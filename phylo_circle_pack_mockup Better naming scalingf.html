@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Venn Tree · nested-circle phylogeny</title>
+<title>Venn Tree </title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
@@ -93,47 +93,102 @@
     border: 1px solid var(--rule);
     border-radius: 999px;
   }
+  .focus-block {
+    text-align: right;
+    max-width: 60vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+  .focus-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-variation-settings: "opsz" 96;
+    font-size: 22px;
+    font-weight: 350;
+    color: var(--ink);
+    line-height: 1.05;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
   .breadcrumbs {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
+    font-size: 10.5px;
     color: var(--ink-soft);
     letter-spacing: 0.04em;
-    max-width: 60vw;
+    max-width: 100%;
     text-align: right;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .breadcrumbs .sep { color: var(--ink-mute); margin: 0 6px; }
-  .breadcrumbs .current { color: var(--accent); }
+  .breadcrumbs .crumb {
+    cursor: pointer;
+    transition: color 120ms ease;
+  }
+  .breadcrumbs .crumb:hover { color: var(--accent); }
+  .breadcrumbs .current { color: var(--accent); cursor: default; }
+  .breadcrumbs .current:hover { color: var(--accent); }
 
   /* ── CANVAS ─────────────────────────────────────────────────────────── */
   .canvas-wrap {
     position: relative;
     overflow: hidden;
     background:
-      radial-gradient(ellipse at center, var(--bg-soft) 0%, var(--bg) 75%);
+      radial-gradient(ellipse at center, var(--bg-soft) 0%, var(--bg) 95%);
   }
+  /* When a node is focused, this overlay fills the canvas with that node's
+     color, replacing the default gradient. SVG content renders above it. */
+  .canvas-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: var(--focus-bg, transparent);
+    opacity: 0;
+    transition: opacity 750ms cubic-bezier(0.65, 0, 0.35, 1),
+                background-color 750ms cubic-bezier(0.65, 0, 0.35, 1);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .canvas-wrap.has-focus::before { opacity: 1; }
   #stage {
+    position: relative;
+    z-index: 1;
     width: 100%;
     height: 100%;
     display: block;
     cursor: grab;
+    touch-action: none;
   }
-  #stage:active { cursor: grabbing; }
+  #stage:active, #stage.dragging { cursor: grabbing; }
 
   .node-circle {
-    transition: stroke-width 120ms ease, filter 160ms ease;
     cursor: pointer;
+    vector-effect: non-scaling-stroke;
+    transition: opacity 600ms cubic-bezier(0.65, 0, 0.35, 1);
   }
   .node-circle:hover {
     stroke: var(--accent) !important;
     stroke-width: 1.8 !important;
     filter: drop-shadow(0 0 14px rgba(201,168,124,0.35));
   }
-  .node-circle.focused {
-    stroke: var(--accent) !important;
-    stroke-width: 2.2 !important;
+  .node-circle.hidden-by-focus {
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* The focused circle itself fades to invisible (its color now lives in
+     the background overlay) but still listens for clicks to "go up". */
+  .node-circle.is-focus-bg {
+    opacity: 0;
+  }
+  .node-circle.is-focus-bg:hover {
+    stroke: none !important;
+    stroke-width: 0 !important;
+    filter: none;
   }
 
   .node-label {
@@ -144,10 +199,15 @@
     text-anchor: middle;
     dominant-baseline: central;
     paint-order: stroke;
-    stroke: rgba(14,17,23,0.85);
+    stroke: rgba(14,17,23,0.92);
     stroke-width: 3px;
     stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
     transition: opacity 320ms ease-out;
+  }
+  .node-label.pinned {
+    /* sticky ancestor label — slightly heavier outline for legibility */
+    stroke-width: 4px;
   }
   .node-label.internal {
     fill: var(--ink);
@@ -499,8 +559,11 @@
         <div class="mark">Venn<em>·</em>Tree</div>
         <span class="tag">CIRCLE-PACK VIEW</span>
       </div>
-      <div class="breadcrumbs" id="breadcrumbs">
-        <span class="current">root</span>
+      <div class="focus-block">
+        <div class="focus-title" id="focus-title">—</div>
+        <div class="breadcrumbs" id="breadcrumbs">
+          <span class="current">root</span>
+        </div>
       </div>
     </header>
 
@@ -569,8 +632,7 @@
     </aside>
 
     <footer>
-      <div>NEWICK · NESTED CIRCLE PACKING · d3.pack(R²)</div>
-      <div class="right">· prototype · </div>
+      <div class="right"> · prototype · </div>
     </footer>
   </div>
 
@@ -700,6 +762,7 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   const tip = document.getElementById('tip');
   let currentRoot = null;
   let currentFocus = null;
+  let currentMaxDepth = 0;
   let packG = null; // the inner <g> we transform for zoom
 
   function setAttrs(el, attrs) {
@@ -920,17 +983,87 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     let trail = d.ancestors().reverse();
     const MAX = 5;
     let ellipsis = false;
+    let trimmed = trail;
     if (trail.length > MAX) {
-      trail = [trail[0]].concat(trail.slice(trail.length - (MAX - 1)));
+      trimmed = [trail[0]].concat(trail.slice(trail.length - (MAX - 1)));
       ellipsis = true;
     }
-    const html = trail.map((n, i) => {
-      const isLast = i === trail.length - 1;
-      const name = n.data.name || (n.depth === 0 ? 'root' : '·');
-      return `<span class="${isLast ? 'current' : ''}">${name}</span>`;
+    const container = document.getElementById('breadcrumbs');
+    container.innerHTML = '';
+    trimmed.forEach((n, i) => {
+      if (i > 0) {
+        if (ellipsis && i === 1) {
+          const ell = document.createElement('span');
+          ell.className = 'sep';
+          ell.style.color = 'var(--ink-mute)';
+          ell.textContent = '… /';
+          container.appendChild(ell);
+        } else {
+          const sep = document.createElement('span');
+          sep.className = 'sep';
+          sep.textContent = '/';
+          container.appendChild(sep);
+        }
+      }
+      const isLast = i === trimmed.length - 1;
+      const crumb = document.createElement('span');
+      crumb.className = isLast ? 'current' : 'crumb';
+      crumb.textContent = n.data.name || (n.depth === 0 ? 'root' : '·');
+      if (!isLast) {
+        crumb.addEventListener('click', () => zoomTo(n));
+      }
+      container.appendChild(crumb);
     });
-    if (ellipsis) html.splice(1, 0, '<span class="sep">/</span><span style="color:var(--ink-mute)">…</span>');
-    document.getElementById('breadcrumbs').innerHTML = html.join('<span class="sep">/</span>');
+  }
+
+  function updateFocusTitle(d) {
+    const el = document.getElementById('focus-title');
+    el.textContent = d.data.name || (d.depth === 0 ? 'root' : '(unnamed)');
+  }
+
+  function updateCanvasBackground(d) {
+    const wrap = document.querySelector('.canvas-wrap');
+    if (!d || d.depth === 0) {
+      wrap.style.removeProperty('--focus-bg');
+      wrap.classList.remove('has-focus');
+    } else {
+      const c = colorForDepth(d.depth, currentMaxDepth);
+      wrap.style.setProperty('--focus-bg', c);
+      wrap.classList.add('has-focus');
+    }
+  }
+
+  // ── Circle visibility — hide ancestors and unrelated branches on focus ─
+  // When the user focuses a node, the canvas should look as if we've zoomed
+  // into that node alone: outer rings (ancestors) and sibling branches are
+  // hidden, and the focused node's color becomes the background (handled by
+  // the overlay above). The focused node itself fades to invisible too — it
+  // still receives clicks to support "click background to go up".
+  function updateCircleVisibility(focus) {
+    if (!packG) return;
+    const circles = packG.querySelectorAll('circle.node-circle');
+    if (!focus || focus.depth === 0) {
+      // root — show everything, no special focus styling
+      circles.forEach(c => {
+        c.classList.remove('hidden-by-focus');
+        c.classList.remove('is-focus-bg');
+      });
+      return;
+    }
+    const descendantSet = new Set(focus.descendants());
+    circles.forEach(c => {
+      const d = c.__data__;
+      if (d === focus) {
+        c.classList.add('is-focus-bg');
+        c.classList.remove('hidden-by-focus');
+      } else if (descendantSet.has(d)) {
+        c.classList.remove('is-focus-bg');
+        c.classList.remove('hidden-by-focus');
+      } else {
+        c.classList.remove('is-focus-bg');
+        c.classList.add('hidden-by-focus');
+      }
+    });
   }
 
   function updateStats(root) {
@@ -980,6 +1113,7 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
 
     let maxDepth = 0;
     hierarchy.each(d => { if (d.depth > maxDepth) maxDepth = d.depth; });
+    currentMaxDepth = maxDepth;
 
     // Clear svg
     while (svg.firstChild) svg.removeChild(svg.firstChild);
@@ -993,14 +1127,16 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     const allNodes = hierarchy.descendants();
     const isLeaf = (d) => !d.children || d.children.length === 0;
 
-    // Circles
+    // Circles — no default border; the depth color ramp is what reads the
+    // boundaries. Hover and focus rings are still drawn via CSS, and use
+    // vector-effect:non-scaling-stroke so they stay 1.8 screen-px at any zoom.
     for (const d of allNodes) {
       const c = makeEl('circle', {
         class: 'node-circle',
         cx: d.x, cy: d.y, r: d.r,
         fill: colorForDepth(d.depth, maxDepth),
-        stroke: 'rgba(255,255,255,0.06)',
-        'stroke-width': 1,
+        stroke: 'none',
+        'stroke-width': 0,
       });
       c.__data__ = d;
       c.addEventListener('mouseenter', (evt) => {
@@ -1012,16 +1148,27 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
       c.addEventListener('mousemove', moveTip);
       c.addEventListener('mouseleave', () => {
         hideTip();
-        updateInspector(null);
-        // revert polynomial to currently focused node (if any), else clear
-        if (currentFocus) updatePolynomial(currentFocus);
-        else updatePolynomial(null);
-        if (currentFocus) updateBreadcrumbs(currentFocus);
-        else updateBreadcrumbs(hierarchy);
+        // revert inspector/polynomial/breadcrumbs to the focused node
+        // (default state when nothing is being hovered)
+        if (currentFocus) {
+          updateInspector(currentFocus);
+          updatePolynomial(currentFocus);
+          updateBreadcrumbs(currentFocus);
+        } else {
+          updateInspector(null);
+          updatePolynomial(null);
+          updateBreadcrumbs(hierarchy);
+        }
       });
       c.addEventListener('click', (evt) => {
         evt.stopPropagation();
-        zoomTo(d);
+        if (dragJustMoved) return;
+        if (d === currentFocus) {
+          // clicking on the focused circle (which now is the background) → go up
+          if (d.parent) zoomTo(d.parent);
+        } else {
+          zoomTo(d);
+        }
       });
       packG.appendChild(c);
     }
@@ -1051,13 +1198,10 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
         ? Math.max(2.5, Math.min(14, d.r * 0.55))
         : Math.max(2.5, Math.min(14, d.r * 0.20));
 
-      // For internal labels, the top band must accommodate the text in coord
-      // space — if not, this label can never fit cleanly at any zoom (since
-      // band and font scale together) and is skipped permanently.
-      if (!isL) {
-        const band = bandAtTop(d);
-        if (band < fontSize + 2) continue;
-      }
+      // Note: we no longer skip thin-band internal labels at render time —
+      // their natural position may not fit, but they can still be pinned at
+      // the viewport top as an ancestor. The band check moves to the
+      // visibility/positioning step.
 
       // Truncate name to roughly the leaf's available width
       const maxLen = isL ? Math.max(3, Math.floor(d.r / 2.4)) : 60;
@@ -1074,21 +1218,50 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
       t.__fontSize = fontSize;
       t.__isLeaf = isL;
       t.__name = name;   // full name for re-truncation at zoom time
+      // pre-compute band (top thickness available for label) once
+      t.__band = isL ? Infinity : bandAtTop(d);
       // start hidden — first zoom call sets the right visibility
       t.style.opacity = 0;
       packG.appendChild(t);
     }
 
-    // background click → reset zoom
-    svg.onclick = () => zoomTo(hierarchy);
+    // background click → go up one level (or reset to root if at root)
+    svg.onclick = () => {
+      if (dragJustMoved) return;
+      if (currentFocus && currentFocus.parent) {
+        zoomTo(currentFocus.parent);
+      } else {
+        zoomTo(hierarchy);
+      }
+    };
 
     zoomTo(hierarchy, /*instant*/ true);
+  }
+
+  // ── Transform application — shared by zoomTo, pan, and wheel zoom ─────
+  // smooth=true uses the CSS transition (for click-to-focus jumps);
+  // smooth=false applies instantly (for pan/wheel which run at 60fps).
+  function applyTransform(tx, ty, scale, smooth) {
+    if (smooth) {
+      packG.style.transition = 'transform 750ms cubic-bezier(0.65, 0, 0.35, 1)';
+    } else {
+      packG.style.transition = 'none';
+    }
+    packG.setAttribute('transform', `translate(${tx},${ty}) scale(${scale})`);
+    currentScale = scale;
+    currentTx = tx;
+    currentTy = ty;
+    updateLabelVisibility(scale);
   }
 
   // ── Zoom-to-subtree (smooth) ──────────────────────────────────────────
   function zoomTo(d, instant=false) {
     currentFocus = d;
     updateBreadcrumbs(d);
+    updateFocusTitle(d);
+    updateCanvasBackground(d);
+    updateCircleVisibility(d);
+    updateInspector(d);
     updatePolynomial(d);
 
     const wrap = document.querySelector('.canvas-wrap');
@@ -1100,38 +1273,57 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
 
     if (instant) {
       packG.style.transition = 'none';
-      // force reflow before re-enabling transitions
       void packG.getBoundingClientRect();
+      applyTransform(tx, ty, scale, /*smooth*/ false);
+    } else {
+      applyTransform(tx, ty, scale, /*smooth*/ true);
     }
-    packG.setAttribute('transform', `translate(${tx},${ty}) scale(${scale})`);
-    if (instant) {
-      // re-enable on next frame
-      requestAnimationFrame(() => {
-        packG.style.transition = 'transform 750ms cubic-bezier(0.65, 0, 0.35, 1)';
-      });
-    }
-
-    // counter-scale strokes; reveal labels whose on-screen size is now readable
-    const circles = packG.querySelectorAll('circle.node-circle');
-    const counter = Math.max(0.6, 1 / scale);
-    circles.forEach(c => c.setAttribute('stroke-width', counter));
-
-    updateLabelVisibility(scale);
   }
 
+  // module-level transform state (read by updateLabelVisibility)
+  let currentScale = 1, currentTx = 0, currentTy = 0;
+
   // ── Label visibility & sizing for current zoom level ─────────────────
-  // Show labels whose parent circle has an effective on-screen radius in
-  // the readable window. Also dynamically:
-  //   • cap rendered font-size so deep zooms don't produce 300px-tall text
-  //   • re-truncate names so leaves show more characters when they're big
+  // Strategy:
+  //   • Render every named node's label.
+  //   • Hide if circle is entirely off-screen OR too small to read.
+  //   • Cap rendered font-size to 7–28 screen-px so deep zooms don't blow up.
+  //   • For ancestors of the currently-focused node whose natural label
+  //     position is above the viewport, stack their labels at the top of the
+  //     viewport — so "earlier generations" stay readable while zoomed in.
   function updateLabelVisibility(scale) {
     const wrap = document.querySelector('.canvas-wrap');
     const W = wrap.clientWidth, H = wrap.clientHeight;
-    const minDim = Math.min(W, H);
     const MIN_R_PX = 12;
-    const MAX_R_PX = minDim * 0.85;
     const MIN_FONT_PX = 7;
     const MAX_FONT_PX = 28;
+
+    // coord-space viewport bounds (inverse of group transform)
+    const viewTopCoord    = (-H / 2 - currentTy) / scale;
+    const viewBottomCoord = ( H / 2 - currentTy) / scale;
+    const viewLeftCoord   = (-W / 2 - currentTx) / scale;
+    const viewRightCoord  = ( W / 2 - currentTx) / scale;
+
+    // ancestor chain of current focus: only the closest few get pinned to
+    // the top of the viewport — the breadcrumbs already convey the full
+    // lineage textually, so over-stacking pinned labels just obscures the view.
+    const MAX_PINNED = 3;
+    const fullChain = currentFocus ? currentFocus.ancestors() : [];
+    // drop the focus itself; closest ancestor first
+    const strictChain = fullChain.slice(1, 1 + MAX_PINNED);
+    // index 0 = closest to focus (pin lowest), index N-1 = furthest (pin top)
+    const ancestorIndex = new Map();
+    strictChain.forEach((a, i) => ancestorIndex.set(a, i));
+
+    const PINNED_FONT_PX = 18;            // smaller than focus label
+    const STICKY_LINE_PX = PINNED_FONT_PX + 6;
+
+    // When focused on a non-root node, only descendants of the focus
+    // (plus the pinned ancestors and focus itself) should show labels.
+    // Sibling/unrelated branches are hidden along with their circles.
+    const focusDescendantSet = (currentFocus && currentFocus.depth !== 0)
+      ? new Set(currentFocus.descendants())
+      : null;
 
     const labels = packG.querySelectorAll('text.node-label');
     labels.forEach(l => {
@@ -1140,24 +1332,87 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
       const screenR = d.r * scale;
       const naturalScreenFont = l.__fontSize * scale;
 
-      // Visibility window
-      let show = screenR >= MIN_R_PX && screenR <= MAX_R_PX;
+      // When focused, hide labels that are neither descendants of focus
+      // nor pinned ancestors.
+      if (focusDescendantSet
+          && !focusDescendantSet.has(d)
+          && !ancestorIndex.has(d)) {
+        l.style.opacity = 0;
+        return;
+      }
+
+      // Hide if the circle is entirely outside the viewport
+      const outOfView =
+        (d.y + d.r < viewTopCoord)   ||
+        (d.y - d.r > viewBottomCoord) ||
+        (d.x + d.r < viewLeftCoord)  ||
+        (d.x - d.r > viewRightCoord);
+      if (outOfView) { l.style.opacity = 0; return; }
+
+      // Readable-size check — too small to bother
+      let show = screenR >= MIN_R_PX;
       if (show && naturalScreenFont < MIN_FONT_PX && screenR < 40) show = false;
       l.style.opacity = show ? 1 : 0;
       if (!show) return;
 
-      // Choose an on-screen target font size: comfortable, capped at MAX
+      // Cap font-size in screen space
       let targetScreenFont = naturalScreenFont;
       if (targetScreenFont < MIN_FONT_PX) targetScreenFont = MIN_FONT_PX;
       if (targetScreenFont > MAX_FONT_PX) targetScreenFont = MAX_FONT_PX;
-
-      // Convert back to coord-space font-size (group is scaled, so / scale)
       const coordFont = targetScreenFont / scale;
       l.setAttribute('font-size', coordFont);
 
-      // Reposition internal labels — their y depends on font-size (top band)
-      if (!l.__isLeaf) {
-        l.setAttribute('y', d.y - d.r + coordFont + 2.5 / scale);
+      // ── Position ────────────────────────────────────────────────────
+      if (l.__isLeaf) {
+        l.setAttribute('x', d.x);
+        l.setAttribute('y', d.y);
+      } else {
+        const naturalY = d.y - d.r + coordFont + 2.5 / scale;
+        const ancIdx = ancestorIndex.get(d);
+        const isStrictAncestor = ancIdx !== undefined && d !== currentFocus;
+        const isFocus = (d === currentFocus) && strictChain.length > 0;
+        const bandFitsNaturally = l.__band >= coordFont + 2 / scale;
+
+        if (isStrictAncestor) {
+          // Always pin strict ancestors — keeps earlier generations readable
+          // as a stable context strip at the top of the viewport.
+          const pinnedScreenFont = PINNED_FONT_PX;
+          const pinnedCoordFont = pinnedScreenFont / scale;
+          l.setAttribute('font-size', pinnedCoordFont);
+
+          // ancIdx 0 = closest, N-1 = furthest. We want furthest at top,
+          // so reverse the slot index.
+          const slot = (strictChain.length - 1) - ancIdx;
+          const stackScreenY = -H / 2 + pinnedScreenFont / 2 + 12
+                              + slot * STICKY_LINE_PX;
+          const stackCoordY = (stackScreenY - currentTy) / scale;
+          const focusScreenX = currentFocus
+            ? currentFocus.x * scale + currentTx
+            : 0;
+          const stackCoordX = (focusScreenX - currentTx) / scale;
+          l.setAttribute('y', stackCoordY);
+          l.setAttribute('x', stackCoordX);
+          l.classList.add('pinned');
+        } else if (isFocus) {
+          // Push focus label below the pinned ancestor stack to avoid overlap.
+          // Sit it just under the lowest pinned slot, inside the focus circle.
+          const focusScreenY = -H / 2 + 12
+                              + strictChain.length * STICKY_LINE_PX
+                              + targetScreenFont / 2 + 6;
+          const focusCoordY = (focusScreenY - currentTy) / scale;
+          l.setAttribute('y', focusCoordY);
+          l.setAttribute('x', d.x);
+          l.classList.remove('pinned');
+        } else if (bandFitsNaturally) {
+          l.setAttribute('y', naturalY);
+          l.setAttribute('x', d.x);
+          l.classList.remove('pinned');
+        } else {
+          // Internal label with no room at top of ring, and not an ancestor
+          // worth pinning — hide.
+          l.style.opacity = 0;
+          return;
+        }
       }
 
       // Re-truncate name to fit current on-screen size
@@ -1165,11 +1420,10 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
       if (!fullName) return;
       let charsThatFit;
       if (l.__isLeaf) {
-        // monospace: ~0.6 × font-size per char; diameter ≈ 2r × 0.9 usable
         const usablePx = screenR * 1.7;
         charsThatFit = Math.max(2, Math.floor(usablePx / (targetScreenFont * 0.62)));
       } else {
-        charsThatFit = 60;  // internal labels sit in band, plenty of room
+        charsThatFit = 60;
       }
       const newText = fullName.length > charsThatFit
         ? fullName.slice(0, Math.max(1, charsThatFit - 1)) + '…'
@@ -1183,21 +1437,121 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   // ─────────────────────────────────────────────────────────────────────
   function loadDataset(name) {
     let nwk, subtitle;
+    const nav = '· click to focus · drag to pan · scroll to zoom · esc to go up';
     if (name === 'ha') {
       nwk = HA_NEWICK;
-      subtitle = '— H3N2 hemagglutinin · click a clade to zoom —';
+      subtitle = '— H3N2 hemagglutinin ' + nav + ' —';
     } else if (name === 'fungi') {
       nwk = FUNGI_NEWICK;
-      subtitle = '— Ascomycota taxonomy · click a clade to zoom —';
+      subtitle = '— Ascomycota taxonomy ' + nav + ' —';
     } else {
       nwk = SLIDE6_NEWICK_FIXED;
-      subtitle = '— synthetic demo · click any circle to focus —';
+      subtitle = '— synthetic demo ' + nav + ' —';
     }
     const parsed = parseNewick(nwk);
     const hier = toHierarchy(parsed);
     document.getElementById('stage-title').textContent = subtitle;
     render(hier);
   }
+
+  // ── Mouse navigation: drag-to-pan + wheel-to-zoom ──────────────────────
+  // Pan works anywhere on the canvas (drag with left mouse button).
+  // Wheel zooms around the cursor position, preserving the coord-space
+  // point under the mouse.
+  let isDragging = false;
+  let dragMoved = false;
+  let dragJustMoved = false;  // read by click handlers to suppress click-after-drag
+  let dragStartClientX = 0, dragStartClientY = 0;
+  let dragStartTx = 0, dragStartTy = 0;
+  const DRAG_THRESHOLD = 5; // px before a mouse-down is treated as a drag
+  const MIN_SCALE = 0.2;
+  const MAX_SCALE = 8000;
+
+  const canvasWrap = document.querySelector('.canvas-wrap');
+  const stage = document.getElementById('stage');
+
+  // Convert clientX/Y → SVG user-space coords (the same space the transform lives in)
+  function clientToSvg(clientX, clientY) {
+    const rect = stage.getBoundingClientRect();
+    // viewBox is centered at (0,0) with size = client size, so:
+    return {
+      x: (clientX - rect.left) - rect.width / 2,
+      y: (clientY - rect.top) - rect.height / 2,
+    };
+  }
+
+  stage.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return;
+    isDragging = true;
+    dragMoved = false;
+    dragJustMoved = false;
+    dragStartClientX = e.clientX;
+    dragStartClientY = e.clientY;
+    dragStartTx = currentTx;
+    dragStartTy = currentTy;
+    stage.classList.add('dragging');
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - dragStartClientX;
+    const dy = e.clientY - dragStartClientY;
+    if (!dragMoved && Math.hypot(dx, dy) > DRAG_THRESHOLD) {
+      dragMoved = true;
+    }
+    if (dragMoved) {
+      applyTransform(dragStartTx + dx, dragStartTy + dy, currentScale, /*smooth*/ false);
+    }
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    stage.classList.remove('dragging');
+    if (dragMoved) {
+      // Set the flag so the click event that fires next (browser default
+      // behavior) is suppressed; clear after a tick.
+      dragJustMoved = true;
+      setTimeout(() => { dragJustMoved = false; }, 0);
+    }
+  });
+
+  stage.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    // exponential zoom feels natural; positive deltaY (scroll down) zooms out
+    const factor = Math.exp(-e.deltaY * 0.0015);
+    const newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, currentScale * factor));
+    if (newScale === currentScale) return;
+
+    // Point in SVG-space under the mouse
+    const m = clientToSvg(e.clientX, e.clientY);
+    // The coord-space point currently under the mouse:
+    //   m.x = coordX * currentScale + currentTx   →   coordX = (m.x - tx) / scale
+    const coordX = (m.x - currentTx) / currentScale;
+    const coordY = (m.y - currentTy) / currentScale;
+    // We want the same coordX,coordY to remain under the mouse after zoom:
+    //   m.x = coordX * newScale + newTx   →   newTx = m.x - coordX * newScale
+    const newTx = m.x - coordX * newScale;
+    const newTy = m.y - coordY * newScale;
+
+    applyTransform(newTx, newTy, newScale, /*smooth*/ false);
+  }, { passive: false });
+
+  // Keyboard: Esc / Backspace → go up one level
+  window.addEventListener('keydown', (e) => {
+    // ignore if user is typing in an input
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'select' || tag === 'textarea') return;
+    if (e.key === 'Escape' || e.key === 'Backspace') {
+      if (currentFocus && currentFocus.parent) {
+        e.preventDefault();
+        zoomTo(currentFocus.parent);
+      } else if (currentRoot && currentFocus !== currentRoot) {
+        e.preventDefault();
+        zoomTo(currentRoot);
+      }
+    }
+  });
 
   const dsSelect = document.getElementById('ds-select');
   dsSelect.addEventListener('change', (e) => {
