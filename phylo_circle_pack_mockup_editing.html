@@ -1,0 +1,2486 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Venn Tree · nested-circle phylogeny</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
+<script>
+// https://d3js.org/d3-hierarchy/ v3.1.2 Copyright 2010-2021 Mike Bostock
+!function(n,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports):"function"==typeof define&&define.amd?define(["exports"],r):r((n="undefined"!=typeof globalThis?globalThis:n||self).d3=n.d3||{})}(this,(function(n){"use strict";function r(n,r){return n.parent===r.parent?1:2}function t(n,r){return n+r.x}function e(n,r){return Math.max(n,r.y)}function i(n){var r=0,t=n.children,e=t&&t.length;if(e)for(;--e>=0;)r+=t[e].value;else r=1;n.value=r}function u(n,r){n instanceof Map?(n=[void 0,n],void 0===r&&(r=f)):void 0===r&&(r=o);for(var t,e,i,u,a,l=new h(n),p=[l];t=p.pop();)if((i=r(t.data))&&(a=(i=Array.from(i)).length))for(t.children=i,u=a-1;u>=0;--u)p.push(e=i[u]=new h(i[u])),e.parent=t,e.depth=t.depth+1;return l.eachBefore(c)}function o(n){return n.children}function f(n){return Array.isArray(n)?n[1]:null}function a(n){void 0!==n.data.value&&(n.value=n.data.value),n.data=n.data.data}function c(n){var r=0;do{n.height=r}while((n=n.parent)&&n.height<++r)}function h(n){this.data=n,this.depth=this.height=0,this.parent=null}function l(n){return null==n?null:p(n)}function p(n){if("function"!=typeof n)throw new Error;return n}function d(){return 0}function s(n){return function(){return n}}h.prototype=u.prototype={constructor:h,count:function(){return this.eachAfter(i)},each:function(n,r){let t=-1;for(const e of this)n.call(r,e,++t,this);return this},eachAfter:function(n,r){for(var t,e,i,u=this,o=[u],f=[],a=-1;u=o.pop();)if(f.push(u),t=u.children)for(e=0,i=t.length;e<i;++e)o.push(t[e]);for(;u=f.pop();)n.call(r,u,++a,this);return this},eachBefore:function(n,r){for(var t,e,i=this,u=[i],o=-1;i=u.pop();)if(n.call(r,i,++o,this),t=i.children)for(e=t.length-1;e>=0;--e)u.push(t[e]);return this},find:function(n,r){let t=-1;for(const e of this)if(n.call(r,e,++t,this))return e},sum:function(n){return this.eachAfter((function(r){for(var t=+n(r.data)||0,e=r.children,i=e&&e.length;--i>=0;)t+=e[i].value;r.value=t}))},sort:function(n){return this.eachBefore((function(r){r.children&&r.children.sort(n)}))},path:function(n){for(var r=this,t=function(n,r){if(n===r)return n;var t=n.ancestors(),e=r.ancestors(),i=null;n=t.pop(),r=e.pop();for(;n===r;)i=n,n=t.pop(),r=e.pop();return i}(r,n),e=[r];r!==t;)r=r.parent,e.push(r);for(var i=e.length;n!==t;)e.splice(i,0,n),n=n.parent;return e},ancestors:function(){for(var n=this,r=[n];n=n.parent;)r.push(n);return r},descendants:function(){return Array.from(this)},leaves:function(){var n=[];return this.eachBefore((function(r){r.children||n.push(r)})),n},links:function(){var n=this,r=[];return n.each((function(t){t!==n&&r.push({source:t.parent,target:t})})),r},copy:function(){return u(this).eachBefore(a)},[Symbol.iterator]:function*(){var n,r,t,e,i=this,u=[i];do{for(n=u.reverse(),u=[];i=n.pop();)if(yield i,r=i.children)for(t=0,e=r.length;t<e;++t)u.push(r[t])}while(u.length)}};const v=4294967296;function x(){let n=1;return()=>(n=(1664525*n+1013904223)%v)/v}function y(n,r){for(var t,e,i=0,u=(n=function(n,r){let t,e,i=n.length;for(;i;)e=r()*i--|0,t=n[i],n[i]=n[e],n[e]=t;return n}(Array.from(n),r)).length,o=[];i<u;)t=n[i],e&&w(e,t)?++i:(e=M(o=g(o,t)),i=0);return e}function g(n,r){var t,e;if(_(r,n))return[r];for(t=0;t<n.length;++t)if(m(r,n[t])&&_(z(n[t],r),n))return[n[t],r];for(t=0;t<n.length-1;++t)for(e=t+1;e<n.length;++e)if(m(z(n[t],n[e]),r)&&m(z(n[t],r),n[e])&&m(z(n[e],r),n[t])&&_(B(n[t],n[e],r),n))return[n[t],n[e],r];throw new Error}function m(n,r){var t=n.r-r.r,e=r.x-n.x,i=r.y-n.y;return t<0||t*t<e*e+i*i}function w(n,r){var t=n.r-r.r+1e-9*Math.max(n.r,r.r,1),e=r.x-n.x,i=r.y-n.y;return t>0&&t*t>e*e+i*i}function _(n,r){for(var t=0;t<r.length;++t)if(!w(n,r[t]))return!1;return!0}function M(n){switch(n.length){case 1:return function(n){return{x:n.x,y:n.y,r:n.r}}(n[0]);case 2:return z(n[0],n[1]);case 3:return B(n[0],n[1],n[2])}}function z(n,r){var t=n.x,e=n.y,i=n.r,u=r.x,o=r.y,f=r.r,a=u-t,c=o-e,h=f-i,l=Math.sqrt(a*a+c*c);return{x:(t+u+a/l*h)/2,y:(e+o+c/l*h)/2,r:(l+i+f)/2}}function B(n,r,t){var e=n.x,i=n.y,u=n.r,o=r.x,f=r.y,a=r.r,c=t.x,h=t.y,l=t.r,p=e-o,d=e-c,s=i-f,v=i-h,x=a-u,y=l-u,g=e*e+i*i-u*u,m=g-o*o-f*f+a*a,w=g-c*c-h*h+l*l,_=d*s-p*v,M=(s*w-v*m)/(2*_)-e,z=(v*x-s*y)/_,B=(d*m-p*w)/(2*_)-i,A=(p*y-d*x)/_,b=z*z+A*A-1,q=2*(u+M*z+B*A),E=M*M+B*B-u*u,S=-(Math.abs(b)>1e-6?(q+Math.sqrt(q*q-4*b*E))/(2*b):E/q);return{x:e+M+z*S,y:i+B+A*S,r:S}}function A(n,r,t){var e,i,u,o,f=n.x-r.x,a=n.y-r.y,c=f*f+a*a;c?(i=r.r+t.r,i*=i,o=n.r+t.r,i>(o*=o)?(e=(c+o-i)/(2*c),u=Math.sqrt(Math.max(0,o/c-e*e)),t.x=n.x-e*f-u*a,t.y=n.y-e*a+u*f):(e=(c+i-o)/(2*c),u=Math.sqrt(Math.max(0,i/c-e*e)),t.x=r.x+e*f-u*a,t.y=r.y+e*a+u*f)):(t.x=r.x+t.r,t.y=r.y)}function b(n,r){var t=n.r+r.r-1e-6,e=r.x-n.x,i=r.y-n.y;return t>0&&t*t>e*e+i*i}function q(n){var r=n._,t=n.next._,e=r.r+t.r,i=(r.x*t.r+t.x*r.r)/e,u=(r.y*t.r+t.y*r.r)/e;return i*i+u*u}function Node(n){this._=n,this.next=null,this.previous=null}function E(n,r){if(!(o=(t=n,n="object"==typeof t&&"length"in t?t:Array.from(t)).length))return 0;var t,e,i,u,o,f,a,c,h,l,p,d;if((e=n[0]).x=0,e.y=0,!(o>1))return e.r;if(i=n[1],e.x=-i.r,i.x=e.r,i.y=0,!(o>2))return e.r+i.r;A(i,e,u=n[2]),e=new Node(e),i=new Node(i),u=new Node(u),e.next=u.previous=i,i.next=e.previous=u,u.next=i.previous=e;n:for(c=3;c<o;++c){A(e._,i._,u=n[c]),u=new Node(u),h=i.next,l=e.previous,p=i._.r,d=e._.r;do{if(p<=d){if(b(h._,u._)){i=h,e.next=i,i.previous=e,--c;continue n}p+=h._.r,h=h.next}else{if(b(l._,u._)){(e=l).next=i,i.previous=e,--c;continue n}d+=l._.r,l=l.previous}}while(h!==l.next);for(u.previous=e,u.next=i,e.next=i.previous=i=u,f=q(e);(u=u.next)!==i;)(a=q(u))<f&&(e=u,f=a);i=e.next}for(e=[i._],u=i;(u=u.next)!==i;)e.push(u._);for(u=y(e,r),c=0;c<o;++c)(e=n[c]).x-=u.x,e.y-=u.y;return u.r}function S(n){return Math.sqrt(n.value)}function k(n){return function(r){r.children||(r.r=Math.max(0,+n(r)||0))}}function I(n,r,t){return function(e){if(i=e.children){var i,u,o,f=i.length,a=n(e)*r||0;if(a)for(u=0;u<f;++u)i[u].r+=a;if(o=E(i,t),a)for(u=0;u<f;++u)i[u].r-=a;e.r=o+a}}}function T(n){return function(r){var t=r.parent;r.r*=n,t&&(r.x=t.x+n*r.x,r.y=t.y+n*r.y)}}function j(n){n.x0=Math.round(n.x0),n.y0=Math.round(n.y0),n.x1=Math.round(n.x1),n.y1=Math.round(n.y1)}function O(n,r,t,e,i){for(var u,o=n.children,f=-1,a=o.length,c=n.value&&(e-r)/n.value;++f<a;)(u=o[f]).y0=t,u.y1=i,u.x0=r,u.x1=r+=u.value*c}var R={depth:-1},D={},L={};function $(n){return n.id}function N(n){return n.parentId}function P(n){let r=n.length;if(r<2)return"";for(;--r>1&&!C(n,r););return n.slice(0,r)}function C(n,r){if("/"===n[r]){let t=0;for(;r>0&&"\\"===n[--r];)++t;if(0==(1&t))return!0}return!1}function F(n,r){return n.parent===r.parent?1:2}function G(n){var r=n.children;return r?r[0]:n.t}function H(n){var r=n.children;return r?r[r.length-1]:n.t}function J(n,r,t){var e=t/(r.i-n.i);r.c-=e,r.s+=t,n.c+=e,r.z+=t,r.m+=t}function K(n,r,t){return n.a.parent===r.parent?n.a:t}function Q(n,r){this._=n,this.parent=null,this.children=null,this.A=null,this.a=this,this.z=0,this.m=0,this.c=0,this.s=0,this.t=null,this.i=r}function U(n,r,t,e,i){for(var u,o=n.children,f=-1,a=o.length,c=n.value&&(i-t)/n.value;++f<a;)(u=o[f]).x0=r,u.x1=e,u.y0=t,u.y1=t+=u.value*c}Q.prototype=Object.create(h.prototype);var V=(1+Math.sqrt(5))/2;function W(n,r,t,e,i,u){for(var o,f,a,c,h,l,p,d,s,v,x,y=[],g=r.children,m=0,w=0,_=g.length,M=r.value;m<_;){a=i-t,c=u-e;do{h=g[w++].value}while(!h&&w<_);for(l=p=h,x=h*h*(v=Math.max(c/a,a/c)/(M*n)),s=Math.max(p/x,x/l);w<_;++w){if(h+=f=g[w].value,f<l&&(l=f),f>p&&(p=f),x=h*h*v,(d=Math.max(p/x,x/l))>s){h-=f;break}s=d}y.push(o={value:h,dice:a<c,children:g.slice(m,w)}),o.dice?O(o,t,e,i,M?e+=c*h/M:u):U(o,t,e,M?t+=a*h/M:i,u),M-=h,m=w}return y}var X=function n(r){function t(n,t,e,i,u){W(r,n,t,e,i,u)}return t.ratio=function(r){return n((r=+r)>1?r:1)},t}(V);var Y=function n(r){function t(n,t,e,i,u){if((o=n._squarify)&&o.ratio===r)for(var o,f,a,c,h,l=-1,p=o.length,d=n.value;++l<p;){for(a=(f=o[l]).children,c=f.value=0,h=a.length;c<h;++c)f.value+=a[c].value;f.dice?O(f,t,e,i,d?e+=(u-e)*f.value/d:u):U(f,t,e,d?t+=(i-t)*f.value/d:i,u),d-=f.value}else n._squarify=o=W(r,n,t,e,i,u),o.ratio=r}return t.ratio=function(r){return n((r=+r)>1?r:1)},t}(V);n.Node=h,n.cluster=function(){var n=r,i=1,u=1,o=!1;function f(r){var f,a=0;r.eachAfter((function(r){var i=r.children;i?(r.x=function(n){return n.reduce(t,0)/n.length}(i),r.y=function(n){return 1+n.reduce(e,0)}(i)):(r.x=f?a+=n(r,f):0,r.y=0,f=r)}));var c=function(n){for(var r;r=n.children;)n=r[0];return n}(r),h=function(n){for(var r;r=n.children;)n=r[r.length-1];return n}(r),l=c.x-n(c,h)/2,p=h.x+n(h,c)/2;return r.eachAfter(o?function(n){n.x=(n.x-r.x)*i,n.y=(r.y-n.y)*u}:function(n){n.x=(n.x-l)/(p-l)*i,n.y=(1-(r.y?n.y/r.y:1))*u})}return f.separation=function(r){return arguments.length?(n=r,f):n},f.size=function(n){return arguments.length?(o=!1,i=+n[0],u=+n[1],f):o?null:[i,u]},f.nodeSize=function(n){return arguments.length?(o=!0,i=+n[0],u=+n[1],f):o?[i,u]:null},f},n.hierarchy=u,n.pack=function(){var n=null,r=1,t=1,e=d;function i(i){const u=x();return i.x=r/2,i.y=t/2,n?i.eachBefore(k(n)).eachAfter(I(e,.5,u)).eachBefore(T(1)):i.eachBefore(k(S)).eachAfter(I(d,1,u)).eachAfter(I(e,i.r/Math.min(r,t),u)).eachBefore(T(Math.min(r,t)/(2*i.r))),i}return i.radius=function(r){return arguments.length?(n=l(r),i):n},i.size=function(n){return arguments.length?(r=+n[0],t=+n[1],i):[r,t]},i.padding=function(n){return arguments.length?(e="function"==typeof n?n:s(+n),i):e},i},n.packEnclose=function(n){return y(n,x())},n.packSiblings=function(n){return E(n,x()),n},n.partition=function(){var n=1,r=1,t=0,e=!1;function i(i){var u=i.height+1;return i.x0=i.y0=t,i.x1=n,i.y1=r/u,i.eachBefore(function(n,r){return function(e){e.children&&O(e,e.x0,n*(e.depth+1)/r,e.x1,n*(e.depth+2)/r);var i=e.x0,u=e.y0,o=e.x1-t,f=e.y1-t;o<i&&(i=o=(i+o)/2),f<u&&(u=f=(u+f)/2),e.x0=i,e.y0=u,e.x1=o,e.y1=f}}(r,u)),e&&i.eachBefore(j),i}return i.round=function(n){return arguments.length?(e=!!n,i):e},i.size=function(t){return arguments.length?(n=+t[0],r=+t[1],i):[n,r]},i.padding=function(n){return arguments.length?(t=+n,i):t},i},n.stratify=function(){var n,r=$,t=N;function e(e){var i,u,o,f,a,l,p,d,s=Array.from(e),v=r,x=t,y=new Map;if(null!=n){const r=s.map(((r,t)=>function(n){let r=(n=`${n}`).length;C(n,r-1)&&!C(n,r-2)&&(n=n.slice(0,-1));return"/"===n[0]?n:`/${n}`}(n(r,t,e)))),t=r.map(P),i=new Set(r).add("");for(const n of t)i.has(n)||(i.add(n),r.push(n),t.push(P(n)),s.push(L));v=(n,t)=>r[t],x=(n,r)=>t[r]}for(o=0,i=s.length;o<i;++o)u=s[o],l=s[o]=new h(u),null!=(p=v(u,o,e))&&(p+="")&&(d=l.id=p,y.set(d,y.has(d)?D:l)),null!=(p=x(u,o,e))&&(p+="")&&(l.parent=p);for(o=0;o<i;++o)if(p=(l=s[o]).parent){if(!(a=y.get(p)))throw new Error("missing: "+p);if(a===D)throw new Error("ambiguous: "+p);a.children?a.children.push(l):a.children=[l],l.parent=a}else{if(f)throw new Error("multiple roots");f=l}if(!f)throw new Error("no root");if(null!=n){for(;f.data===L&&1===f.children.length;)f=f.children[0],--i;for(let n=s.length-1;n>=0&&(l=s[n],l.data===L);--n)l.data=null}if(f.parent=R,f.eachBefore((function(n){n.depth=n.parent.depth+1,--i})).eachBefore(c),f.parent=null,i>0)throw new Error("cycle");return f}return e.id=function(n){return arguments.length?(r=l(n),e):r},e.parentId=function(n){return arguments.length?(t=l(n),e):t},e.path=function(r){return arguments.length?(n=l(r),e):n},e},n.tree=function(){var n=F,r=1,t=1,e=null;function i(i){var a=function(n){for(var r,t,e,i,u,o=new Q(n,0),f=[o];r=f.pop();)if(e=r._.children)for(r.children=new Array(u=e.length),i=u-1;i>=0;--i)f.push(t=r.children[i]=new Q(e[i],i)),t.parent=r;return(o.parent=new Q(null,0)).children=[o],o}(i);if(a.eachAfter(u),a.parent.m=-a.z,a.eachBefore(o),e)i.eachBefore(f);else{var c=i,h=i,l=i;i.eachBefore((function(n){n.x<c.x&&(c=n),n.x>h.x&&(h=n),n.depth>l.depth&&(l=n)}));var p=c===h?1:n(c,h)/2,d=p-c.x,s=r/(h.x+p+d),v=t/(l.depth||1);i.eachBefore((function(n){n.x=(n.x+d)*s,n.y=n.depth*v}))}return i}function u(r){var t=r.children,e=r.parent.children,i=r.i?e[r.i-1]:null;if(t){!function(n){for(var r,t=0,e=0,i=n.children,u=i.length;--u>=0;)(r=i[u]).z+=t,r.m+=t,t+=r.s+(e+=r.c)}(r);var u=(t[0].z+t[t.length-1].z)/2;i?(r.z=i.z+n(r._,i._),r.m=r.z-u):r.z=u}else i&&(r.z=i.z+n(r._,i._));r.parent.A=function(r,t,e){if(t){for(var i,u=r,o=r,f=t,a=u.parent.children[0],c=u.m,h=o.m,l=f.m,p=a.m;f=H(f),u=G(u),f&&u;)a=G(a),(o=H(o)).a=r,(i=f.z+l-u.z-c+n(f._,u._))>0&&(J(K(f,r,e),r,i),c+=i,h+=i),l+=f.m,c+=u.m,p+=a.m,h+=o.m;f&&!H(o)&&(o.t=f,o.m+=l-h),u&&!G(a)&&(a.t=u,a.m+=c-p,e=r)}return e}(r,i,r.parent.A||e[0])}function o(n){n._.x=n.z+n.parent.m,n.m+=n.parent.m}function f(n){n.x*=r,n.y=n.depth*t}return i.separation=function(r){return arguments.length?(n=r,i):n},i.size=function(n){return arguments.length?(e=!1,r=+n[0],t=+n[1],i):e?null:[r,t]},i.nodeSize=function(n){return arguments.length?(e=!0,r=+n[0],t=+n[1],i):e?[r,t]:null},i},n.treemap=function(){var n=X,r=!1,t=1,e=1,i=[0],u=d,o=d,f=d,a=d,c=d;function h(n){return n.x0=n.y0=0,n.x1=t,n.y1=e,n.eachBefore(l),i=[0],r&&n.eachBefore(j),n}function l(r){var t=i[r.depth],e=r.x0+t,h=r.y0+t,l=r.x1-t,p=r.y1-t;l<e&&(e=l=(e+l)/2),p<h&&(h=p=(h+p)/2),r.x0=e,r.y0=h,r.x1=l,r.y1=p,r.children&&(t=i[r.depth+1]=u(r)/2,e+=c(r)-t,h+=o(r)-t,(l-=f(r)-t)<e&&(e=l=(e+l)/2),(p-=a(r)-t)<h&&(h=p=(h+p)/2),n(r,e,h,l,p))}return h.round=function(n){return arguments.length?(r=!!n,h):r},h.size=function(n){return arguments.length?(t=+n[0],e=+n[1],h):[t,e]},h.tile=function(r){return arguments.length?(n=p(r),h):n},h.padding=function(n){return arguments.length?h.paddingInner(n).paddingOuter(n):h.paddingInner()},h.paddingInner=function(n){return arguments.length?(u="function"==typeof n?n:s(+n),h):u},h.paddingOuter=function(n){return arguments.length?h.paddingTop(n).paddingRight(n).paddingBottom(n).paddingLeft(n):h.paddingTop()},h.paddingTop=function(n){return arguments.length?(o="function"==typeof n?n:s(+n),h):o},h.paddingRight=function(n){return arguments.length?(f="function"==typeof n?n:s(+n),h):f},h.paddingBottom=function(n){return arguments.length?(a="function"==typeof n?n:s(+n),h):a},h.paddingLeft=function(n){return arguments.length?(c="function"==typeof n?n:s(+n),h):c},h},n.treemapBinary=function(n,r,t,e,i){var u,o,f=n.children,a=f.length,c=new Array(a+1);for(c[0]=o=u=0;u<a;++u)c[u+1]=o+=f[u].value;!function n(r,t,e,i,u,o,a){if(r>=t-1){var h=f[r];return h.x0=i,h.y0=u,h.x1=o,void(h.y1=a)}var l=c[r],p=e/2+l,d=r+1,s=t-1;for(;d<s;){var v=d+s>>>1;c[v]<p?d=v+1:s=v}p-c[d-1]<c[d]-p&&r+1<d&&--d;var x=c[d]-l,y=e-x;if(o-i>a-u){var g=e?(i*y+o*x)/e:o;n(r,d,x,i,u,g,a),n(d,t,y,g,u,o,a)}else{var m=e?(u*y+a*x)/e:a;n(r,d,x,i,u,o,m),n(d,t,y,i,m,o,a)}}(0,a,n.value,r,t,e,i)},n.treemapDice=O,n.treemapResquarify=Y,n.treemapSlice=U,n.treemapSliceDice=function(n,r,t,e,i){(1&n.depth?U:O)(n,r,t,e,i)},n.treemapSquarify=X,Object.defineProperty(n,"__esModule",{value:!0})}));
+
+</script>
+<style>
+  :root {
+    --bg:        #0E1117;
+    --bg-soft:   #141923;
+    --panel:    #181E29;
+    --panel-2:  #1F2632;
+    --ink:      #E7E2D6;
+    --ink-soft: #A8AFBC;
+    --ink-mute: #6B7585;
+    --rule:     #262D3B;
+    --accent:   #C9A87C;     /* warm gold for highlights */
+    --accent-2: #7BA7C7;     /* slate blue */
+    --danger:   #C97B7B;
+
+    /* circle depth ramp — deep petrol foundation for outer rings,
+       warming through slate toward an amber accent for the deepest leaves.
+       Interpolated smoothly in colorForDepth() so every depth gets its own shade */
+    --d0: #1E3A4A;   /* deep petrol — rich outer foundation */
+    --d1: #2E5566;
+    --d2: #4F7889;
+    --d3: #7DA0AE;
+    --d4: #B6CDD5;
+    --d5: #E8C77E;   /* warm amber — leaves break visually from the cool stack */
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: 'Newsreader', Georgia, serif;
+    font-feature-settings: "ss01", "ss02";
+    overflow: hidden;
+    background-image:
+      radial-gradient(1200px 600px at 80% -10%, rgba(123,167,199,0.06), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(201,168,124,0.05), transparent 60%);
+  }
+
+  .app {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+    gap: 0;
+  }
+
+  /* ── HEADER ─────────────────────────────────────────────────────────── */
+  header {
+    grid-column: 1 / -1;
+    padding: 22px 32px 18px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--rule);
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .brand .mark {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 1;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 30px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .brand .mark em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .brand .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    padding: 3px 9px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+  }
+  .focus-block {
+    text-align: right;
+    max-width: 60vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+  .focus-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-variation-settings: "opsz" 96;
+    font-size: 22px;
+    font-weight: 350;
+    color: var(--ink);
+    line-height: 1.05;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  .breadcrumbs {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+    max-width: 100%;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .breadcrumbs .sep { color: var(--ink-mute); margin: 0 6px; }
+  .breadcrumbs .crumb {
+    cursor: pointer;
+    transition: color 120ms ease;
+  }
+  .breadcrumbs .crumb:hover { color: var(--accent); }
+  .breadcrumbs .current { color: var(--accent); cursor: default; }
+  .breadcrumbs .current:hover { color: var(--accent); }
+
+  /* ── CANVAS ─────────────────────────────────────────────────────────── */
+  .canvas-wrap {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at center, var(--bg-soft) 0%, var(--bg) 95%);
+  }
+  /* When a node is focused, this overlay fills the canvas with that node's
+     color, replacing the default gradient. SVG content renders above it. */
+  .canvas-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: var(--focus-bg, transparent);
+    opacity: 0;
+    transition: opacity 750ms cubic-bezier(0.65, 0, 0.35, 1),
+                background-color 750ms cubic-bezier(0.65, 0, 0.35, 1);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .canvas-wrap.has-focus::before { opacity: 1; }
+  #stage {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: grab;
+    touch-action: none;
+  }
+  #stage:active, #stage.dragging { cursor: grabbing; }
+
+  .node-circle {
+    cursor: pointer;
+    vector-effect: non-scaling-stroke;
+    transition: opacity 600ms cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .node-circle:hover {
+    stroke: var(--accent) !important;
+    stroke-width: 1.8 !important;
+    filter: drop-shadow(0 0 14px rgba(201,168,124,0.35));
+  }
+  .node-circle.hidden-by-focus {
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* The focused circle itself fades to invisible (its color now lives in
+     the background overlay) but still listens for clicks to "go up". */
+  .node-circle.is-focus-bg {
+    opacity: 0;
+  }
+  .node-circle.is-focus-bg:hover {
+    stroke: none !important;
+    stroke-width: 0 !important;
+    filter: none;
+  }
+
+  .node-label {
+    pointer-events: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    fill: var(--ink);
+    text-anchor: middle;
+    dominant-baseline: central;
+    paint-order: stroke;
+    stroke: rgba(14,17,23,0.92);
+    stroke-width: 3px;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+    transition: opacity 320ms ease-out;
+  }
+  .node-label.pinned {
+    /* sticky ancestor label — slightly heavier outline for legibility */
+    stroke-width: 4px;
+  }
+  .node-label.internal {
+    fill: var(--ink);
+    font-weight: 600;
+  }
+  .node-label.leaf {
+    fill: #1A1F2A;
+    stroke: none;
+  }
+
+  .legend {
+    position: absolute;
+    bottom: 20px;
+    left: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: rgba(20,25,35,0.7);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+  }
+  .legend .ramp {
+    width: 110px;
+    height: 10px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    background: linear-gradient(
+      to right,
+      var(--d0), var(--d1), var(--d2), var(--d3), var(--d4), var(--d5)
+    );
+  }
+  .legend small { color: var(--ink-mute); }
+
+  .stage-overlay-tl {
+    position: absolute;
+    top: 18px;
+    left: 22px;
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 13px;
+    color: var(--ink-mute);
+    letter-spacing: 0.01em;
+  }
+
+  /* ── PANEL ──────────────────────────────────────────────────────────── */
+  aside {
+    border-left: 1px solid var(--rule);
+    background: var(--panel);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .panel-section {
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .panel-section h2 {
+    margin: 0 0 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--ink-mute);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .panel-section h2::before {
+    content: '';
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  /* dataset dropdown */
+  .ds-select {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    color: var(--ink);
+    padding: 13px 38px 13px 16px;
+    border-radius: 6px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 15px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%23C9A87C' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round' d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+    background-position: right 16px center;
+    background-repeat: no-repeat;
+    transition: border-color 140ms ease;
+  }
+  .ds-select:hover { border-color: var(--ink-mute); }
+  .ds-select:focus { outline: none; border-color: var(--accent); }
+  .ds-select option { background: var(--panel); color: var(--ink); font-family: 'Newsreader', serif; font-style: normal; }
+
+  .field-label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+
+  /* ── Edit mode UI ──────────────────────────────────────────────────── */
+  .edit-switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .edit-switch input { display: none; }
+  .switch-track {
+    width: 38px; height: 22px;
+    border-radius: 11px;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    position: relative;
+    transition: background 160ms ease, border-color 160ms ease;
+    flex: 0 0 auto;
+  }
+  .switch-thumb {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--ink-mute);
+    transition: transform 160ms ease, background 160ms ease;
+  }
+  .edit-switch input:checked + .switch-track {
+    background: rgba(201,168,124,0.25);
+    border-color: var(--accent);
+  }
+  .edit-switch input:checked + .switch-track .switch-thumb {
+    transform: translateX(16px);
+    background: var(--accent);
+  }
+  .switch-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+  }
+  .history-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .history-btn {
+    flex: 1;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+    padding: 7px 10px;
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 140ms ease;
+  }
+  .history-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--ink); }
+  .history-btn:disabled { opacity: 0.32; cursor: not-allowed; }
+
+  .edit-hint {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--ink-mute);
+    font-style: italic;
+  }
+  .edit-row { margin-bottom: 10px; }
+  .edit-row label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 5px;
+  }
+  .edit-row input {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    color: var(--ink);
+    padding: 9px 12px;
+    border-radius: 5px;
+    font-family: 'Newsreader', serif;
+    font-size: 15px;
+  }
+  .edit-row input:focus { outline: none; border-color: var(--accent); }
+  .edit-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+  .edit-actions { display: flex; gap: 8px; }
+  .edit-actions button, .edit-export-btn {
+    flex: 1;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+    padding: 8px 10px;
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 140ms ease;
+  }
+  .edit-actions button:hover:not(:disabled), .edit-export-btn:hover {
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+  .edit-actions button:disabled { opacity: 0.35; cursor: not-allowed; }
+  .edit-export-row { margin-top: 14px; }
+  .edit-export-btn { width: 100%; }
+  .edit-newick {
+    width: 100%;
+    margin-top: 10px;
+    min-height: 70px;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+    border-radius: 5px;
+    padding: 8px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    line-height: 1.5;
+    resize: vertical;
+    word-break: break-all;
+  }
+
+  /* circles in edit mode: subtle dashed outline to signal draggability */
+  .node-circle.editable {
+    cursor: grab;
+  }
+  .app.edit-mode .node-circle:hover {
+    stroke: var(--accent) !important;
+    stroke-width: 1.4 !important;
+    stroke-dasharray: 4 3;
+  }
+  .node-circle.edit-selected {
+    stroke: #F2C75C !important;
+    stroke-width: 2.4 !important;
+    stroke-dasharray: none !important;
+  }
+  .node-circle.drop-target {
+    stroke: #7CFFB2 !important;
+    stroke-width: 3 !important;
+    stroke-dasharray: none !important;
+    filter: drop-shadow(0 0 12px rgba(124,255,178,0.5));
+  }
+  .node-circle.drag-source {
+    opacity: 0.45;
+  }
+
+  /* floating chip that follows the cursor while dragging to reparent */
+  .drag-ghost {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: rgba(20,26,34,0.97);
+    border: 1.5px solid var(--accent);
+    border-radius: 7px;
+    padding: 8px 13px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+  }
+  .drag-ghost::before {
+    content: '⤧';
+    color: var(--accent);
+    font-size: 15px;
+    margin-right: 2px;
+  }
+  .drag-ghost .dg-name {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .drag-ghost .dg-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+  }
+
+  /* inspector */
+  .inspector {
+    /* sizes to its content; sidebar scrolls if needed */
+  }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 18px;
+  }
+  .stat {
+    border-left: 2px solid var(--rule);
+    padding-left: 12px;
+  }
+  .stat .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 4px;
+  }
+  .stat .val {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 96;
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .stat .val.small {
+    font-size: 16px;
+  }
+
+  .node-card {
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-top: 6px;
+  }
+  .node-card .nm {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 12px;
+    word-break: break-word;
+    line-height: 1.2;
+  }
+  .node-card .nm.placeholder {
+    color: var(--ink-mute);
+    font-style: italic;
+    font-size: 18px;
+  }
+  .node-card .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 9px 0;
+    border-top: 1px dashed var(--rule);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .node-card .row:first-of-type { border-top: none; }
+  .node-card .row .k {
+    color: var(--ink-mute);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    font-size: 10px;
+  }
+  .node-card .row .v { color: var(--ink); font-size: 13px; }
+
+  /* polynomial card */
+  .cite {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink-mute);
+    margin-left: 6px;
+  }
+  .poly-card {
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .poly-meta {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .poly-stat {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .poly-stat .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+  .poly-stat .val {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 96;
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--ink);
+  }
+  .poly-copy {
+    margin-left: auto;
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--ink-mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 140ms ease;
+  }
+  .poly-copy:hover {
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+  .poly-copy.copied {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .poly-body {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.65;
+    color: var(--ink);
+    max-height: 260px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    word-break: break-word;
+    white-space: normal;
+    padding-right: 4px;
+  }
+  .poly-body sup {
+    font-size: 0.72em;
+    vertical-align: super;
+    line-height: 0;
+    color: var(--accent-2);
+    margin-left: 0.5px;
+  }
+  .poly-body .poly-eq {
+    color: var(--ink-mute);
+    margin-right: 4px;
+  }
+  .poly-body .poly-more {
+    color: var(--ink-mute);
+    font-style: italic;
+    font-family: 'Newsreader', serif;
+    font-size: 12px;
+  }
+  .poly-body .poly-placeholder {
+    color: var(--ink-mute);
+    font-style: italic;
+    font-family: 'Newsreader', serif;
+    font-size: 13px;
+  }
+  .poly-body .poly-toobig {
+    color: var(--ink-mute);
+    font-style: italic;
+    font-family: 'Newsreader', serif;
+    font-size: 13px;
+  }
+  .poly-body::-webkit-scrollbar { width: 6px; }
+  .poly-body::-webkit-scrollbar-track { background: transparent; }
+  .poly-body::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+
+  .help {
+    font-family: 'Newsreader', serif;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .help kbd {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    padding: 2px 6px;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    color: var(--ink);
+  }
+
+  /* ── FOOTER ─────────────────────────────────────────────────────────── */
+  footer {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--rule);
+    padding: 10px 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    display: flex;
+    justify-content: space-between;
+    letter-spacing: 0.06em;
+  }
+  footer .right { color: var(--ink-soft); }
+  footer .right strong { color: var(--accent); font-weight: 500; }
+
+  /* tooltip */
+  .tip {
+    position: fixed;
+    pointer-events: none;
+    background: rgba(20,25,35,0.94);
+    border: 1px solid var(--rule);
+    backdrop-filter: blur(8px);
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink);
+    opacity: 0;
+    transition: opacity 120ms;
+    z-index: 50;
+    max-width: 280px;
+  }
+  .tip .t-name { font-family: 'Fraunces', serif; font-style: italic; font-size: 15px; margin-bottom: 4px; }
+  .tip .t-row { color: var(--ink-soft); }
+  .tip .t-row span { color: var(--accent); }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="mark">Venn<em>·</em>Tree</div>
+        <span class="tag">CIRCLE-PACK VIEW</span>
+      </div>
+      <div class="focus-block">
+        <div class="focus-title" id="focus-title">—</div>
+        <div class="breadcrumbs" id="breadcrumbs">
+          <span class="current">root</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="canvas-wrap">
+      <div class="stage-overlay-tl" id="stage-title">— click a node to zoom · click outside to reset —</div>
+      <svg id="stage" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="legend">
+        <span>depth</span>
+        <div class="ramp"></div>
+        <small>shallow → deep</small>
+      </div>
+    </div>
+
+    <aside>
+      <div class="panel-section">
+        <h2>Dataset</h2>
+        <select class="ds-select" id="ds-select">
+          <option value="slide6">Slide 6 demo  ·  6 leaves · synthetic</option>
+          <option value="ha">H3N2 · HA  ·  475 leaves · influenza</option>
+          <option value="fungi">Ascomycota  ·  619 leaves · fungal taxonomy</option>
+        </select>
+      </div>
+
+      <div class="panel-section">
+        <h2>Appearance</h2>
+        <label class="field-label" for="palette-select">depth gradient</label>
+        <select class="ds-select" id="palette-select">
+          <option value="A">Petrol → amber (current)</option>
+          <option value="B">Extended cool → warm</option>
+          <option value="C" selected>Teal → gold (more contrast)</option>
+          <option value="D">Petrol → coral</option>
+          <option value="E">High-contrast banded</option>
+        </select>
+      </div>
+
+      <div class="panel-section">
+        <h2>Edit mode</h2>
+        <label class="edit-switch">
+          <input type="checkbox" id="edit-toggle" />
+          <span class="switch-track"><span class="switch-thumb"></span></span>
+          <span class="switch-label">enable editing</span>
+        </label>
+        <div class="history-row">
+          <button id="undo-btn" class="history-btn" disabled title="Undo (Ctrl/Cmd+Z)">↶ undo</button>
+          <button id="redo-btn" class="history-btn" disabled title="Redo (Ctrl/Cmd+Shift+Z)">redo ↷</button>
+        </div>
+        <div id="edit-panel" style="display:none; margin-top: 14px;">
+          <div id="edit-selection">
+            <div class="edit-hint">Click a circle to select it, then rename / add / delete. Drag a circle onto another to reparent it — its children come along. Drag a circle out onto empty space to split it into its own graph.</div>
+          </div>
+          <div class="edit-export-row">
+            <button id="edit-export" class="edit-export-btn">copy Newick</button>
+          </div>
+          <textarea id="edit-newick-out" class="edit-newick" style="display:none" readonly></textarea>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h2>Tree</h2>
+        <div class="stat-grid">
+          <div class="stat">
+            <div class="lbl">leaves</div>
+            <div class="val" id="stat-leaves">—</div>
+          </div>
+          <div class="stat">
+            <div class="lbl">internal</div>
+            <div class="val" id="stat-internal">—</div>
+          </div>
+          <div class="stat">
+            <div class="lbl">max depth</div>
+            <div class="val" id="stat-depth">—</div>
+          </div>
+          <div class="stat">
+            <div class="lbl">total nodes</div>
+            <div class="val" id="stat-total">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-section inspector">
+        <h2>Inspector</h2>
+        <div class="node-card" id="node-card">
+          <div class="nm placeholder">hover a circle…</div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h2>Polynomial <span class="cite">Liu (2021)</span></h2>
+        <div class="poly-card">
+          <div class="poly-meta">
+            <span class="poly-stat"><span class="lbl">terms</span><span class="val" id="poly-terms">—</span></span>
+            <span class="poly-stat"><span class="lbl">deg</span><span class="val" id="poly-deg">—</span></span>
+            <button class="poly-copy" id="poly-copy" title="copy as plain text">copy</button>
+          </div>
+          <div class="poly-body" id="poly-body">
+            <span class="poly-placeholder">P(T) = y + ∏ P(Tᵢ),&nbsp; P(•) = x</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <footer>
+      <div>NEWICK · NESTED CIRCLE PACKING · d3.pack(R²)</div>
+      <div class="right">prototype · <strong>concept matches slide 6</strong></div>
+    </footer>
+  </div>
+
+  <div class="tip" id="tip"></div>
+
+  <script>
+const HA_NEWICK = "((((((((((((((((((((((((((((((((((A/Murcia/10207/2021:0.0,A/PARIS/09224/2022:0.0,A/Netherlands/10735/2022:0.0,A/Netherlands/10103/2022:0.0,A/Centre/01915/2022:0.0):5.500000000000019E-4,A/Netherlands/10734/2022:6.400000000000017E-4):6.400000000000017E-4,A/PARIS/10105/2022:0.0012700000000000038):5.499999999999949E-4,A/Catalonia/NSVH101717090/2022:6.399999999999947E-4):5.500000000000019E-4,((A/PARIS/09222/2022:0.0,A/Catalonia/NSVH101761579/2022:0.0,A/PARIS/09225/2022:0.0,A/Le_Mans/15006/2022:0.0):5.499999999999949E-4,(A/PARIS/09216/2022:0.0012500000000000011,A/PARIS/09228/2022:5.500000000000019E-4):6.399999999999947E-4):5.500000000000019E-4):5.500000000000019E-4,A/ROUEN/46942/2021:6.400000000000017E-4):5.500000000000019E-4,((A/Ile_de_France/54452/2021:0.0012700000000000003,A/PARIS/09210/2022:0.0012700000000000003):5.500000000000019E-4,(A/Netherlands/10677/2022:6.400000000000017E-4,A/Ile_de_France/50420/2021:6.299999999999986E-4):5.500000000000019E-4):5.500000000000019E-4):5.499999999999949E-4,(((((A/Netherlands/10227/2022:0.0,A/Netherlands/10228/2022:0.0,A/Netherlands/10117/2022:0.0,A/Netherlands/10675/2022:0.0,A/Netherlands/10061/2022:0.0,A/Netherlands/10116/2022:0.0,A/Netherlands/10646/2022:0.0,A/Netherlands/10642/2022:0.0,A/Netherlands/10101/2022:0.0,A/Netherlands/10293/2022:0.0,A/Netherlands/10584/2022:0.0):5.500000000000019E-4,(A/Netherlands/10108/2022:6.399999999999982E-4,A/Netherlands/10751/2022:6.399999999999982E-4):5.500000000000019E-4):5.500000000000019E-4,A/Netherlands/10749/2022:6.400000000000017E-4):5.500000000000019E-4,A/Netherlands/10598/2022:6.400000000000017E-4):0.0012700000000000003,((A/Pays_de_Loire/12924/2022:6.400000000000017E-4,A/Ile_de_France/03787/2022:5.500000000000019E-4):5.500000000000019E-4,A/Ile_de_France/52132/2021:0.0012700000000000003):6.400000000000017E-4):5.499999999999949E-4):6.400000000000017E-4,(((A/SAINT-DENIS/48408/2021:0.0012699999999999934,A/PARIS/09223/2022:0.0012599999999999972):5.500000000000019E-4,A/Monaco/743/2021:5.500000000000019E-4):5.500000000000019E-4,(A/Picardie/50100/2021:6.400000000000017E-4,A/Ile_de_France/52803/2021:6.400000000000017E-4):6.400000000000017E-4):0.0011099999999999999):5.500000000000019E-4,((A/Netherlands/10235/2022:0.0,A/Netherlands/10133/2022:0.0,A/Netherlands/10337/2022:0.0):5.500000000000019E-4,(A/Netherlands/10051/2022:0.0012599999999999972,A/Netherlands/10717/2022:6.399999999999947E-4):5.500000000000019E-4):6.400000000000017E-4):5.500000000000019E-4,((((A/Netherlands/10333/2022:0.0,A/Netherlands/10050/2022:0.0):5.500000000000019E-4,A/Netherlands/10132/2022:6.400000000000017E-4):0.0012700000000000003,(A/England/220640429/2022:0.0012700000000000003,A/Nord_Pas_de_Calais/17070/2022:6.399999999999947E-4):6.400000000000017E-4):5.500000000000019E-4,((A/Netherlands/10068/2022:6.400000000000017E-4,A/Netherlands/10739/2022:6.400000000000017E-4):5.500000000000019E-4,A/Netherlands/10130/2022:6.400000000000017E-4):6.299999999999986E-4):5.500000000000019E-4):5.499999999999949E-4,(A/Nord_Pas_de_Calais/16911/2022:0.0,A/Netherlands/10730/2022:0.0):6.299999999999986E-4):5.500000000000019E-4,(((((A/Netherlands/10114/2022:0.0,A/Netherlands/10745/2022:0.0,A/Netherlands/10769/2022:0.0,A/Netherlands/10152/2022:0.0,A/Netherlands/10147/2022:0.0,A/Netherlands/10115/2022:0.0,A/Netherlands/10748/2022:0.0,A/Netherlands/10246/2022:0.0,A/Netherlands/10166/2022:0.0,A/Netherlands/10257/2022:0.0):5.500000000000019E-4,A/Netherlands/10231/2022:6.400000000000017E-4):5.500000000000019E-4,A/Netherlands/10148/2022:5.500000000000019E-4):6.400000000000017E-4,(A/Netherlands/10251/2022:5.500000000000019E-4,A/Pays_de_Loire/12611/2022:0.0012600000000000042):5.500000000000019E-4):5.499999999999949E-4,A/Netherlands/10335/2022:0.0012700000000000003):5.500000000000019E-4):5.500000000000019E-4,((A/Netherlands/10049/2022:0.0,A/Catalonia/NSVH199820550/2022:0.0,A/ARGENTEUIL/05295/2022:0.0,A/DIJON/48658/2021:0.0,A/Netherlands/10048/2022:0.0,A/Netherlands/10090/2022:0.0,A/Luxembourg/LNS5757539/2021:0.0,A/Netherlands/10069/2022:0.0,A/Netherlands/10402/2022:0.0,A/Ile_de_France/04467/2022:0.0,A/Netherlands/10129/2022:0.0,A/PARIS/50426/2021:0.0,A/Netherlands/10016/2022:0.0,A/Netherlands/10810/2022:0.0,A/Netherlands/10066/2022:0.0):5.500000000000019E-4,(A/Netherlands/10578/2022:6.400000000000017E-4,A/Netherlands/10828/2022:0.003810000000000001):5.500000000000019E-4):5.499999999999949E-4):5.499999999999949E-4,((((((A/Netherlands/10687/2022:6.400000000000017E-4,A/Netherlands/10718/2022:5.500000000000019E-4):5.500000000000019E-4,A/Netherlands/10279/2022:0.0018600000000000005):6.400000000000017E-4,A/Netherlands/10088/2022:0.0012200000000000058):5.499999999999949E-4,(A/Netherlands/10128/2022:0.0012600000000000042,A/Netherlands/10236/2022:6.400000000000017E-4):5.499999999999949E-4):5.500000000000019E-4,(A/Netherlands/10056/2022:6.299999999999986E-4,A/PARIS/09218/2022:0.0012599999999999972):5.500000000000019E-4):5.500000000000019E-4,((A/Netherlands/10725/2022:5.499999999999949E-4,A/Netherlands/10146/2022:6.399999999999947E-4):6.400000000000017E-4,A/Netherlands/10435/2022:0.0012800000000000034):5.500000000000019E-4):5.500000000000019E-4):5.500000000000019E-4,(((A/Catalonia/NSVH101735933/2022:0.0,A/Catalonia/NSVH101748606/2022:0.0,A/Catalonia/NSVH101733715/2022:0.0):0.0012700000000000003,A/Netherlands/10761/2022:6.299999999999986E-4):5.500000000000019E-4,((A/Netherlands/10726/2022:0.0012800000000000034,A/Netherlands/10192/2022:6.300000000000056E-4):7.299999999999945E-4,A/Alsace/16905/2022:0.0030899999999999955):6.400000000000017E-4):5.500000000000019E-4):5.500000000000019E-4,(((((A/Catalonia/NSVH101729016/2022:0.0,A/Catalonia/NSVH101729473/2022:0.0):6.400000000000017E-4,(A/Centre/50421/2021:6.399999999999947E-4,A/Bretagne/18383/2022:0.0025400000000000006):5.500000000000019E-4):5.500000000000019E-4,(A/Mecklenburg-Vorpommern/2/2022:6.299999999999986E-4,A/Bretagne/18387/2022:0.0018900000000000028):6.400000000000017E-4):6.400000000000017E-4,A/Bourgogne/16916/2022:0.0025500000000000037):5.499999999999949E-4,((A/Lisboa/9/2022:0.0,A/Lisboa/8/2022:0.0):0.0012600000000000042,A/Nord_Pas_de_Calais/50101/2021:6.400000000000017E-4):5.499999999999949E-4):5.500000000000019E-4):5.500000000000019E-4,A/Netherlands/10670/2022:6.299999999999986E-4):0.001899999999999999,(((((A/Togo/0247/2021:0.0,A/Togo/0086/2021:0.0,A/Togo/0299/2021:0.0):5.499999999999984E-4,((A/Togo/0219/2021:0.0,A/Togo/0175/2021:0.0):0.0025400000000000006,A/Togo/0171/2021:6.400000000000017E-4):5.499999999999984E-4):5.500000000000019E-4,((A/Togo/0290/2021:6.400000000000017E-4,A/Togo/0172/2021:6.400000000000017E-4):5.499999999999984E-4,(A/Togo/0228/2021:5.499999999999984E-4,A/Togo/0254/2021:6.300000000000021E-4):6.399999999999982E-4):5.500000000000019E-4):5.500000000000019E-4,A/Togo/0108/2021:6.400000000000017E-4):6.399999999999947E-4,A/Togo/0417/2021:0.0012700000000000003):6.400000000000017E-4):5.500000000000019E-4,A/Nigeria/5060/2020:6.399999999999947E-4):5.499999999999949E-4,(((((((((((((A/Togo/0220/2021:0.0,A/Togo/0285/2021:0.0,A/Togo/0197/2021:0.0,A/Togo/0275/2021:0.0,A/Togo/0192/2021:0.0,A/Togo/0246/2021:0.0,A/Togo/0218/2021:0.0):5.499999999999984E-4,(((A/Togo/0212/2021:0.0012599999999999972,A/Togo/0231/2021:6.399999999999982E-4):5.500000000000019E-4,A/Togo/0167/2021:5.500000000000019E-4):5.500000000000019E-4,A/Togo/0211/2021:6.400000000000017E-4):5.499999999999984E-4):6.399999999999982E-4,(A/Abidjan/455/2021:0.0012700000000000003,A/Cote_DIvoire/1626/2021:0.0012799999999999999):6.299999999999986E-4):5.500000000000019E-4,((((((((A/Lisboa/35/2022:0.0,A/Lisboa/65/2022:0.0):5.499999999999984E-4,A/Murcia/10206/2021:6.299999999999986E-4):6.400000000000017E-4,(A/Lyon/CHU/R21.826.95/2021:0.0,A/Chambery/831/2021:0.0):6.400000000000017E-4):6.399999999999982E-4,A/TOURS/37554/2021:0.0012799999999999999):5.500000000000019E-4,A/Murcia/220274/2021:6.400000000000017E-4):6.400000000000017E-4,A/Cote_DIvoire/1798/2021:6.400000000000017E-4):5.499999999999984E-4,((A/Cote_DIvoire/1946/2021:0.0,A/Cote_DIvoire/1496/2021:0.0):5.500000000000019E-4,A/Cote_DIvoire/1801/2021:6.400000000000017E-4):5.499999999999984E-4):5.499999999999984E-4,A/Togo/0404/2021:5.499999999999984E-4):5.500000000000019E-4):5.500000000000019E-4,((A/Togo/0378/2021:5.499999999999984E-4,A/Togo/0361/2021:0.001899999999999999):6.400000000000017E-4,A/Togo/0310/2021:5.500000000000019E-4):6.400000000000017E-4):5.499999999999984E-4,((((((A/Ghana/755/2021:6.399999999999982E-4,A/Ghana/231/2021:0.001899999999999999):5.499999999999984E-4,A/Ghana/1581/2021:5.499999999999984E-4):5.500000000000019E-4,A/Ghana/97/2021:6.400000000000017E-4):5.500000000000019E-4,(A/Togo/1134/2021:6.400000000000017E-4,A/Ghana/167/2021:6.400000000000017E-4):5.500000000000019E-4):6.399999999999982E-4,A/Togo/1597/2021:0.0025400000000000006):6.300000000000021E-4,A/Togo/0295/2021:0.0025400000000000006):5.499999999999984E-4):5.499999999999984E-4,(A/Togo/0074/2021:6.399999999999982E-4,A/Cote_DIvoire/1877/2021:0.0025400000000000006):5.499999999999984E-4):5.500000000000019E-4,A/Togo/0189/2021:6.299999999999986E-4):5.500000000000019E-4,(A/Togo/0103/2021:0.0,A/Togo/0410/2021:0.0,A/Togo/0407/2021:0.0,A/Togo/0138/2021:0.0):5.500000000000019E-4):5.499999999999984E-4,(((((((A/Stockholm/23/2021:0.0,A/England/220200318/2022:0.0,A/Denmark/55/2021:0.0,A/Canarias/550/2022:0.0,A/Denmark/85/2021:0.0,A/Canarias/549/2022:0.0,A/PARIS/09215/2022:0.0,A/Dakar/04/2021:0.0,A/Canarias/551/2022:0.0,A/Canarias/558/2022:0.0,A/Canarias/555/2022:0.0):5.500000000000019E-4,(A/Baleares/837/2022:6.399999999999982E-4,A/Lyon/820/2021:0.001899999999999999):5.500000000000019E-4):5.500000000000019E-4,A/PARIS/49507/2021:6.300000000000021E-4):5.499999999999984E-4,A/Stockholm/19/2021:5.499999999999984E-4):5.499999999999984E-4,A/ROUEN/41246/2021:6.399999999999982E-4):6.400000000000017E-4,(((A/Murcia/10211/2021:0.0019099999999999985,A/Canarias/9656/2021:5.499999999999984E-4):0.003169999999999999,A/Nice/742/2021:0.00255):5.499999999999984E-4,(A/Murcia/10396/2021:0.0,A/Dakar/28/2021:0.0):5.499999999999984E-4):5.500000000000019E-4):0.001910000000000002,(((((((A/Cote_DIvoire/1901/2021:0.0,A/Cote_DIvoire/1855/2021:0.0,A/Abidjan/458/2021:0.0):6.400000000000017E-4,(A/Cote_DIvoire/1060/2021:6.299999999999986E-4,A/Cote_DIvoire/1618/2021:0.0012600000000000007):5.500000000000019E-4):5.499999999999984E-4,((A/Cote_DIvoire/1983/2021:6.299999999999986E-4,A/Cote_DIvoire/1982/2021:5.500000000000019E-4):5.500000000000019E-4,A/Cote_DIvoire/1884/2021:6.300000000000021E-4):6.399999999999982E-4):5.499999999999984E-4,(A/Abidjan/457/2021:0.0,A/Cote_DIvoire/1565/2021:0.0,A/Cote_DIvoire/1973/2021:0.0,A/Cote_DIvoire/1620/2021:0.0,A/Cote_DIvoire/1499/2021:0.0):5.499999999999984E-4):5.500000000000019E-4,((A/Cote_DIvoire/1800/2021:6.399999999999982E-4,A/Cote_DIvoire/1501/2021:5.499999999999984E-4):6.399999999999982E-4,A/Cote_DIvoire/1650/2021:6.399999999999982E-4):5.500000000000019E-4):5.500000000000019E-4,A/Cote_DIvoire/1270/2021:6.400000000000017E-4):6.399999999999982E-4,A/Cote_DIvoire/1049/2021:6.399999999999982E-4):6.300000000000021E-4):5.499999999999984E-4):0.0012700000000000003,A/Nigeria/5063/2020:6.400000000000017E-4):5.499999999999984E-4,A/Togo/0176/2021:6.399999999999982E-4):5.500000000000019E-4,(A/Nigeria/5066/2020:0.0,A/Togo/0091/2021:0.0):5.500000000000019E-4):5.500000000000019E-4):5.500000000000019E-4,(((((((((((((((((((((((((A/SouthAfrica/PET20405/2021:0.0,A/SouthAfrica/PET20333/2021:0.0):5.499999999999984E-4,A/SouthAfrica/PET20505/2021:6.500000000000013E-4):5.499999999999984E-4,(A/SouthAfrica/PET20345/2021:5.499999999999984E-4,A/SouthAfrica/PPET20447/2021:0.00213):5.499999999999984E-4):5.499999999999984E-4,A/SouthAfrica/PET20326/2021:5.499999999999984E-4):5.499999999999984E-4,A/SouthAfrica/PET20554/2021:5.499999999999984E-4):5.499999999999984E-4,A/South_Africa/16316/2021:6.400000000000017E-4):5.499999999999984E-4,(A/South_Africa/15060/2021:6.400000000000017E-4,A/South_Africa/14072/2021:0.003179999999999999):5.499999999999984E-4):5.499999999999984E-4,(((A/South_Africa/15627/2021:0.0,A/South_Africa/15630/2021:0.0):6.400000000000017E-4,(A/South_Africa/15289/2021:7.300000000000015E-4,A/SouthAfrica/PET20279/2021:0.0020300000000000006):5.399999999999988E-4):5.499999999999984E-4,(A/South_Africa/15549/2021:0.0,A/South_Africa/13023/2021:0.0,A/South_Africa/14872/2021:0.0):5.499999999999984E-4):5.499999999999984E-4):6.400000000000017E-4,(((((A/South_Africa/15327/2021:0.0,A/South_Africa/16489/2021:0.0):5.499999999999984E-4,(A/SouthAfrica/PET20744/2021:5.499999999999984E-4,A/South_Africa/16493/2021:0.0017500000000000016):5.499999999999984E-4):5.499999999999984E-4,(A/Wisconsin/14/2021:6.400000000000017E-4,A/South_Africa/16477/2021:0.0012799999999999999):5.499999999999984E-4):5.499999999999984E-4,A/SouthAfrica/PET20468/2021:6.400000000000017E-4):5.499999999999984E-4,A/SouthAfrica/PET20528/2021:5.499999999999984E-4):5.499999999999984E-4):6.299999999999986E-4,A/Qatar/16-VI-21-3837766/2021:0.001899999999999999):5.500000000000019E-4,A/Nigeria/6062/2021:5.500000000000019E-4):5.499999999999984E-4,(A/Togo/1885/2021:6.399999999999982E-4,A/Togo/1454/2021:0.0012799999999999999):6.300000000000021E-4):5.499999999999984E-4,A/Niger/10048/2021:0.005079999999999998):6.300000000000021E-4,A/Niger/9983/2021:0.005080000000000001):5.499999999999984E-4,(A/Ghana/1243/2021:6.399999999999982E-4,A/Alsace/48917/2021:6.399999999999982E-4):5.499999999999984E-4):5.500000000000019E-4,A/Nigeria/6013/2021:5.500000000000019E-4):5.500000000000019E-4,A/Nigeria/6098/2021:5.500000000000019E-4):5.499999999999984E-4,A/Nigeria/6079/2021:6.399999999999982E-4):5.499999999999984E-4,A/Nigeria/6097/2021:5.499999999999984E-4):5.500000000000019E-4,((((((((A/Niger/10236/2021:0.0,A/Niger/9995/2021:0.0):5.499999999999984E-4,(A/Niger/10186/2021:6.400000000000017E-4,A/Niger/10217/2021:6.400000000000017E-4):5.499999999999984E-4):5.499999999999984E-4,A/Niger/10183/2021:6.299999999999986E-4):6.400000000000017E-4,A/Niger/10126/2021:0.0012700000000000003):0.0012700000000000003,(A/Niger/10090/2021:6.400000000000017E-4,A/Niger/10073/2021:0.0012600000000000007):0.0012700000000000003):5.500000000000019E-4,(((A/Togo/1274/2021:0.0,A/Togo/1486/2021:0.0):5.499999999999984E-4,A/Togo/1439/2021:6.399999999999982E-4):6.400000000000017E-4,(A/Togo/1410/2021:0.0,A/Togo/1363/2021:0.0):6.400000000000017E-4):5.500000000000019E-4):5.499999999999984E-4,A/Togo/1451/2021:5.499999999999984E-4):5.499999999999984E-4,A/Togo/1521/2021:5.499999999999984E-4):6.400000000000017E-4):5.500000000000019E-4,(A/Nigeria/5952/2021:0.0,A/Nigeria/5950/2021:0.0,A/Nigeria/6000/2021:0.0):5.500000000000019E-4):5.499999999999984E-4,A/England/214080971/2021:0.0019099999999999985):6.300000000000021E-4,(A/Togo/1288/2021:0.0018899999999999993,A/Nigeria/6011/2021:0.0012700000000000003):6.400000000000017E-4):5.499999999999984E-4,(A/Nigeria/5951/2021:0.0019000000000000024,A/Nigeria/6018/2021:6.399999999999982E-4):0.0012700000000000003):6.399999999999982E-4,(((A/Niger/8784/2021:0.0,A/Niger/8699/2021:0.0):6.400000000000017E-4,A/Niger/8836/2021:0.0012700000000000003):5.499999999999984E-4,A/Niger/8970/2021:5.499999999999984E-4):5.499999999999984E-4):6.400000000000017E-4):0.0012700000000000003,A/Nigeria/5065/2020:0.0012700000000000003):0.0012700000000000003,A/Hawaii/70/2019:6.400000000000017E-4):5.500000000000019E-4,(A/Baltimore/R0720/2020:0.0,A/Baltimore/R0736/2020:0.0):5.499999999999984E-4):5.499999999999984E-4,A/Togo/0319/2021:0.007640000000000001):6.300000000000021E-4,(((((((((A/Togo/0346/2021:0.0,A/Togo/0097/2021:0.0,A/Togo/0136/2021:0.0,A/Togo/64/2021:0.0,A/Togo/0079/2021:0.0,A/Togo/0146/2021:0.0,A/Togo/0130/2021:0.0,A/Togo/0362/2021:0.0,A/Togo/0118/2021:0.0,A/Togo/0256/2021:0.0):5.499999999999984E-4,((A/Togo/0132/2021:0.0,A/Togo/0096/2021:0.0,A/Togo/0100/2021:0.0):6.400000000000017E-4,(A/Togo/0312/2021:0.0,A/Togo/45/2021:0.0):5.499999999999984E-4):6.400000000000017E-4):5.499999999999984E-4,A/Togo/44/2021:5.499999999999984E-4):5.499999999999984E-4,((((((A/Togo/0274/2021:0.0,A/Togo/0284/2021:0.0):5.499999999999984E-4,A/Togo/0286/2021:5.499999999999984E-4):0.0012600000000000007,(A/Togo/0092/2021:0.0,A/Togo/0267/2021:0.0):6.400000000000017E-4):5.499999999999984E-4,(((A/Togo/0099/2021:0.0,A/Togo/0071/2021:0.0):6.400000000000017E-4,A/Togo/0160/2021:0.0012700000000000003):5.499999999999984E-4,A/Togo/0095/2021:6.299999999999986E-4):5.499999999999984E-4):5.499999999999984E-4,(A/Togo/0291/2021:0.0,A/Togo/0227/2021:0.0):6.400000000000017E-4):5.499999999999984E-4,A/Togo/0163/2021:5.499999999999984E-4):5.499999999999984E-4):5.499999999999984E-4,(((((A/Togo/0115/2021:0.0,A/Togo/0242/2021:0.0,A/Togo/0190/2021:0.0,A/Togo/0125/2021:0.0,A/Togo/0153/2021:0.0):5.499999999999984E-4,(A/Togo/0217/2021:6.400000000000017E-4,A/Togo/0094/2021:0.0012700000000000003):5.499999999999984E-4):5.499999999999984E-4,(A/Togo/0257/2021:0.0,A/Togo/0263/2021:0.0):6.400000000000017E-4):5.499999999999984E-4,A/Togo/0140/2021:6.400000000000017E-4):6.400000000000017E-4,A/Togo/0168/2021:6.400000000000017E-4):5.499999999999984E-4):6.299999999999986E-4,((((((A/Ghana/1348/2021:5.499999999999984E-4,A/Ghana/182/2021:5.499999999999984E-4):0.0019099999999999985,A/Ghana/1894/2021:6.400000000000017E-4):6.299999999999986E-4,A/Ghana/64/2021:6.400000000000017E-4):6.400000000000017E-4,A/Ghana/138/2020:0.001899999999999999):5.499999999999984E-4,(A/Niger/8247/2020:0.0,A/Niger/8309/2020:0.0):5.499999999999984E-4):5.499999999999984E-4,((A/Niger/8327/2020:6.400000000000017E-4,A/Niger/8315/2020:5.499999999999984E-4):0.0012799999999999999,A/Niger/8661/2020:0.0012700000000000003):5.499999999999984E-4):6.299999999999986E-4):5.500000000000019E-4,((((((A/Togo/0226/2021:0.0,A/Togo/0297/2021:0.0):5.499999999999984E-4,A/Togo/0308/2021:6.400000000000017E-4):5.499999999999984E-4,(A/Togo/0093/2021:0.0,A/Togo/0229/2021:0.0):6.299999999999986E-4):0.0019099999999999985,((A/Togo/0234/2021:5.499999999999984E-4,A/Togo/0266/2021:6.400000000000017E-4):0.0019099999999999985,A/Niger/8306/2020:6.400000000000017E-4):5.499999999999984E-4):6.600000000000009E-4,(((A/Cote_DIvoire/1502/2021:0.0,A/Cote_DIvoire/1040/2021:0.0):5.499999999999984E-4,(A/Cote_DIvoire/1051/2021:5.499999999999984E-4,A/Cote_DIvoire/1802/2021:6.400000000000017E-4):5.499999999999984E-4):5.499999999999984E-4,(A/Cote_DIvoire/1211/2021:5.499999999999984E-4,A/Cote_DIvoire/1624/2021:6.400000000000017E-4):0.0012700000000000003):0.0018899999999999993):6.400000000000017E-4,A/Niger/8175/2020:0.0038000000000000013):5.500000000000019E-4):5.499999999999984E-4,(((A/Togo/858/2020:0.0,A/Togo/865/2020:0.0,A/Togo/792/2020:0.0,A/Togo/847/2020:0.0,A/Togo/852/2020:0.0):5.499999999999984E-4,((A/Togo/878/2020:6.400000000000017E-4,A/Togo/869/2020:5.499999999999984E-4):5.499999999999984E-4,A/Togo/0112/2021:6.400000000000017E-4):5.499999999999984E-4):6.500000000000013E-4,(((A/Togo/905/2020:6.400000000000017E-4,A/Togo/0135/2021:0.0012700000000000003):6.400000000000017E-4,(A/Niger/8832/2021:0.004470000000000002,A/Togo/897/2020:8.799999999999988E-4):0.0016700000000000013):5.499999999999984E-4,(((A/Cote_DIvoire/1652/2021:0.0012700000000000003,A/Cote_DIvoire/1467/2021:6.400000000000017E-4):6.299999999999986E-4,A/Togo/0164/2021:5.499999999999984E-4):6.299999999999986E-4,A/Niger/8318/2020:0.0012799999999999999):5.499999999999984E-4):5.500000000000019E-4):5.499999999999984E-4):5.499999999999984E-4,A/Nigeria/5072/2020:0.0031899999999999984):0.0037400000000000003):5.499999999999984E-4,(A/Nagaski/8/2020:0.0,A/NAGASAKI/8/2020:0.0):0.005739999999999999):6.300000000000021E-4,A/Guangdong-Maonan/SWL1536/2019:5.499999999999984E-4):5.499999999999984E-4,((((A/Abidjan/428/2021:5.499999999999984E-4,A/Cote_DIvoire/1953/2021:6.400000000000017E-4):5.499999999999984E-4,A/Cote_DIvoire/1448/2021:0.0012700000000000003):0.0025400000000000006,A/Baltimore/R0713/2020:0.0019000000000000024):5.499999999999984E-4,A/Belgium/IG0080/2020:6.399999999999982E-4):6.300000000000021E-4):0.0019000000000000024,(((((((((((A/Bangladesh/9009/2021:0.0,A/Bangladesh/2020/2021:0.0,A/Bangladesh/1210910004/2021:0.0,A/Bangladesh/2012/2021:0.0,A/Bangladesh/704/2021:0.0,A/Bangladesh/682/2021:0.0,A/Bangladesh/0020/2021:0.0,A/Bangladesh/2227/2021:0.0,A/Bangladesh/1006/2021:0.0,A/Bangladesh/82228/2021:0.0,A/Bangladesh/0014/2021:0.0):5.500000000000019E-4,((((A/Bangladesh/8030/2021:6.400000000000017E-4,A/Bangladesh/2058/2021:0.001910000000000002):5.500000000000019E-4,(A/Bangladesh/9002/2021:5.500000000000019E-4,A/Bangladesh/9005/2021:6.400000000000017E-4):5.500000000000019E-4):5.500000000000019E-4,A/England/214561047/2021:6.400000000000017E-4):6.299999999999986E-4,A/Bangladesh/8018/2021:0.0012700000000000003):5.500000000000019E-4):5.500000000000019E-4,(A/England/220361004/2022:0.001899999999999999,A/Bangladesh/2290/2021:5.500000000000019E-4):6.299999999999986E-4):5.500000000000019E-4,A/Bangladesh/8011/2021:5.500000000000019E-4):5.500000000000019E-4,A/Bangladesh/3210910019/2021:5.500000000000019E-4):5.500000000000019E-4,A/Darwin/27/2021:0.001899999999999999):5.500000000000019E-4,A/Bangladesh/0017/2021:0.0012100000000000027):6.400000000000017E-4,((A/Bangladesh/4028/2021:0.0012700000000000003,A/Bangladesh/4018/2021:0.0012800000000000034):5.500000000000019E-4,A/Bangladesh/4020/2021:6.299999999999986E-4):0.004400000000000001):0.0013099999999999987,((((((A/Manitoba/RV09184/2021:5.500000000000019E-4,A/Bangladesh/898/2021:0.0012700000000000003):5.500000000000019E-4,A/Bangladesh/3039/2021:5.500000000000019E-4):5.500000000000019E-4,A/Bangladesh/3026/2021:6.299999999999986E-4):0.0025499999999999967,(A/India/2152/2021:6.400000000000017E-4,A/Bangladesh/4031/2021:6.400000000000017E-4):0.0031899999999999984):6.299999999999986E-4,((A/Bangladesh/4001/2021:5.500000000000019E-4,A/Bangladesh/4006/2021:5.500000000000019E-4):6.400000000000017E-4,A/Bangladesh/2225/2021:6.400000000000017E-4):0.001899999999999999):5.499999999999984E-4,((((((A/Bangladesh/9031/2021:6.400000000000017E-4,A/Bangladesh/2050/2021:0.0012599999999999972):5.500000000000019E-4,A/Bangladesh/2067/2021:6.400000000000017E-4):5.500000000000019E-4,(A/Bangladesh/1693/2021:0.0,A/Bangladesh/1691/2021:0.0):5.500000000000019E-4):5.500000000000019E-4,A/Bangladesh/8036/2021:6.400000000000017E-4):6.600000000000009E-4,A/India/4610/2021:0.005740000000000002):6.299999999999986E-4,A/India/2140/2021:0.003160000000000003):5.499999999999984E-4):5.499999999999984E-4):6.400000000000017E-4,((((((((((A/Bangladesh/4046/2021:0.0,A/Limoges/635/2021:0.0,A/Bangladesh/2028/2021:0.0):5.500000000000019E-4,(A/Bangladesh/2212/2021:6.400000000000017E-4,A/Bangladesh/3012/2021:6.400000000000017E-4):5.500000000000019E-4):5.500000000000019E-4,(A/Bangladesh/2221/2021:5.500000000000019E-4,A/Bangladesh/2294/2021:0.001899999999999999):6.400000000000017E-4):6.400000000000017E-4,(A/Bangladesh/491/2021:0.0012700000000000003,A/Netherlands/10532/2022:0.001910000000000002):5.500000000000019E-4):5.500000000000019E-4,A/Bangladesh/8015/2021:5.500000000000019E-4):0.0012599999999999972,(((A/Bangladesh/1315/2021:5.500000000000019E-4,A/Bangladesh/2315/2021:5.500000000000019E-4):6.400000000000017E-4,A/Bangladesh/1211011022/2021:0.0012700000000000003):5.500000000000019E-4,(A/Bangladesh/3021/2021:0.0,A/Bangladesh/1211004014/2021:0.0):5.500000000000019E-4):6.400000000000017E-4):5.500000000000019E-4,(A/Sydney/5/2021:0.0,A/Bangladesh/1018/2021:0.0):5.500000000000019E-4):5.500000000000019E-4,(((((((A/Bahrain/3664/2021:0.0,A/Bahrain/4067/2021:0.0):5.500000000000019E-4,A/Bahrain/3174/2021:5.500000000000019E-4):0.0012599999999999972,A/England/220340608/2022:0.001910000000000002):5.500000000000019E-4,A/Stockholm/10/2021:5.500000000000019E-4):5.500000000000019E-4,A/Bangladesh/687/2021:5.500000000000019E-4):5.500000000000019E-4,A/Bangladesh/2230/2021:0.0012700000000000003):5.500000000000019E-4,A/Abu_Dhabi/9657699/2021:6.400000000000017E-4):0.0025499999999999967):0.0012600000000000007,(((((((A/Abu_Dhabi/3420357/2021:6.400000000000017E-4,A/Bangladesh/3022/2021:0.0012700000000000003):5.500000000000019E-4,A/Al_Musana/72128568/2021:5.500000000000019E-4):5.500000000000019E-4,(A/Bangladesh/3051/2021:6.400000000000017E-4,A/England/220580432/2022:0.001899999999999999):5.500000000000019E-4):5.500000000000019E-4,(A/Bangladesh/2062/2021:0.0,A/Bangladesh/3036/2021:0.0):5.500000000000019E-4):5.499999999999984E-4,(A/Bangladesh/3211111022/2021:0.001910000000000002,A/Catalonia/NSVH101731391/2022:6.400000000000017E-4):5.499999999999984E-4):5.499999999999984E-4,(A/Bangladesh/2036/2021:6.399999999999982E-4,A/Bangladesh/3023/2021:6.399999999999982E-4):5.499999999999984E-4):5.499999999999984E-4,A/England/220390256/2022:6.299999999999986E-4):6.400000000000017E-4):5.499999999999984E-4,(((A/Bangladesh/0009/2021:0.0,A/Bangladesh/1210810009/2021:0.0):5.499999999999984E-4,A/Bangladesh/537/2021:6.399999999999982E-4):5.499999999999984E-4,A/Bangladesh/1017/2021:0.001910000000000002):0.0012700000000000003):6.299999999999986E-4):0.00706,(((((A/Baltimore/R0703/2020:5.499999999999984E-4,A/Baltimore/R0716/2020:6.400000000000017E-4):6.299999999999986E-4,A/Baltimore/R0718/2020:6.400000000000017E-4):6.400000000000017E-4,A/Baltimore/R0780/2020:6.400000000000017E-4):6.400000000000017E-4,((A/Fujian-Fengze/SWL11027/2020:6.400000000000017E-4,A/Baltimore/R0735/2020:6.400000000000017E-4):5.499999999999984E-4,A/Baltimore/R0784/2020:6.400000000000017E-4):6.400000000000017E-4):6.400000000000017E-4,(A/Victoria/2570/2019:0.0,A/Wisconsin/588/2019:0.0,A/Baltimore/R0731/2020:0.0):5.499999999999984E-4):5.499999999999984E-4):0.007049999999999997):5.399999999999988E-4,((A/Zambia/0393/2021:0.0,A/Zambia/0354/2021:0.0,A/Zambia/0390/2021:0.0):6.299999999999986E-4,A/Zambia/0678/2021:5.499999999999984E-4):0.009500000000000001):0.003020000000000002,A/South_Africa/16325/2021:0.013150000000000002):0.007795,A/Iowa/23/2020:0.007795);";
+
+  </script>
+
+  <script>
+const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)Xylobotryomycetes,(((Dactylosporaceae,Sclerococcales_incertae_sedis)Sclerococcales)Sclerococcomycetidae,(Tuberculiformaceae)Eurotiomycetes_incertae_sedis,((Coryneliaceae)Coryneliales)Coryneliomycetidae,((Trichocomaceae,Aspergillaceae,Penicillaginaceae,Thermoascaceae,Elaphomycetaceae)Eurotiales,Eurotiomycetidae_incertae_sedis,(Malbrancheaceae,Onygenales_incertae_sedis,Eremascaceae,Arachnomycetaceae,Ascosphaeraceae,Neogymnomycetaceae,Gymnoascaceae,Ajellomycetaceae,Spiromastigoidaceae,Arthrodermataceae,Onygenaceae,Nannizziopsiaceae)Onygenales)Eurotiomycetidae,((Cryptocaliciaceae)Cryptocaliciales)Cryptocaliciomycetidae,((Mycocaliciaceae,Sphinctrinaceae)Mycocaliciales)Mycocaliciomycetidae,((Pleostigmataceae)Chaetothyriomycetidae_incertae_sedis,(Pyrenulales_incertae_sedis,Pyrenulaceae,Rhynchostomataceae)Pyrenulales,(Chaetothyriaceae,Trichomeriaceae,Coccodiniaceae,Cyphellophoraceae,Herpotrichiellaceae,Epibryaceae,Chaetothyriales_incertae_sedis)Chaetothyriales,(Adelococcaceae,Verrucariaceae)Verrucariales,(Phaeomoniellales_incertae_sedis,Celotheliaceae,Phaeomoniellaceae)Phaeomoniellales)Chaetothyriomycetidae)Eurotiomycetes,(Geoglossomycetes_incertae_sedis,(Geoglossaceae)Geoglossales)Geoglossomycetes,((Coniocybaceae)Coniocybales)Coniocybomycetes,(((Xanthopyreniaceae)Collemopsidiales)Collemopsidiomycetes,((Arthoniaceae,Lecanographaceae,Roccellaceae,Opegraphaceae,Roccellographaceae,Chrysotrichaceae,Arthoniales_incertae_sedis,Andreiomycetaceae)Arthoniales,(Phaeococcomycetaceae)Lichenostigmatales)Arthoniomycetes,(((Stigmatodiscaceae)Stigmatodiscales,(Lichenotheliaceae)Lichenotheliales,(Lineolataceae)Lineolatales,Palawaniaceae,Micropeltidaceae,Mycoporaceae,(Superstratomycetaceae)Superstratomycetales,(Asterotexaceae,Asterotexales_incertae_sedis)Asterotexales,Meliolinaceae,Pleurotremataceae,(Neodactylariaceae)Neodactylariales,(Monoblastiaceae)Monoblastiales,(Abrothallaceae,Lichenoconiaceae)Abrothallales,Zopfiaceae,(Microthyriaceae,Microthyriales_incertae_sedis)Microthyriales,(Phaeotrichaceae)Phaeotrichales,Polystomellaceae,(Acrospermales_incertae_sedis,Acrospermaceae)Acrospermales,(Valsariaceae)Valsariales,Parodiopsidaceae,(Eremomycetaceae)Eremomycetales,(Natipusillaceae)Natipusillales,(Asterinales_incertae_sedis,Asterinaceae,Parmulariaceae)Asterinales,(Kirschsteiniotheliaceae,Kirschsteiniotheliales_incertae_sedis)Kirschsteiniotheliales,Pyrenidiaceae,(Polycoccaceae,Trypetheliaceae,Trypetheliales_incertae_sedis)Trypetheliales,(Melanopsaceae,Septorioideaceae,Aplosporellaceae,Saccharataceae,Phyllostictaceae,Planistromellaceae,Botryosphaeriales_incertae_sedis,Botryosphaeriaceae)Botryosphaeriales,Pseudoperisporiaceae,(Tubeufiaceae,Bezerromycetaceae,Tubeufiales_incertae_sedis,Wiesneriomycetaceae)Tubeufiales,(Patellariaceae,Patellariales_incertae_sedis)Patellariales,(Melaspileaceae)Eremithallales,(Minutisphaeraceae,Acrogenosporaceae)Minutisphaerales,(Tenuitholiascaceae,Strigulaceae)Strigulales,(Muyocopronales_incertae_sedis,Muyocopronaceae)Muyocopronales)Dothideomycetes_incertae_sedis,((Aliquandostipitaceae,Jahnulales_incertae_sedis,Manglicolaceae)Jahnulales,(Halojulellaceae,Podonectriaceae)Pleosporomycetidae_incertae_sedis,(Hysteriaceae)Hysteriales,(Rhizodiscinaceae,Aulographaceae)Aulographales,(Argynnaceae,Mytilinidiales_incertae_sedis,Mytilinidiaceae)Mytilinidiales,(Gloniaceae)Gloniales,(Amorosiaceae,Shiraiaceae,Thyridariaceae,Dothidotthiaceae,Neohendersoniaceae,(Pleomonodictydaceae)Pleosporales_incertae_sedis,Testudinaceae,Occultibambusaceae,Hypsostromataceae,Cyclothyriellaceae,Diademaceae,Aigialaceae,Longiostiolaceae,Hermatomycetaceae,Delitschiaceae,Teichosporaceae,(Sulcatisporaceae,Trematosphaeriaceae,Periconiaceae,Massarinaceae,Acrocalymmaceae,Morosphaeriaceae,Dictyosporiaceae,Bambusicolaceae,Didymosphaeriaceae,Lentitheciaceae,Parabambusicolaceae,Massarineae_incertae_sedis)Massarineae,Lindgomycetaceae,Latoruaceae,Phaeoseptaceae,Tetraplosphaeriaceae,Sporormiaceae,Nigrogranaceae,Astrosphaeriellaceae,(Pleosporaceae,Neopyrenochaetaceae,Pseudopyrenochaetaceae,Cucurbitariaceae,Pyrenochaetopsidaceae,Phaeosphaeriaceae,Pleosporineae_incertae_sedis,Leptosphaeriaceae,Parapyrenochaetaceae,Coniothyriaceae,Didymellaceae)Pleosporineae,Corynesporascaceae,Halotthiaceae,Massariaceae,Melanommataceae,Arthopyreniaceae,Lophiostomataceae,Dacampiaceae,Anastomitrabeculiaceae,Paradictyoarthriniaceae,Biatriosporaceae,Torulaceae,Pseudoastrosphaeriellaceae,Pleomassariaceae,Tzeananiaceae,Amniculicolaceae,Lophiotremataceae,Naetrocymbaceae,Anteagloniaceae)Pleosporales,(Venturiales_incertae_sedis,Venturiaceae,Sympoventuriaceae,Cylindrosympodiaceae)Venturiales)Pleosporomycetidae,((Racodiaceae)Racodiales,Dothideomycetidae_incertae_sedis,(Mycosphaerellales_incertae_sedis,Phaeothecoidiellaceae,Cystocoleaceae,Aeminiaceae,Schizothyriaceae,Phillipsiellaceae,Mycosphaerellaceae,Teratosphaeriaceae,Extremaceae,Neodevriesiaceae,Dissoconiaceae)Mycosphaerellales,(Neoantennariellaceae,Paradevriesiaceae,Euantennariaceae,Capnodiales_incertae_sedis,Piedraiaceae,Readerielliopsidaceae,Capnodiaceae,Metacapnodiaceae)Capnodiales,(Comminutisporaceae)Comminutisporales,(Cladosporiaceae)Cladosporiales,(Myriangiales_incertae_sedis,Myriangiaceae,Elsinoaceae)Myriangiales,(Zalariaceae,Dothioraceae,Dothideaceae,Dothideales_incertae_sedis,Saccotheciaceae)Dothideales,(Arthrocatenaceae)Arthrocatenales,(Phaeothecaceae)Phaeothecales,(Neophaeothecaceae)Neophaeothecales)Dothideomycetidae)Dothideomycetes)dothideomyceta,((((Pseudomassariaceae,Appendicosporaceae,Hyponectriaceae,Castanediellaceae,Iodosphaeriaceae,Amphisphaeriaceae,Pseudotruncatellaceae,Phlogicylindriaceae,Clypeophysalosporaceae,Pseudosporidesmiaceae,Beltraniaceae,Sporocadaceae,Apiosporaceae,Vialaeaceae,Melogrammataceae,Oxydothidaceae)Amphisphaeriales,Xylariomycetidae_incertae_sedis,(Nothodactylariaceae,Cainiaceae,Requienellaceae,Coniocessiaceae,Diatrypaceae,Delonicicolaceae,Xylariaceae,Hypoxylaceae,Zygosporiaceae,Xylariales_incertae_sedis,Fasciatisporaceae,Microdochiaceae,Barrmaeliaceae,Graphostromataceae,Spirodecosporaceae,Gyrothricaceae,Pallidoperidiaceae,Leptosilliaceae,Anungitiomycetaceae)Xylariales)Xylariomycetidae,((Koralionastetaceae)Koralionastetales,(Lulworthiaceae,Lulworthiales_incertae_sedis,Spathulosporaceae)Lulworthiales)Lulworthiomycetidae,((Vermiculariopsiellaceae,Vermiculariopsiellales_incertae_sedis)Vermiculariopsiellales,Phomatosporaceae,(Trichosphaeriaceae)Trichosphaeriales,(Meliolaceae)Meliolales,(Pisorisporiales_incertae_sedis,Pisorisporiaceae)Pisorisporiales)Sordariomycetes_incertae_sedis,((Ophiostomatales_incertae_sedis,Ophiostomataceae,Kathistaceae)Ophiostomatales,(Tracyllaceae)Tracyllales,(Xenospadicoidaceae)Xenospadicoidales,(Coniochaetaceae,Cordanaceae)Coniochaetales,(Myrmecridiaceae)Myrmecridiales,(Thyridiaceae)Thyridiales,(Chaetosphaeriales_incertae_sedis,Chaetosphaeriaceae,Pseudocapsulosporaceae,Leptosporellaceae,Linocarpaceae)Chaetosphaeriales,(Togniniaceae)Togniniales,(Jobellisiaceae,Rhamphoriaceae,Amplistromataceae,Atractosporaceae,Conlariaceae,Papulosaceae,Sporidesmiaceae,Cancellidiaceae,(Tirisporellaceae)Tirisporellales,Catabotryaceae)Sordariomycetidae_incertae_sedis,(Asterosporiaceae,Diaporthaceae,Apoharknessiaceae,Dwiroopaceae,Coryneaceae,Pseudomelanconidaceae,Melansporellaceae,Erythrogloeaceae,Tubakiaceae,Cytosporaceae,Gnomoniaceae,Diaporthales_incertae_sedis,Diaporthosporellaceae,Cryphonectriaceae,Diaporthostomataceae,Melanconiellaceae,Lamproconiaceae,Pseudoplagiostomataceae,Stilbosporaceae,Schizoparmaceae,Synnemasporellaceae,Juglanconidaceae,Harknessiaceae,Sydowiellaceae,Melanconidaceae)Diaporthales,(Phaeochoraceae,Telimenaceae,Phyllachorales_incertae_sedis,Phyllachoraceae)Phyllachorales,(Pyriculariaceae,Magnaporthaceae,Ceratosphaeriaceae,Ophioceraceae)Magnaporthales,(Sordariaceae,Diplogelasinosporaceae,Sordariales_incertae_sedis,Schizotheciaceae,Podosporaceae,Naviculisporaceae,Lasiosphaeriaceae,Helminthosphaeriaceae,Chaetomiaceae)Sordariales,(Pleurostomataceae,Calosphaeriaceae)Calosphaeriales,(Annulatascaceae)Annulatascales,(Pinibarreniaceae)Pinibarreniales,(Barbatosphaeriaceae)Barbatosphaeriales,(Boliniaceae)Boliniales,(Cephalothecaceae)Cephalothecales)Sordariomycetidae,((Conioscyphaceae)Conioscyphales,(Coronophoraceae,Chaetosphaerellaceae,Coronophorales_incertae_sedis,Ceratostomataceae,Nitschkiaceae,Bertiaceae,Scortechiniaceae)Coronophorales,(Melanosporaceae)Melanosporales,Hypocreomycetidae_incertae_sedis,(Juncigenaceae,Torpedosporaceae,Etheirophoraceae)Torpedosporales,(Chadefaudiellaceae,Halosphaeriaceae,Ceratocystidaceae,Microascales_incertae_sedis,Microascaceae,Graphiaceae,Gondwanamycetaceae)Microascales,(Savoryellaceae)Savoryellales,(Pleurotheciaceae)Pleurotheciales,(Glomerellales_incertae_sedis,Reticulascaceae,Australiascaceae,Plectosphaerellaceae,Glomerellaceae)Glomerellales,(Fuscosporellaceae)Fuscosporellales,(Valsonectriaceae,Stachybotryaceae,Neoacremoniaceae,Niessliaceae,Nothoacremoniaceae,Nectriaceae,Pseudoniessliaceae,Chrysonectriaceae,Ophiocordycipitaceae,Pseudodiploosporaceae,Bionectriaceae,Tilachlidiaceae,Sarocladiaceae,Clavicipitaceae,Cordycipitaceae,Hypocreaceae,('Verticillium'_clade)Hypocreales_incertae_sedis)Hypocreales,(Falcocladiaceae)Falcocladiales)Hypocreomycetidae)Sordariomycetes,((Pyxidiophoraceae)Pyxidiophorales,(Laboulbeniaceae,Ceratomycetaceae)Laboulbeniales,(Herpomycetaceae)Herpomycetales,Laboulbeniomycetes_incertae_sedis)Laboulbeniomycetes,((Rhytismataceae,Ascodichaenaceae,Cudoniaceae,Rhytismatales_incertae_sedis)Rhytismatales,(Erysiphaceae)Erysiphales,(Marthamycetaceae)Marthamycetales,(Mniaeciaceae,Tympanidaceae,Leotiales_incertae_sedis,Leotiaceae)Leotiales,(Chaetomellaceae)Chaetomellales,(Medeolariaceae)Medeolariales,(Cyttariaceae)Cyttariales,(Micraspidaceae)Micraspidales,(Mitrulaceae,Vibrisseaceae,Neolauriomycetaceae,Rutstroemiaceae,Bryoglossaceae,Solenopeziaceae,Hyaloscyphaceae,Bloxamiaceae,Heterosphaeriaceae,Ploettnerulaceae,Sclerotiniaceae,Cochlearomycetaceae,Vandijckellaceae,Ascocorticiaceae,Tricladiaceae,Patellariopsidaceae,Helotiaceae,Dermateaceae,Discinellaceae,Amorphothecaceae,Neodictyocheirosporaceae,Pezizellaceae,Helotiales_incertae_sedis,Cordieritidaceae,Chlorospleniaceae,Neocrinulaceae,Leptodontidiaceae,Hamatocanthoscyphaceae,Porodiplodiaceae,Mollisiaceae,Chlorociboriaceae,Arachnopezizaceae,Calloriaceae,Gelatinodiscaceae,Chrysodiscaceae,Drepanopezizaceae,Hyphodiscaceae,Pleuroascaceae,Lachnaceae,Godroniaceae,Cenangiaceae)Helotiales,(Phacidiales_incertae_sedis,Helicogoniaceae,Phacidiaceae)Phacidiales,(Thelebolaceae,Pseudeurotiaceae,Holwayaceae)Thelebolales,(Triblidiaceae)Triblidiales,(Lichinodiaceae)Lichinodiales,(Myxotrichaceae)Leotiomycetes_incertae_sedis)Leotiomycetes)sordariomyceta,((Xylonaceae,Xylonales_incertae_sedis)Xylonales)Xylonomycetes,((Zythiaceae)Sareales)Sareomycetes,((Lichinaceae,Gloeoheppiaceae,Porocyphaceae,Phylliscaceae,Lichinellaceae)Lichinales)Lichinomycetes,((Pycnoraceae,Candelariaceae)Candelariales)Candelariomycetes,(((Acarosporaceae)Acarosporales)Acarosporomycetidae,(((Protothelenellaceae,Arthrorhaphidaceae,Thelenellaceae)Ostropomycetidae_incertae_sedis,(Sarrameanaceae,Sarrameneales_incertae_sedis)Sarrameanales,(Porinaceae,Graphidaceae,Sagiolechiaceae,Gyalectaceae,Myeloconidaceae,Odontotremataceae,Solorinellaceae,Ostropales_incertae_sedis,Stictidaceae,Spirographaceae,Coenogoniaceae)Ostropales,(Trapeliaceae)Trapeliales,(Hymeneliaceae)Hymeneliales,(Arctomiaceae)Arctomiales,(Miltideaceae,Microcaliciaceae,Pertusariaceae,Megasporaceae,Icmadophilaceae,Coccotremataceae,Ochrolechiaceae)Pertusariales,(Anamylopsoraceae,Xylographaceae,Baeomycetaceae)Baeomycetales)Ostropomycetidae,((Umbilicariales_incertae_sedis,Ropalosporaceae,Ophioparmaceae,Fuscideaceae,Umbilicariaceae,Elixiaceae)Umbilicariales)Umbilicariomycetidae,(((Placynthiaceae,Collemataceae,Pannariaceae,Coccocarpiaceae)Collematineae,Peltigerales_incertae_sedis,(Massalongiaceae,Vahliellaceae,Lobariaceae,Nephromataceae,Peltigerineae_incertae_sedis,Koerberiaceae,Peltigeraceae)Peltigerineae)Peltigerales,(Physciaceae,Caliciaceae)Caliciales,(Sporastatiaceae,Rhizocarpaceae)Rhizocarpales,(Phlyctidaceae)Lecanoromycetidae_incertae_sedis,((Letrouitiaceae,Brigantiaeaceae)Letrouitineae,(Megalosporaceae,Teloschistaceae)Teloschistineae,Teloschistales_incertae_sedis)Teloschistales,(Leprocaulaceae)Leprocaulales,(Lecideaceae)Lecideales,((Calycidiaceae,Squamarinaceae,Catillariaceae,Biatorellaceae,Mycoblastaceae,Aphanopsidaceae,Carbonicolaceae,Parmeliaceae,Pilocarpaceae,Malmideaceae,Ramboldiaceae,Cladoniaceae,Haematommataceae,Gypsoplacaceae,Lecanorineae_incertae_sedis,Megalariaceae,Stereocaulaceae,Tephromelataceae,Crocyniaceae,Sphaerophoraceae,Micareaceae,Cetradoniaceae,Lecanoraceae,Psoraceae,Ramalinaceae)Lecanorineae,(Lopadiaceae,Ectolechiaceae,Psilolechiaceae)Lecanorales_incertae_sedis)Lecanorales)Lecanoromycetidae)OSLEUM_clade,(Strangosporaceae)Lecanoromycetes_incertae_sedis)Lecanoromycetes,leotiomyceta_incertae_sedis)leotiomyceta,((Thelocarpaceae)Thelocarpales,(Vezdaeaceae)Vezdaeales,Batistiaceae,(Symbiotaphrinaceae)Symbiotaphrinales)Pezizomycotina_incertae_sedis,((Orbiliales_incertae_sedis,Orbiliaceae)Orbiliales)Orbiliomycetes,((Morchellaceae,Discinaceae,Pyronemataceae,Sarcosomataceae,Pezizaceae,Ascobolaceae,Tuberaceae,Chorioactidaceae,Ascodesmidaceae,Glaziellaceae,Helvellaceae,Caloscyphaceae,Geomoriaceae,Pezizales_incertae_sedis,Rhizinaceae,Carbomycetaceae,Sarcoscyphaceae,Strobiloscyphaceae,Karstenellaceae)Pezizales)Pezizomycetes)Pezizomycotina,(Saccharomycotina_incertae_sedis,((Trigonopsidaceae)Trigonopsidales)Trigonopsidomycetes,((Lipomycetaceae)Lipomycetales)Lipomycetes,((Alloascoideaceae)Alloascoideales)Alloascoideomycetes,((Sporopachydermiaceae)Sporopachydermiales)Sporopachydermiomycetes,(((Candida/Dipodascales_clade)Dipodascales_incertae_sedis,Dipodascaceae,Trichomonascaceae)Dipodascales)Dipodascomycetes,((Pachysolenaceae)Alaninales,(Metschnikowiaceae,Cephaloascaceae,Serinales_incertae_sedis,Debaryomycetaceae)Serinales,(Pichiaceae)Pichiales)Pichiomycetes,((Ascoideaceae,Saccharomycopsidaceae)Ascoideales,(Endomycetaceae)Saccharomycetes_incertae_sedis,(Saccharomycodaceae)Saccharomycodales,((Candida/Saccharomycales_clade)Saccharomycetales_incertae_sedis,Saccharomycetaceae)Saccharomycetales,(Wickerhamomycetaceae,Phaffomycetaceae)Phaffomycetales)Saccharomycetes)Saccharomycotina)saccharomyceta,Ascomycota_incertae_sedis,(((Archaeorhizomycetaceae)Archaeorhizomycetales)Archaeorhizomycetes,((Taphrinaceae,Taphrinales_incertae_sedis,Protomycetaceae)Taphrinales)Taphrinomycetes,((Neolectaceae)Neolectales)Neolectomycetes,((Pneumocystaceae)Pneumocystales)Pneumocystomycetes,Taphrinomycotina_incertae_sedis,((Schizosaccharomycetaceae)Schizosaccharomycetales)Schizosaccharomycetes)Taphrinomycotina)Ascomycota)Dikarya)Fungi)Opisthokonta)Eukaryota)cellular_organisms);";
+
+  </script>
+
+  <script>
+  // ─────────────────────────────────────────────────────────────────────
+  //  Lightweight Newick parser (no deps)
+  // ─────────────────────────────────────────────────────────────────────
+  function parseNewick(s) {
+    let i = 0;
+    function readName() {
+      // Names can mix quoted ('foo') and unquoted segments contiguously,
+      // e.g. 'Verticillium'_clade in phyloT exports.
+      let out = '';
+      while (i < s.length && !',():;'.includes(s[i])) {
+        if (s[i] === "'") {
+          i++;
+          while (i < s.length) {
+            if (s[i] === "'") {
+              if (s[i+1] === "'") { out += "'"; i += 2; continue; }
+              i++; break;
+            }
+            out += s[i++];
+          }
+        } else {
+          out += s[i++];
+        }
+      }
+      return out.trim();
+    }
+    function readBranchLen() {
+      if (s[i] !== ':') return null;
+      i++; let start = i;
+      while (i < s.length && !',():;'.includes(s[i])) i++;
+      const n = parseFloat(s.slice(start, i));
+      return isNaN(n) ? null : n;
+    }
+    function readClade() {
+      const node = { name: '', children: [], length: null };
+      if (s[i] === '(') {
+        i++; // consume (
+        node.children.push(readClade());
+        while (s[i] === ',') { i++; node.children.push(readClade()); }
+        if (s[i] !== ')') throw new Error('Expected ) at ' + i);
+        i++; // consume )
+      }
+      node.name = readName();
+      node.length = readBranchLen();
+      return node;
+    }
+    s = s.trim();
+    const root = readClade();
+    if (s[i] === ';') i++;
+    return root;
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
+  //  Demo tree matching slide 6 visually
+  // ─────────────────────────────────────────────────────────────────────
+  const SLIDE6_NEWICK = "(((G3_a,G3_b)Gen2,((G3_c,G3_d)Gen2,Gen2_leaf)Tree2_Gen1)Tree1_Gen1)Some_Parent_Gen0;";
+
+  // give the slide6 tree a more faithful structure with two subtrees
+  const SLIDE6_NEWICK_FIXED =
+    "(((G3a,G3b)Gen2_a)Tree1_Gen1,((G3c,G3d)Gen2_b,Gen2_c)Tree2_Gen1)Some_Parent;";
+
+  // ─────────────────────────────────────────────────────────────────────
+  //  Wire data conversion: Newick → d3 hierarchy
+  // ─────────────────────────────────────────────────────────────────────
+  function toHierarchy(nwkRoot) {
+    // d3.hierarchy wants {name, children}. Newick already matches.
+    // Make sure leaves have value=1 for packing.
+    function walk(n) {
+      const o = { name: n.name || '', length: n.length };
+      if (n.children && n.children.length) {
+        o.children = n.children.map(walk);
+      } else {
+        o.value = 1;
+      }
+      return o;
+    }
+    return walk(nwkRoot);
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
+  //  Color ramp (smoothly interpolated so every depth gets a unique tone,
+  //  even in deep trees where many levels would otherwise share a bucket)
+  // ─────────────────────────────────────────────────────────────────────
+  const cssVar = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  function hexToRgb(h) {
+    h = h.replace('#', '');
+    return [parseInt(h.slice(0,2), 16), parseInt(h.slice(2,4), 16), parseInt(h.slice(4,6), 16)];
+  }
+  function rgbToCss([r,g,b]) { return `rgb(${r|0},${g|0},${b|0})`; }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  // Named palettes (more stops = more distinct shades per depth, less blur).
+  const PALETTES = {
+    A: ['#1E3A4A','#2E5566','#4F7889','#7DA0AE','#B6CDD5','#E8C77E'],
+    B: ['#16303F','#1E4456','#2A5C6E','#3C7585','#5A8F9B','#86ABB0','#B7C9B9','#E2CE93','#F2C75C'],
+    C: ['#10303A','#13414A','#175259','#1F6B6A','#33857A','#5C9E80','#90B484','#C6C684','#EFCD72','#FFC23B'],
+    D: ['#173A4A','#1F5161','#2C6B73','#478379','#6E9A78','#A0AE76','#D4BC76','#EFB06A','#F2925E'],
+    E: ['#0E2E3D','#154A55','#1C6566','#2A8070','#479A72','#74B27A','#A6C487','#D2CE83','#EDC766','#F4B248','#F59E3C'],
+  };
+  let DEPTH_RGBS = PALETTES.C.map(hexToRgb);   // default: teal→gold
+
+  function setPalette(key) {
+    const stops = PALETTES[key] || PALETTES.C;
+    DEPTH_RGBS = stops.map(hexToRgb);
+    // also update the legend ramp gradient
+    const ramp = document.querySelector('.legend-ramp, .ramp');
+    if (ramp) ramp.style.background = 'linear-gradient(90deg, ' + stops.join(', ') + ')';
+  }
+
+  function colorForDepth(d, maxD) {
+    const last = DEPTH_RGBS.length - 1;
+    if (maxD <= 0) return rgbToCss(DEPTH_RGBS[0]);
+    const t = Math.min(1, d / maxD);
+    const pos = t * last;            // 0..last continuous
+    const i = Math.min(last - 1, Math.floor(pos));
+    const f = pos - i;
+    const a = DEPTH_RGBS[i], b = DEPTH_RGBS[i + 1];
+    return rgbToCss([lerp(a[0], b[0], f), lerp(a[1], b[1], f), lerp(a[2], b[2], f)]);
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
+  //  Stage state
+  // ─────────────────────────────────────────────────────────────────────
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const svg = document.getElementById('stage');
+  const tip = document.getElementById('tip');
+  let currentRoot = null;       // d3 hierarchy of the ACTIVE tree (focus belongs to it)
+  let currentFocus = null;
+  let currentMaxDepth = 0;
+  let worldG = null;            // outer <g> carrying the shared pan/zoom transform
+  let packG = null;             // inner <g> of the ACTIVE tree (kept for back-compat)
+
+  // ── Forest model ────────────────────────────────────────────────────────
+  // The canvas is a shared "world". Each tree is one entry in `forest`:
+  //   { data, hierarchy, g, ox, oy, size, maxDepth }
+  // where (ox,oy) is the tree's center offset in world coords, `g` is its
+  // own <g> (child of worldG), and `data` is the editable plain-object root.
+  // A single-tree document is just a forest of length 1.
+  let forest = [];
+  let activeTreeIndex = 0;       // which tree currentFocus / edits belong to
+
+  // ── Editing state ──────────────────────────────────────────────────────
+  // Each tree's `data` is the source of truth for edits to that tree. Edits
+  // mutate the data object then re-render. d3 nodes back-reference their data
+  // via d.data so a clicked/dragged circle maps to the editable object.
+  let currentRootData = null;    // active tree's data root (= forest[activeTreeIndex].data)
+  let editMode = false;
+  let editSelection = null;   // the data object currently selected for edit ops
+
+  function setAttrs(el, attrs) {
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+  }
+  function makeEl(tag, attrs={}) {
+    const el = document.createElementNS(SVG_NS, tag);
+    setAttrs(el, attrs);
+    return el;
+  }
+
+  function showTip(evt, d) {
+    const isLeaf = !d.children || d.children.length === 0;
+    const bl = (d.data.length != null) ? `<div class="t-row">branch <span>${d.data.length.toExponential(2)}</span></div>` : '';
+    tip.innerHTML = `
+      <div class="t-name">${d.data.name || '(unnamed)'}</div>
+      <div class="t-row">depth <span>${d.depth}</span> · ${isLeaf ? 'leaf' : 'internal'}</div>
+      ${isLeaf ? '' : `<div class="t-row">descendants <span>${d.descendants().length - 1}</span></div>`}
+      ${bl}
+    `;
+    tip.style.opacity = 1;
+    moveTip(evt);
+  }
+  function moveTip(evt) {
+    const pad = 14;
+    let x = evt.clientX + pad;
+    let y = evt.clientY + pad;
+    const r = tip.getBoundingClientRect();
+    if (x + r.width > window.innerWidth)  x = evt.clientX - r.width - pad;
+    if (y + r.height > window.innerHeight) y = evt.clientY - r.height - pad;
+    tip.style.left = x + 'px';
+    tip.style.top  = y + 'px';
+  }
+  function hideTip() { tip.style.opacity = 0; }
+
+  // ─────────────────────────────────────────────────────────────────────
+  //  Liu (2021) tree-distinguishing polynomial.
+  //  P(•) = x   (leaf)
+  //  P(T) = y + ∏ P(Tᵢ)   (internal node with children Tᵢ)
+  //
+  //  Each polynomial is a Map "i,j" → integer coefficient,
+  //  representing Σ c_ij · x^i · y^j.
+  //  Computed lazily and cached on the d3 hierarchy node.
+  //  POLY_SIZE_CAP guards against explosion in very large subtrees;
+  //  if the polynomial would exceed this many monomials, we return null
+  //  and show a "too large" notice instead of blocking the UI.
+  // ─────────────────────────────────────────────────────────────────────
+  const POLY_SIZE_CAP = 5000;
+
+  function polyMul(a, b) {
+    const out = new Map();
+    for (const [ka, ca] of a) {
+      const [ia, ja] = ka.split(',');
+      const ix = +ia, jy = +ja;
+      for (const [kb, cb] of b) {
+        const [ib, jb] = kb.split(',');
+        const key = (ix + +ib) + ',' + (jy + +jb);
+        out.set(key, (out.get(key) || 0) + ca * cb);
+      }
+    }
+    return out;
+  }
+
+  function computePolynomial(node) {
+    if (node._poly !== undefined) return node._poly;
+    // leaf → x
+    if (!node.children || node.children.length === 0) {
+      const p = new Map();
+      p.set('1,0', 1);
+      node._poly = p;
+      return p;
+    }
+    // internal → y + ∏ children
+    let prod = new Map();
+    prod.set('0,0', 1); // multiplicative identity
+    for (const ch of node.children) {
+      const cp = computePolynomial(ch);
+      if (cp === null) { node._poly = null; return null; }
+      prod = polyMul(prod, cp);
+      if (prod.size > POLY_SIZE_CAP) { node._poly = null; return null; }
+    }
+    prod.set('0,1', (prod.get('0,1') || 0) + 1);
+    node._poly = prod;
+    return prod;
+  }
+
+  function polyTotalDegree(p) {
+    let d = 0;
+    for (const k of p.keys()) {
+      const c = k.indexOf(',');
+      const total = (+k.slice(0, c)) + (+k.slice(c + 1));
+      if (total > d) d = total;
+    }
+    return d;
+  }
+
+  // Sort: descending total degree, then descending x degree.
+  function polyTermsSorted(p) {
+    const terms = [];
+    for (const [k, c] of p) {
+      if (c === 0) continue;
+      const idx = k.indexOf(',');
+      terms.push([+k.slice(0, idx), +k.slice(idx + 1), c]);
+    }
+    terms.sort((a, b) => {
+      const da = a[0] + a[1], db = b[0] + b[1];
+      if (db !== da) return db - da;
+      return b[0] - a[0];
+    });
+    return terms;
+  }
+
+  function formatTerm(i, j, c, isFirst) {
+    let s = '';
+    if (isFirst) {
+      if (c < 0) s += '−';
+    } else {
+      s += c < 0 ? ' − ' : ' + ';
+    }
+    const ac = Math.abs(c);
+    const hasVar = i > 0 || j > 0;
+    if (ac !== 1 || !hasVar) s += ac;
+    if (i > 0) s += 'x' + (i > 1 ? `<sup>${i}</sup>` : '');
+    if (j > 0) s += 'y' + (j > 1 ? `<sup>${j}</sup>` : '');
+    return s;
+  }
+  function formatTermPlain(i, j, c, isFirst) {
+    let s = '';
+    if (isFirst) {
+      if (c < 0) s += '-';
+    } else {
+      s += c < 0 ? ' - ' : ' + ';
+    }
+    const ac = Math.abs(c);
+    const hasVar = i > 0 || j > 0;
+    if (ac !== 1 || !hasVar) s += ac;
+    if (i > 0) s += 'x' + (i > 1 ? '^' + i : '');
+    if (j > 0) s += 'y' + (j > 1 ? '^' + j : '');
+    return s;
+  }
+
+  function polyToHTML(p, maxTerms = 24) {
+    const terms = polyTermsSorted(p);
+    const truncated = terms.length > maxTerms;
+    const shown = truncated ? terms.slice(0, maxTerms) : terms;
+    let html = '<span class="poly-eq">P =</span> ';
+    html += shown.map((t, i) => formatTerm(t[0], t[1], t[2], i === 0)).join('');
+    if (truncated) {
+      html += ` <span class="poly-more">… +${(terms.length - maxTerms).toLocaleString()} more terms</span>`;
+    }
+    return html;
+  }
+  function polyToPlain(p) {
+    const terms = polyTermsSorted(p);
+    return 'P = ' + terms.map((t, i) => formatTermPlain(t[0], t[1], t[2], i === 0)).join('');
+  }
+
+  let currentPolyPlainText = '';
+
+  function updatePolynomial(d) {
+    const body = document.getElementById('poly-body');
+    const tEl  = document.getElementById('poly-terms');
+    const dEl  = document.getElementById('poly-deg');
+    if (!d) {
+      body.innerHTML = '<span class="poly-placeholder">P(T) = y + ∏ P(Tᵢ),&nbsp; P(•) = x</span>';
+      tEl.textContent = '—';
+      dEl.textContent = '—';
+      currentPolyPlainText = '';
+      return;
+    }
+    const p = computePolynomial(d);
+    if (p === null) {
+      body.innerHTML = '<span class="poly-toobig">subtree too large — exceeds ' + POLY_SIZE_CAP.toLocaleString() + '-monomial display budget. zoom into a smaller clade to compute.</span>';
+      tEl.textContent = '>' + (POLY_SIZE_CAP / 1000) + 'k';
+      dEl.textContent = '—';
+      currentPolyPlainText = '';
+      return;
+    }
+    tEl.textContent = p.size.toLocaleString();
+    dEl.textContent = polyTotalDegree(p);
+    body.innerHTML = polyToHTML(p);
+    currentPolyPlainText = polyToPlain(p);
+  }
+
+  // copy button
+  document.getElementById('poly-copy').addEventListener('click', async () => {
+    if (!currentPolyPlainText) return;
+    try {
+      await navigator.clipboard.writeText(currentPolyPlainText);
+      const btn = document.getElementById('poly-copy');
+      btn.textContent = 'copied';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 1200);
+    } catch (e) {
+      // fall back to selecting text
+    }
+  });
+
+  function updateInspector(d) {
+    const card = document.getElementById('node-card');
+    if (!d) {
+      card.innerHTML = '<div class="nm placeholder">hover a circle…</div>';
+      return;
+    }
+    const isLeaf = !d.children || d.children.length === 0;
+    const displayName = d.data.name || (d.depth === 0 ? 'root' : '(unnamed)');
+    card.innerHTML = `
+      <div class="nm">${displayName}</div>
+      <div class="row"><span class="k">type</span><span class="v">${isLeaf ? 'leaf' : 'internal'}</span></div>
+      <div class="row"><span class="k">depth</span><span class="v">${d.depth}</span></div>
+      <div class="row"><span class="k">descendants</span><span class="v">${d.descendants().length - 1}</span></div>
+      <div class="row"><span class="k">leaves under</span><span class="v">${d.leaves().length}</span></div>
+      ${d.data.length != null ? `<div class="row"><span class="k">branch</span><span class="v">${d.data.length.toExponential(3)}</span></div>` : ''}
+    `;
+  }
+
+  function updateBreadcrumbs(d) {
+    let trail = d.ancestors().reverse();
+    const MAX = 5;
+    let ellipsis = false;
+    let trimmed = trail;
+    if (trail.length > MAX) {
+      trimmed = [trail[0]].concat(trail.slice(trail.length - (MAX - 1)));
+      ellipsis = true;
+    }
+    const container = document.getElementById('breadcrumbs');
+    container.innerHTML = '';
+    trimmed.forEach((n, i) => {
+      if (i > 0) {
+        if (ellipsis && i === 1) {
+          const ell = document.createElement('span');
+          ell.className = 'sep';
+          ell.style.color = 'var(--ink-mute)';
+          ell.textContent = '… /';
+          container.appendChild(ell);
+        } else {
+          const sep = document.createElement('span');
+          sep.className = 'sep';
+          sep.textContent = '/';
+          container.appendChild(sep);
+        }
+      }
+      const isLast = i === trimmed.length - 1;
+      const crumb = document.createElement('span');
+      crumb.className = isLast ? 'current' : 'crumb';
+      crumb.textContent = n.data.name || (n.depth === 0 ? 'root' : '·');
+      if (!isLast) {
+        crumb.addEventListener('click', () => zoomTo(n));
+      }
+      container.appendChild(crumb);
+    });
+  }
+
+  function updateFocusTitle(d) {
+    const el = document.getElementById('focus-title');
+    el.textContent = d.data.name || (d.depth === 0 ? 'root' : '(unnamed)');
+  }
+
+  function updateCanvasBackground(d) {
+    const wrap = document.querySelector('.canvas-wrap');
+    if (!d || d.depth === 0) {
+      wrap.style.removeProperty('--focus-bg');
+      wrap.classList.remove('has-focus');
+    } else {
+      const c = colorForDepth(d.depth, currentMaxDepth);
+      wrap.style.setProperty('--focus-bg', c);
+      wrap.classList.add('has-focus');
+    }
+  }
+
+  // ── Circle visibility — hide ancestors and unrelated branches on focus ─
+  // When the user focuses a node, the canvas should look as if we've zoomed
+  // into that node alone: outer rings (ancestors) and sibling branches are
+  // hidden, and the focused node's color becomes the background (handled by
+  // the overlay above). The focused node itself fades to invisible too — it
+  // still receives clicks to support "click background to go up".
+  function updateCircleVisibility(focus) {
+    if (!worldG) return;
+    const focusTree = focus ? treeOfNode(focus) : null;
+    // Iterate every tree.
+    for (const t of forest) {
+      if (!t.g) continue;
+      const circles = t.g.querySelectorAll('circle.node-circle');
+      const isFocusTree = (t === focusTree);
+      if (!isFocusTree || !focus || focus.depth === 0) {
+        // non-active trees (and the active tree when at its root) show fully
+        circles.forEach(c => {
+          c.classList.remove('hidden-by-focus');
+          c.classList.remove('is-focus-bg');
+        });
+        continue;
+      }
+      const descendantSet = new Set(focus.descendants());
+      circles.forEach(c => {
+        const d = c.__data__;
+        if (d === focus) {
+          c.classList.add('is-focus-bg');
+          c.classList.remove('hidden-by-focus');
+        } else if (descendantSet.has(d)) {
+          c.classList.remove('is-focus-bg');
+          c.classList.remove('hidden-by-focus');
+        } else {
+          c.classList.remove('is-focus-bg');
+          c.classList.add('hidden-by-focus');
+        }
+      });
+    }
+  }
+
+  function updateStats(root) {
+    const leaves = root.leaves().length;
+    const all = root.descendants().length;
+    const internal = all - leaves;
+    let maxD = 0;
+    root.each(n => { if (n.depth > maxD) maxD = n.depth; });
+    document.getElementById('stat-leaves').textContent   = leaves;
+    document.getElementById('stat-internal').textContent = internal;
+    document.getElementById('stat-depth').textContent    = maxD;
+    document.getElementById('stat-total').textContent    = all;
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
+  //  Layout + render
+  // ─────────────────────────────────────────────────────────────────────
+  // Compute side-by-side world offsets for every tree in the forest.
+  // Trees are laid out left→right with a gap; each is packed to `size`.
+  function layoutForest(W, H) {
+    const size = Math.min(W, H) - 40;
+    const gap = size * 0.28;
+    // total width of all trees + gaps, centered on x=0
+    const totalW = forest.length * size + (forest.length - 1) * gap;
+    let x = -totalW / 2 + size / 2;
+    for (const t of forest) {
+      t.size = size;
+      t.ox = x;
+      t.oy = 0;
+      x += size + gap;
+    }
+    return size;
+  }
+
+  function render() {
+    const wrap = document.querySelector('.canvas-wrap');
+    const W = wrap.clientWidth, H = wrap.clientHeight;
+
+    setAttrs(svg, {
+      viewBox: `${-W/2} ${-H/2} ${W} ${H}`,
+      width: W, height: H,
+    });
+
+    const size = layoutForest(W, H);
+
+    // Clear svg, build the world group that carries the shared pan/zoom
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    worldG = makeEl('g', { class: 'world' });
+    worldG.style.transformOrigin = '0 0';
+    svg.appendChild(worldG);
+
+    // Build each tree into its own <g> positioned at (ox,oy)
+    for (let i = 0; i < forest.length; i++) {
+      renderTree(forest[i], i, size);
+    }
+
+    // active tree references
+    const active = forest[activeTreeIndex] || forest[0];
+    currentRoot = active ? active.hierarchy : null;
+    currentRootData = active ? active.data : null;
+    currentMaxDepth = active ? active.maxDepth : 0;
+    if (currentRoot) updateStats(currentRoot);
+
+    // background click → go up one level within the active tree
+    svg.onclick = () => {
+      if (dragJustMoved) return;
+      if (currentFocus && currentFocus.parent) {
+        zoomTo(currentFocus.parent);
+      } else if (currentRoot) {
+        zoomTo(currentRoot);
+      }
+    };
+  }
+
+  // Build one tree's circles + labels into its own group at world offset.
+  function renderTree(t, treeIndex, size) {
+    const hierarchy = d3.hierarchy(t.data)
+      .sum(d => d.children ? 0 : 1)
+      .sort((a, b) => (b.value || 0) - (a.value || 0));
+
+    d3.pack().size([size, size]).padding(d => Math.max(2, 8 - d.depth * 1.2))(hierarchy);
+
+    // center each tree's pack around its own (0,0), then we translate the <g>
+    hierarchy.each(d => { d.x -= size / 2; d.y -= size / 2; });
+
+    let maxDepth = 0;
+    hierarchy.each(d => { if (d.depth > maxDepth) maxDepth = d.depth; });
+    t.maxDepth = maxDepth;
+    t.hierarchy = hierarchy;
+
+    const g = makeEl('g', { class: 'pack', 'data-tree': treeIndex });
+    g.style.transformOrigin = '0 0';
+    g.setAttribute('transform', `translate(${t.ox},${t.oy})`);
+    worldG.appendChild(g);
+    t.g = g;
+    if (treeIndex === activeTreeIndex) packG = g;
+
+    const allNodes = hierarchy.descendants();
+    const isLeaf = (d) => !d.children || d.children.length === 0;
+
+    for (const d of allNodes) {
+      const c = makeEl('circle', {
+        class: 'node-circle',
+        cx: d.x, cy: d.y, r: d.r,
+        fill: colorForDepth(d.depth, maxDepth),
+        stroke: 'none', 'stroke-width': 0,
+      });
+      c.__data__ = d;
+      c.__tree = t;
+      c.__treeIndex = treeIndex;
+      c.addEventListener('mouseenter', (evt) => {
+        if (reparentDrag.active && reparentDrag.moved) {
+          if (d.data !== reparentDrag.nodeData &&
+              !isDescendantData(reparentDrag.nodeData, d.data)) {
+            c.classList.add('drop-target');
+          }
+          return;
+        }
+        showTip(evt, d);
+        updateInspector(d);
+        updatePolynomial(d);
+        updateBreadcrumbs(d);
+      });
+      c.addEventListener('mousemove', (evt) => {
+        if (reparentDrag.active && reparentDrag.moved) return;
+        moveTip(evt);
+      });
+      c.addEventListener('mouseleave', () => {
+        c.classList.remove('drop-target');
+        if (reparentDrag.active && reparentDrag.moved) return;
+        hideTip();
+        if (currentFocus) {
+          updateInspector(currentFocus);
+          updatePolynomial(currentFocus);
+          updateBreadcrumbs(currentFocus);
+        } else {
+          updateInspector(null);
+          updatePolynomial(null);
+          updateBreadcrumbs(currentRoot);
+        }
+      });
+      // ── Edit mode: drag to reparent (or detach) ──────────────────────
+      c.addEventListener('mousedown', (evt) => {
+        if (!editMode) return;
+        if (evt.button !== 0) return;
+        // A tree's root can only be dragged when there's more than one tree
+        // (to merge it into another graph). A lone tree's root isn't draggable.
+        if (d === t.hierarchy && forest.length <= 1) return;
+        evt.stopPropagation();
+        reparentDrag.active = true;
+        reparentDrag.nodeData = d.data;
+        reparentDrag.sourceTree = t;
+        reparentDrag.startX = evt.clientX;
+        reparentDrag.startY = evt.clientY;
+        reparentDrag.moved = false;
+        c.classList.add('drag-source');
+      });
+      c.addEventListener('click', (evt) => {
+        evt.stopPropagation();
+        if (editMode) {
+          if (reparentDrag.consumedClick) { reparentDrag.consumedClick = false; return; }
+          // select for editing; also make this tree the active one
+          setActiveTree(treeIndex);
+          editSelection = d.data;
+          applyEditModeVisuals();
+          refreshEditPanel();
+          return;
+        }
+        if (dragJustMoved) return;
+        setActiveTree(treeIndex);
+        if (d === currentFocus) {
+          if (d.parent) zoomTo(d.parent);
+        } else {
+          zoomTo(d);
+        }
+      });
+      g.appendChild(c);
+    }
+
+    // Labels
+    function bandAtTop(d) {
+      if (!d.children || d.children.length === 0) return Infinity;
+      const parentTop = d.y - d.r;
+      let minBand = Infinity;
+      for (const ch of d.children) {
+        const childTop = ch.y - ch.r;
+        minBand = Math.min(minBand, childTop - parentTop);
+      }
+      return minBand;
+    }
+
+    for (const d of allNodes) {
+      const isL = isLeaf(d);
+      const rawName = d.data.name || '';
+      const name = rawName || (d === hierarchy ? 'root' : '');
+      if (!name) continue;
+
+      const fontSize = isL
+        ? Math.max(2.5, Math.min(14, d.r * 0.55))
+        : Math.max(2.5, Math.min(14, d.r * 0.20));
+
+      const maxLen = isL ? Math.max(3, Math.floor(d.r / 2.4)) : 60;
+      const text = name.length > maxLen ? name.slice(0, maxLen - 1) + '…' : name;
+
+      const yOffset = isL ? d.y : d.y - d.r + fontSize + 2.5;
+      const tx = makeEl('text', {
+        class: 'node-label ' + (isL ? 'leaf' : 'internal'),
+        x: d.x, y: yOffset, 'font-size': fontSize,
+      });
+      tx.textContent = text;
+      tx.__data__ = d;
+      tx.__fontSize = fontSize;
+      tx.__isLeaf = isL;
+      tx.__name = name;
+      tx.__band = isL ? Infinity : bandAtTop(d);
+      tx.__tree = t;
+      tx.style.opacity = 0;
+      g.appendChild(tx);
+    }
+  }
+
+  // Make a given tree the active one (focus / edits / stats target it).
+  function setActiveTree(i) {
+    if (i === activeTreeIndex) return;
+    activeTreeIndex = i;
+    const t = forest[i];
+    if (!t) return;
+    packG = t.g;
+    currentRoot = t.hierarchy;
+    currentRootData = t.data;
+    currentMaxDepth = t.maxDepth;
+    updateStats(currentRoot);
+  }
+
+  // ── Transform application — shared by zoomTo, pan, and wheel zoom ─────
+  // The whole world (all trees) pans/zooms together via worldG.
+  function applyTransform(tx, ty, scale, smooth) {
+    if (!worldG) return;
+    worldG.style.transition = smooth
+      ? 'transform 750ms cubic-bezier(0.65, 0, 0.35, 1)'
+      : 'none';
+    worldG.setAttribute('transform', `translate(${tx},${ty}) scale(${scale})`);
+    currentScale = scale;
+    currentTx = tx;
+    currentTy = ty;
+    updateLabelVisibility(scale);
+  }
+
+  // ── Zoom-to-subtree (smooth) ──────────────────────────────────────────
+  function zoomTo(d, instant=false) {
+    currentFocus = d;
+    // make sure the active tree matches the node being zoomed to
+    const owner = treeOfNode(d);
+    if (owner) setActiveTree(forest.indexOf(owner));
+    updateBreadcrumbs(d);
+    updateFocusTitle(d);
+    updateCanvasBackground(d);
+    updateCircleVisibility(d);
+    updateInspector(d);
+    updatePolynomial(d);
+
+    const wrap = document.querySelector('.canvas-wrap');
+    const W = wrap.clientWidth, H = wrap.clientHeight;
+    const target = Math.min(W, H) - 40;
+    const scale = (target / 2) / d.r;
+    // node world position includes its tree's offset
+    const off = owner ? { x: owner.ox, y: owner.oy } : { x: 0, y: 0 };
+    const tx = -(off.x + d.x) * scale;
+    const ty = -(off.y + d.y) * scale;
+
+    if (instant) {
+      worldG.style.transition = 'none';
+      void worldG.getBoundingClientRect();
+      applyTransform(tx, ty, scale, /*smooth*/ false);
+    } else {
+      applyTransform(tx, ty, scale, /*smooth*/ true);
+    }
+  }
+
+  // Which tree does this d3 node belong to? (search by hierarchy root match)
+  function treeOfNode(d) {
+    if (!d) return null;
+    let root = d;
+    while (root.parent) root = root.parent;
+    return forest.find(t => t.hierarchy === root) || null;
+  }
+
+  // Frame the entire forest (all trees) within the viewport.
+  function fitWorld(instant=false) {
+    if (!forest.length) return;
+    const wrap = document.querySelector('.canvas-wrap');
+    const W = wrap.clientWidth, H = wrap.clientHeight;
+    // world bounding box across all tree root circles
+    let minX=Infinity, maxX=-Infinity, minY=Infinity, maxY=-Infinity;
+    for (const t of forest) {
+      if (!t.hierarchy) continue;
+      const r = t.hierarchy.r;
+      minX = Math.min(minX, t.ox - r); maxX = Math.max(maxX, t.ox + r);
+      minY = Math.min(minY, t.oy - r); maxY = Math.max(maxY, t.oy + r);
+    }
+    if (!isFinite(minX)) return;
+    const bw = maxX - minX, bh = maxY - minY;
+    const pad = 60;
+    const scale = Math.min((W - pad) / bw, (H - pad) / bh);
+    const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+    const tx = -cx * scale, ty = -cy * scale;
+    // clear focus so no single tree is "drilled into"
+    currentFocus = null;
+    updateCircleVisibility(null);
+    if (instant) {
+      worldG.style.transition = 'none';
+      void worldG.getBoundingClientRect();
+      applyTransform(tx, ty, scale, false);
+    } else {
+      applyTransform(tx, ty, scale, true);
+    }
+  }
+
+  // module-level transform state (read by updateLabelVisibility)
+  let currentScale = 1, currentTx = 0, currentTy = 0;
+
+  // ── Label visibility & sizing for current zoom level ─────────────────
+  // Strategy:
+  //   • Render every named node's label.
+  //   • Hide if circle is entirely off-screen OR too small to read.
+  //   • Cap rendered font-size to 7–28 screen-px so deep zooms don't blow up.
+  //   • For ancestors of the currently-focused node whose natural label
+  //     position is above the viewport, stack their labels at the top of the
+  //     viewport — so "earlier generations" stay readable while zoomed in.
+  function updateLabelVisibility(scale) {
+    const wrap = document.querySelector('.canvas-wrap');
+    const W = wrap.clientWidth, H = wrap.clientHeight;
+    const MIN_R_PX = 12;
+    const MIN_FONT_PX = 7;
+    const MAX_FONT_PX = 28;
+
+    // coord-space viewport bounds (inverse of group transform)
+    const viewTopCoord    = (-H / 2 - currentTy) / scale;
+    const viewBottomCoord = ( H / 2 - currentTy) / scale;
+    const viewLeftCoord   = (-W / 2 - currentTx) / scale;
+    const viewRightCoord  = ( W / 2 - currentTx) / scale;
+
+    // ancestor chain of current focus: only the closest few get pinned to
+    // the top of the viewport — the breadcrumbs already convey the full
+    // lineage textually, so over-stacking pinned labels just obscures the view.
+    const MAX_PINNED = 3;
+    const fullChain = currentFocus ? currentFocus.ancestors() : [];
+    // drop the focus itself; closest ancestor first
+    const strictChain = fullChain.slice(1, 1 + MAX_PINNED);
+    // index 0 = closest to focus (pin lowest), index N-1 = furthest (pin top)
+    const ancestorIndex = new Map();
+    strictChain.forEach((a, i) => ancestorIndex.set(a, i));
+
+    const PINNED_FONT_PX = 18;            // smaller than focus label
+    const STICKY_LINE_PX = PINNED_FONT_PX + 6;
+
+    // When focused on a non-root node, only descendants of the focus
+    // (plus the pinned ancestors and focus itself) should show labels.
+    // Sibling/unrelated branches are hidden along with their circles.
+    const focusDescendantSet = (currentFocus && currentFocus.depth !== 0)
+      ? new Set(currentFocus.descendants())
+      : null;
+
+    // Iterate every tree's labels. Each tree's <g> is translated by (ox,oy),
+    // so a node's WORLD position is (ox + d.x, oy + d.y). Label x/y attributes
+    // are LOCAL to the <g>, so when we compute a target in world/screen space
+    // we subtract the offset before writing the attribute.
+    for (const t of forest) {
+      if (!t.g) continue;
+      const ox = t.ox, oy = t.oy;
+      const labels = t.g.querySelectorAll('text.node-label');
+      labels.forEach(l => {
+        const d = l.__data__;
+        if (!d) return;
+        const wx = ox + d.x, wy = oy + d.y;   // world coords
+        const screenR = d.r * scale;
+        const naturalScreenFont = l.__fontSize * scale;
+
+        // Focus filtering only applies within the active tree.
+        if (t === forest[activeTreeIndex] && focusDescendantSet
+            && !focusDescendantSet.has(d)
+            && !ancestorIndex.has(d)) {
+          l.style.opacity = 0;
+          return;
+        }
+
+        // Hide if the circle is entirely outside the viewport (world coords)
+        const outOfView =
+          (wy + d.r < viewTopCoord)   ||
+          (wy - d.r > viewBottomCoord) ||
+          (wx + d.r < viewLeftCoord)  ||
+          (wx - d.r > viewRightCoord);
+        if (outOfView) { l.style.opacity = 0; return; }
+
+        let show = screenR >= MIN_R_PX;
+        if (show && naturalScreenFont < MIN_FONT_PX && screenR < 40) show = false;
+        l.style.opacity = show ? 1 : 0;
+        if (!show) return;
+
+        let targetScreenFont = naturalScreenFont;
+        if (targetScreenFont < MIN_FONT_PX) targetScreenFont = MIN_FONT_PX;
+        if (targetScreenFont > MAX_FONT_PX) targetScreenFont = MAX_FONT_PX;
+        const coordFont = targetScreenFont / scale;
+        l.setAttribute('font-size', coordFont);
+
+        const isActive = (t === forest[activeTreeIndex]);
+
+        // ── Position ──────────────────────────────────────────────────
+        if (l.__isLeaf) {
+          l.setAttribute('x', d.x);
+          l.setAttribute('y', d.y);
+        } else {
+          const naturalY = d.y - d.r + coordFont + 2.5 / scale;
+          const ancIdx = isActive ? ancestorIndex.get(d) : undefined;
+          const isStrictAncestor = ancIdx !== undefined && d !== currentFocus;
+          const isFocus = isActive && (d === currentFocus) && strictChain.length > 0;
+          const bandFitsNaturally = l.__band >= coordFont + 2 / scale;
+
+          if (isStrictAncestor) {
+            const pinnedScreenFont = PINNED_FONT_PX;
+            const pinnedCoordFont = pinnedScreenFont / scale;
+            l.setAttribute('font-size', pinnedCoordFont);
+            const slot = (strictChain.length - 1) - ancIdx;
+            const stackScreenY = -H / 2 + pinnedScreenFont / 2 + 12 + slot * STICKY_LINE_PX;
+            // world Y for that screen position, then local = world - oy
+            const stackWorldY = (stackScreenY - currentTy) / scale;
+            const focusScreenX = currentFocus
+              ? (forest[activeTreeIndex].ox + currentFocus.x) * scale + currentTx
+              : 0;
+            const stackWorldX = (focusScreenX - currentTx) / scale;
+            l.setAttribute('y', stackWorldY - oy);
+            l.setAttribute('x', stackWorldX - ox);
+            l.classList.add('pinned');
+          } else if (isFocus) {
+            const focusScreenY = -H / 2 + 12 + strictChain.length * STICKY_LINE_PX
+                                + targetScreenFont / 2 + 6;
+            const focusWorldY = (focusScreenY - currentTy) / scale;
+            l.setAttribute('y', focusWorldY - oy);
+            l.setAttribute('x', d.x);
+            l.classList.remove('pinned');
+          } else if (bandFitsNaturally) {
+            l.setAttribute('y', naturalY);
+            l.setAttribute('x', d.x);
+            l.classList.remove('pinned');
+          } else {
+            l.style.opacity = 0;
+            return;
+          }
+        }
+
+        const fullName = l.__name;
+        if (!fullName) return;
+        let charsThatFit;
+        if (l.__isLeaf) {
+          const usablePx = screenR * 1.7;
+          charsThatFit = Math.max(2, Math.floor(usablePx / (targetScreenFont * 0.62)));
+        } else {
+          charsThatFit = 60;
+        }
+        const newText = fullName.length > charsThatFit
+          ? fullName.slice(0, Math.max(1, charsThatFit - 1)) + '…'
+          : fullName;
+        if (l.textContent !== newText) l.textContent = newText;
+      });
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
+  //  Dataset switching
+  // ─────────────────────────────────────────────────────────────────────
+  function loadDataset(name) {
+    let nwk, subtitle;
+    const nav = '· click to focus · drag to pan · scroll to zoom · esc to go up';
+    if (name === 'ha') {
+      nwk = HA_NEWICK;
+      subtitle = '— H3N2 hemagglutinin ' + nav + ' —';
+    } else if (name === 'fungi') {
+      nwk = FUNGI_NEWICK;
+      subtitle = '— Ascomycota taxonomy ' + nav + ' —';
+    } else {
+      nwk = SLIDE6_NEWICK_FIXED;
+      subtitle = '— synthetic demo ' + nav + ' —';
+    }
+    const parsed = parseNewick(nwk);
+    const hier = toHierarchy(parsed);
+    ensureIds(hier);
+    // fresh single-tree forest
+    forest = [ { data: hier, hierarchy: null, g: null, ox: 0, oy: 0, size: 0, maxDepth: 0 } ];
+    activeTreeIndex = 0;
+    currentRootData = hier;          // source of truth for editing
+    currentFocus = null;
+    editSelection = null;
+    document.getElementById('stage-title').textContent = subtitle;
+    render();
+    // focus the root of the (only) tree
+    if (forest[0].hierarchy) zoomTo(forest[0].hierarchy, /*instant*/ true);
+    resetHistory();                  // start a fresh undo timeline
+    if (editMode) refreshEditPanel();
+  }
+
+  // ── Mouse navigation: drag-to-pan + wheel-to-zoom ──────────────────────
+  // Pan works anywhere on the canvas (drag with left mouse button).
+  // Wheel zooms around the cursor position, preserving the coord-space
+  // point under the mouse.
+  let isDragging = false;
+  let dragMoved = false;
+  let dragJustMoved = false;  // read by click handlers to suppress click-after-drag
+  let dragStartClientX = 0, dragStartClientY = 0;
+  let dragStartTx = 0, dragStartTy = 0;
+  const DRAG_THRESHOLD = 5; // px before a mouse-down is treated as a drag
+  const MIN_SCALE = 0.2;
+  const MAX_SCALE = 8000;
+
+  // Edit-mode reparent drag state (separate from pan drag)
+  const reparentDrag = {
+    active: false,
+    moved: false,
+    consumedClick: false,
+    nodeData: null,
+    startX: 0, startY: 0,
+  };
+
+  const canvasWrap = document.querySelector('.canvas-wrap');
+  const stage = document.getElementById('stage');
+
+  // Convert clientX/Y → SVG user-space coords (the same space the transform lives in)
+  function clientToSvg(clientX, clientY) {
+    const rect = stage.getBoundingClientRect();
+    // viewBox is centered at (0,0) with size = client size, so:
+    return {
+      x: (clientX - rect.left) - rect.width / 2,
+      y: (clientY - rect.top) - rect.height / 2,
+    };
+  }
+
+  // Find the editable data object whose circle is under the given screen point.
+  // Returns the *smallest* (deepest) circle that contains the point, excluding
+  // the subtree being dragged. Scans every tree in the forest, accounting for
+  // each tree's world offset (ox,oy).
+  function dataObjectAtPoint(clientX, clientY, excludeData) {
+    const m = clientToSvg(clientX, clientY);
+    // world coords under the cursor
+    const cx = (m.x - currentTx) / currentScale;
+    const cy = (m.y - currentTy) / currentScale;
+    let best = null, bestR = Infinity;
+    for (const t of forest) {
+      if (!t.hierarchy) continue;
+      for (const node of t.hierarchy.descendants()) {
+        if (excludeData && isDescendantData(excludeData, node.data)) continue;
+        const wx = t.ox + node.x, wy = t.oy + node.y;   // world position
+        const dx = wx - cx, dy = wy - cy;
+        if (dx*dx + dy*dy <= node.r * node.r) {
+          if (node.r < bestR) { bestR = node.r; best = node; }
+        }
+      }
+    }
+    return best ? best.data : null;
+  }
+
+  // ── Drag ghost: a small floating chip following the cursor during reparent ─
+  let dragGhostEl = null;
+  function showDragGhost(nodeData) {
+    hideTip();   // the hover tooltip would compete with the ghost
+    if (!dragGhostEl) {
+      dragGhostEl = document.createElement('div');
+      dragGhostEl.className = 'drag-ghost';
+      document.body.appendChild(dragGhostEl);
+    }
+    const childCount = nodeData.children ? nodeData.children.length : 0;
+    const label = nodeData.name || '(unnamed)';
+    dragGhostEl.innerHTML = `<span class="dg-name">${label}</span>` +
+      (childCount ? `<span class="dg-meta">+ ${childCount} child${childCount===1?'':'ren'}</span>` : '');
+    dragGhostEl.style.display = 'flex';
+  }
+  function moveDragGhost(x, y) {
+    if (!dragGhostEl) return;
+    dragGhostEl.style.left = (x + 14) + 'px';
+    dragGhostEl.style.top = (y + 14) + 'px';
+  }
+  function hideDragGhost() {
+    if (dragGhostEl) dragGhostEl.style.display = 'none';
+  }
+
+  stage.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return;
+    isDragging = true;
+    dragMoved = false;
+    dragJustMoved = false;
+    dragStartClientX = e.clientX;
+    dragStartClientY = e.clientY;
+    dragStartTx = currentTx;
+    dragStartTy = currentTy;
+    stage.classList.add('dragging');
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    // ── Edit-mode reparent drag takes priority over pan ──
+    if (reparentDrag.active) {
+      const dx = e.clientX - reparentDrag.startX;
+      const dy = e.clientY - reparentDrag.startY;
+      if (!reparentDrag.moved && Math.hypot(dx, dy) > DRAG_THRESHOLD) {
+        reparentDrag.moved = true;
+        showDragGhost(reparentDrag.nodeData);
+      }
+      if (reparentDrag.moved) moveDragGhost(e.clientX, e.clientY);
+      return;
+    }
+    if (!isDragging) return;
+    const dx = e.clientX - dragStartClientX;
+    const dy = e.clientY - dragStartClientY;
+    if (!dragMoved && Math.hypot(dx, dy) > DRAG_THRESHOLD) {
+      dragMoved = true;
+    }
+    if (dragMoved) {
+      applyTransform(dragStartTx + dx, dragStartTy + dy, currentScale, /*smooth*/ false);
+    }
+  });
+
+  window.addEventListener('mouseup', (e) => {
+    // ── Complete an edit-mode reparent / detach ──
+    if (reparentDrag.active) {
+      const wasMoved = reparentDrag.moved;
+      const nodeData = reparentDrag.nodeData;
+      hideDragGhost();
+      worldG.querySelectorAll('.drag-source').forEach(el => el.classList.remove('drag-source'));
+      worldG.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
+      reparentDrag.active = false;
+      reparentDrag.moved = false;
+
+      if (wasMoved) {
+        reparentDrag.consumedClick = true;  // suppress the click that follows
+        const targetData = dataObjectAtPoint(e.clientX, e.clientY, nodeData);
+        if (targetData) {
+          // dropped onto a circle → reparent under it
+          pushHistory();
+          if (reparentNode(nodeData, targetData)) {
+            editSelection = nodeData;
+            rerenderPreservingFocus();
+          }
+        } else {
+          // dropped on empty space → detach into its own new graph,
+          // but only if it isn't already a tree root and has a parent.
+          const srcTree = treeOfData(nodeData);
+          if (srcTree && nodeData !== srcTree.data) {
+            pushHistory();
+            if (detachToNewTree(nodeData)) {
+              editSelection = nodeData;
+              render();                    // rebuild forest with the new tree
+              forest.forEach(t => ensureIds(t.data));
+              // re-resolve selection reference after rebuild
+              for (const t of forest) {
+                const hit = findDataById(t.data, nodeData._id);
+                if (hit) { editSelection = hit; break; }
+              }
+              if (editMode) { applyEditModeVisuals(); refreshEditPanel(); }
+              fitWorld(false);             // frame both graphs so the split is visible
+            }
+          }
+        }
+      }
+      return;
+    }
+    if (!isDragging) return;
+    isDragging = false;
+    stage.classList.remove('dragging');
+    if (dragMoved) {
+      dragJustMoved = true;
+      setTimeout(() => { dragJustMoved = false; }, 0);
+    }
+  });
+
+  stage.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    // exponential zoom feels natural; positive deltaY (scroll down) zooms out
+    const factor = Math.exp(-e.deltaY * 0.0015);
+    const newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, currentScale * factor));
+    if (newScale === currentScale) return;
+
+    // Point in SVG-space under the mouse
+    const m = clientToSvg(e.clientX, e.clientY);
+    // The coord-space point currently under the mouse:
+    //   m.x = coordX * currentScale + currentTx   →   coordX = (m.x - tx) / scale
+    const coordX = (m.x - currentTx) / currentScale;
+    const coordY = (m.y - currentTy) / currentScale;
+    // We want the same coordX,coordY to remain under the mouse after zoom:
+    //   m.x = coordX * newScale + newTx   →   newTx = m.x - coordX * newScale
+    const newTx = m.x - coordX * newScale;
+    const newTy = m.y - coordY * newScale;
+
+    applyTransform(newTx, newTy, newScale, /*smooth*/ false);
+  }, { passive: false });
+
+  // Keyboard: Esc / Backspace → go up one level
+  window.addEventListener('keydown', (e) => {
+    // ignore if user is typing in an input
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'select' || tag === 'textarea') return;
+    if (e.key === 'Escape' || e.key === 'Backspace') {
+      if (currentFocus && currentFocus.parent) {
+        e.preventDefault();
+        zoomTo(currentFocus.parent);
+      } else if (currentRoot && currentFocus !== currentRoot) {
+        e.preventDefault();
+        zoomTo(currentRoot);
+      }
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  EDITING SUBSYSTEM
+  //  The plain-object tree `currentRootData` is the source of truth. Every
+  //  edit mutates it then re-renders. d3 nodes carry a back-reference to their
+  //  source object as `d.data`, so a circle's `__data__.data` is the editable
+  //  object. We tag each data object with a stable `_id` so we can find the
+  //  same node again after a re-render rebuilds the d3 hierarchy.
+  // ═══════════════════════════════════════════════════════════════════════
+  let _nextNodeId = 1;
+  function ensureIds(node) {
+    if (!node) return;
+    if (node._id == null) node._id = _nextNodeId++;
+    (node.children || []).forEach(ensureIds);
+  }
+  function findDataById(node, id) {
+    if (node._id === id) return node;
+    for (const c of (node.children || [])) {
+      const hit = findDataById(c, id);
+      if (hit) return hit;
+    }
+    return null;
+  }
+  function findParentById(root, id) {
+    function walk(node) {
+      for (const c of (node.children || [])) {
+        if (c._id === id) return node;
+        const hit = walk(c);
+        if (hit) return hit;
+      }
+      return null;
+    }
+    return walk(root);
+  }
+  function isDescendantData(ancestor, maybeChild) {
+    if (ancestor === maybeChild) return true;
+    return (ancestor.children || []).some(c => isDescendantData(c, maybeChild));
+  }
+
+  // Re-render the whole forest, keeping focus + edit selection (matched by _id).
+  function rerenderPreservingFocus() {
+    if (!forest.length) return;
+    forest.forEach(t => ensureIds(t.data));
+    const focusId = currentFocus ? currentFocus.data._id : null;
+    const selId = editSelection ? editSelection._id : null;
+    const activeIdx = activeTreeIndex;
+
+    render();
+
+    // restore active tree index if still valid
+    if (activeIdx < forest.length) activeTreeIndex = activeIdx;
+
+    // restore focus: search all trees for the focused id
+    let restored = null;
+    if (focusId != null) {
+      for (const t of forest) {
+        const node = t.hierarchy.descendants().find(n => n.data._id === focusId);
+        if (node) { restored = node; break; }
+      }
+    }
+    if (restored) {
+      zoomTo(restored, /*instant*/ true);
+    } else if (forest[activeTreeIndex]) {
+      zoomTo(forest[activeTreeIndex].hierarchy, /*instant*/ true);
+    }
+
+    if (selId != null) {
+      editSelection = null;
+      for (const t of forest) {
+        const hit = findDataById(t.data, selId);
+        if (hit) { editSelection = hit; break; }
+      }
+    }
+    if (editMode) { applyEditModeVisuals(); refreshEditPanel(); }
+  }
+
+  // Find the forest tree whose data contains the given data object.
+  function treeOfData(nodeData) {
+    return forest.find(t => findDataById(t.data, nodeData._id)) || null;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  UNDO / REDO
+  //  A snapshot is a deep clone of every tree's data plus the active index.
+  //  Before each mutating edit we pushHistory(); undo/redo swap snapshots in.
+  //  Cloning is cheap here (trees are ≤ ~860 nodes) and keeps the model
+  //  dead-simple — no inverse-operation bookkeeping.
+  // ═══════════════════════════════════════════════════════════════════════
+  let undoStack = [];
+  let redoStack = [];
+  const HISTORY_LIMIT = 100;
+
+  function cloneData(node) {
+    const o = { name: node.name, _id: node._id };
+    if (node.length != null) o.length = node.length;
+    if (node.children && node.children.length) {
+      o.children = node.children.map(cloneData);
+    } else {
+      o.value = 1;
+    }
+    return o;
+  }
+  function snapshot() {
+    return {
+      trees: forest.map(t => cloneData(t.data)),
+      activeTreeIndex,
+      focusId: currentFocus ? currentFocus.data._id : null,
+      selId: editSelection ? editSelection._id : null,
+    };
+  }
+  function pushHistory() {
+    undoStack.push(snapshot());
+    if (undoStack.length > HISTORY_LIMIT) undoStack.shift();
+    redoStack = [];   // a new edit invalidates the redo timeline
+    updateHistoryButtons();
+  }
+  function resetHistory() {
+    undoStack = [];
+    redoStack = [];
+    updateHistoryButtons();
+  }
+  function restoreSnapshot(snap) {
+    // rebuild the forest from the snapshot's cloned data
+    forest = snap.trees.map(d => ({ data: d, hierarchy: null, g: null, ox: 0, oy: 0, size: 0, maxDepth: 0 }));
+    activeTreeIndex = Math.min(snap.activeTreeIndex, forest.length - 1);
+    // keep _nextNodeId ahead of any restored id
+    let maxId = 0;
+    forest.forEach(t => { const w = (n)=>{ if(n._id>maxId)maxId=n._id; (n.children||[]).forEach(w);}; w(t.data); });
+    _nextNodeId = Math.max(_nextNodeId, maxId + 1);
+
+    render();
+
+    // restore focus + selection by id
+    currentFocus = null;
+    if (snap.focusId != null) {
+      for (const t of forest) {
+        const node = t.hierarchy.descendants().find(n => n.data._id === snap.focusId);
+        if (node) { zoomTo(node, true); break; }
+      }
+    }
+    if (!currentFocus && forest[activeTreeIndex]) {
+      zoomTo(forest[activeTreeIndex].hierarchy, true);
+    }
+    editSelection = null;
+    if (snap.selId != null) {
+      for (const t of forest) {
+        const hit = findDataById(t.data, snap.selId);
+        if (hit) { editSelection = hit; break; }
+      }
+    }
+    // If the restored state has multiple trees and no specific focus, frame
+    // the whole forest so the result of the undo/redo is visible.
+    if (forest.length > 1 && snap.focusId == null) {
+      fitWorld(true);
+    }
+    if (editMode) { applyEditModeVisuals(); refreshEditPanel(); }
+  }
+  function undo() {
+    if (!undoStack.length) return;
+    redoStack.push(snapshot());
+    const snap = undoStack.pop();
+    restoreSnapshot(snap);
+    updateHistoryButtons();
+  }
+  function redo() {
+    if (!redoStack.length) return;
+    undoStack.push(snapshot());
+    const snap = redoStack.pop();
+    restoreSnapshot(snap);
+    updateHistoryButtons();
+  }
+  function updateHistoryButtons() {
+    const u = document.getElementById('undo-btn');
+    const r = document.getElementById('redo-btn');
+    if (u) u.disabled = undoStack.length === 0;
+    if (r) r.disabled = redoStack.length === 0;
+  }
+
+  // ── Reparent: move `nodeData` (with its subtree) under `targetData` ──────
+  // Works across trees. If `nodeData` is its own tree's root, the entire tree
+  // is moved under the target and its forest entry is removed (merging two
+  // graphs into one). Otherwise the node is spliced out of its source parent.
+  function reparentNode(nodeData, targetData) {
+    if (nodeData === targetData) return false;
+    if (isDescendantData(nodeData, targetData)) return false;  // no cycles
+    const srcTree = treeOfData(nodeData);
+    const tgtTree = treeOfData(targetData);
+    if (!srcTree || !tgtTree) return false;
+
+    if (nodeData === srcTree.data) {
+      // moving an entire tree's root into another tree
+      if (srcTree === tgtTree) return false;     // can't move a root into itself
+      if (!targetData.children) {
+        targetData.children = [];
+        delete targetData.value;
+      }
+      targetData.children.push(nodeData);
+      forest = forest.filter(t => t !== srcTree);   // remove the now-merged tree
+      if (activeTreeIndex >= forest.length) activeTreeIndex = forest.length - 1;
+      return true;
+    }
+
+    const oldParent = findParentById(srcTree.data, nodeData._id);
+    if (!oldParent) return false;
+    if (oldParent === targetData) return false;                // already a child
+
+    oldParent.children = oldParent.children.filter(c => c !== nodeData);
+    if (oldParent.children.length === 0) {
+      delete oldParent.children;
+      oldParent.value = 1;
+    }
+    if (!targetData.children) {
+      targetData.children = [];
+      delete targetData.value;
+    }
+    targetData.children.push(nodeData);
+    return true;
+  }
+
+  // ── Detach: pull `nodeData` (with its subtree) out into its own new tree ─
+  function detachToNewTree(nodeData) {
+    const srcTree = treeOfData(nodeData);
+    if (!srcTree) return false;
+    if (nodeData === srcTree.data) return false;   // already a root; nothing to do
+    const oldParent = findParentById(srcTree.data, nodeData._id);
+    if (!oldParent) return false;
+
+    oldParent.children = oldParent.children.filter(c => c !== nodeData);
+    if (oldParent.children.length === 0) {
+      delete oldParent.children;
+      oldParent.value = 1;
+    }
+    // new tree entry with nodeData as its root
+    forest.push({ data: nodeData, hierarchy: null, g: null, ox: 0, oy: 0, size: 0, maxDepth: 0 });
+    return true;
+  }
+
+  // ── Add an empty child under a node ──────────────────────────────────────
+  function addChild(parentData) {
+    if (!parentData.children) {
+      parentData.children = [];
+      delete parentData.value;
+    }
+    const child = { name: 'new_node', value: 1, length: null };
+    child._id = _nextNodeId++;
+    parentData.children.push(child);
+    return child;
+  }
+
+  // ── Delete a node and its subtree ────────────────────────────────────────
+  function deleteNode(nodeData) {
+    const tree = treeOfData(nodeData);
+    if (!tree) return false;
+    if (nodeData === tree.data) {
+      // deleting a whole tree's root removes the tree (unless it's the last)
+      if (forest.length <= 1) return false;
+      forest = forest.filter(t => t !== tree);
+      if (activeTreeIndex >= forest.length) activeTreeIndex = forest.length - 1;
+      return true;
+    }
+    const parent = findParentById(tree.data, nodeData._id);
+    if (!parent) return false;
+    parent.children = parent.children.filter(c => c !== nodeData);
+    if (parent.children.length === 0) {
+      delete parent.children;
+      parent.value = 1;
+    }
+    return true;
+  }
+
+  function renameNode(nodeData, newName) { nodeData.name = newName; }
+
+  // ── Serialize a data root to a Newick string ───────────────────────────
+  function buildNewick(root) {
+    function quoteIfNeeded(name) {
+      if (name == null || name === '') return '';
+      if (/[ ,():;'"]/.test(name)) return "'" + name.replace(/'/g, "''") + "'";
+      return name;
+    }
+    function walk(node) {
+      let s = '';
+      if (node.children && node.children.length) {
+        s += '(' + node.children.map(walk).join(',') + ')';
+      }
+      s += quoteIfNeeded(node.name);
+      if (node.length != null) s += ':' + node.length;
+      return s;
+    }
+    return walk(root) + ';';
+  }
+
+  // ── Edit-mode visuals ────────────────────────────────────────────────────
+  function applyEditModeVisuals() {
+    if (!worldG) return;
+    const circles = worldG.querySelectorAll('circle.node-circle');
+    circles.forEach(c => {
+      c.classList.toggle('editable', editMode);
+      c.classList.remove('edit-selected', 'drop-target', 'drag-source');
+    });
+    if (editMode && editSelection) {
+      const sel = [...circles].find(c => c.__data__ && c.__data__.data === editSelection);
+      if (sel) sel.classList.add('edit-selected');
+    }
+  }
+
+  // ── The edit panel in the sidebar ───────────────────────────────────────
+  function refreshEditPanel() {
+    const panel = document.getElementById('edit-panel');
+    if (!panel) return;
+    panel.style.display = editMode ? '' : 'none';
+    if (!editMode) return;
+
+    const selWrap = document.getElementById('edit-selection');
+    if (!editSelection) {
+      selWrap.innerHTML = '<div class="edit-hint">Click a circle to select it, then rename / add / delete. Drag a circle onto another to reparent it — its children come along.</div>';
+      return;
+    }
+    const ownerTree = treeOfData(editSelection);
+    const isRoot = (ownerTree && editSelection === ownerTree.data);
+    const isLeaf = !editSelection.children || editSelection.children.length === 0;
+    const childCount = editSelection.children ? editSelection.children.length : 0;
+    selWrap.innerHTML = `
+      <div class="edit-row">
+        <label>name</label>
+        <input id="edit-name" type="text" value="${(editSelection.name||'').replace(/"/g,'&quot;')}" />
+      </div>
+      <div class="edit-meta">${isRoot ? 'root · ' : ''}${isLeaf ? 'leaf' : childCount + ' child' + (childCount===1?'':'ren')}</div>
+      <div class="edit-actions">
+        <button id="edit-add">+ child</button>
+        <button id="edit-del">delete</button>
+      </div>
+    `;
+    const nameInput = document.getElementById('edit-name');
+    let renameSnapshotTaken = false;
+    nameInput.addEventListener('focus', () => { renameSnapshotTaken = false; });
+    nameInput.addEventListener('input', () => {
+      if (!renameSnapshotTaken) { pushHistory(); renameSnapshotTaken = true; }
+      renameNode(editSelection, nameInput.value);
+    });
+    nameInput.addEventListener('change', () => rerenderPreservingFocus());
+    nameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') nameInput.blur(); });
+    document.getElementById('edit-add').addEventListener('click', () => {
+      pushHistory();
+      const child = addChild(editSelection);
+      editSelection = child;
+      rerenderPreservingFocus();
+    });
+    const delBtn = document.getElementById('edit-del');
+    if (delBtn) {
+      delBtn.addEventListener('click', () => {
+        const owner = treeOfData(editSelection);
+        const parent = findParentById(owner.data, editSelection._id);
+        pushHistory();
+        if (deleteNode(editSelection)) {
+          editSelection = parent || (forest[activeTreeIndex] && forest[activeTreeIndex].data) || null;
+          rerenderPreservingFocus();
+        } else {
+          undoStack.pop();  // delete refused (e.g. last remaining root); discard snapshot
+          updateHistoryButtons();
+        }
+      });
+    }
+  }
+
+  // ── Edit mode toggle + export wiring ────────────────────────────────────
+  const editToggle = document.getElementById('edit-toggle');
+  if (editToggle) {
+    editToggle.addEventListener('change', () => {
+      editMode = editToggle.checked;
+      document.querySelector('.app').classList.toggle('edit-mode', editMode);
+      forest.forEach(t => ensureIds(t.data));
+      applyEditModeVisuals();
+      refreshEditPanel();
+    });
+  }
+  const exportBtn = document.getElementById('edit-export');
+  if (exportBtn) {
+    exportBtn.addEventListener('click', () => {
+      // one Newick line per tree in the forest
+      const nwk = forest.map(t => buildNewick(t.data)).join('\n');
+      navigator.clipboard?.writeText(nwk).then(() => {
+        exportBtn.textContent = 'copied!';
+        setTimeout(() => { exportBtn.textContent = 'copy Newick'; }, 1400);
+      }).catch(() => {});
+      const ta = document.getElementById('edit-newick-out');
+      if (ta) { ta.style.display = 'block'; ta.value = nwk; ta.select(); }
+    });
+  }
+
+  // ── Undo / redo buttons + keyboard shortcuts ────────────────────────────
+  const undoBtnEl = document.getElementById('undo-btn');
+  const redoBtnEl = document.getElementById('redo-btn');
+  if (undoBtnEl) undoBtnEl.addEventListener('click', undo);
+  if (redoBtnEl) redoBtnEl.addEventListener('click', redo);
+  window.addEventListener('keydown', (e) => {
+    const tag = (e.target.tagName || '').toLowerCase();
+    const typing = (tag === 'input' || tag === 'textarea' || tag === 'select');
+    const mod = e.metaKey || e.ctrlKey;
+    if (!mod) return;
+    const key = e.key.toLowerCase();
+    // redo: Cmd/Ctrl+Shift+Z  or  Ctrl+Y
+    if ((key === 'z' && e.shiftKey) || key === 'y') {
+      if (typing) return;   // let the input handle its own redo
+      e.preventDefault();
+      redo();
+      return;
+    }
+    // undo: Cmd/Ctrl+Z
+    if (key === 'z') {
+      if (typing) return;   // let the input handle its own undo
+      e.preventDefault();
+      undo();
+    }
+  });
+
+  const dsSelect = document.getElementById('ds-select');
+  dsSelect.addEventListener('change', (e) => {
+    loadDataset(e.target.value);
+  });
+
+  const paletteSelect = document.getElementById('palette-select');
+  if (paletteSelect) {
+    setPalette(paletteSelect.value);  // initialize to default selection
+    paletteSelect.addEventListener('change', (e) => {
+      setPalette(e.target.value);
+      rerenderPreservingFocus();
+    });
+  }
+
+  window.addEventListener('resize', () => {
+    if (currentRootData) {
+      rerenderPreservingFocus();
+    }
+  });
+
+  // initial paint
+  loadDataset(dsSelect.value || 'slide6');
+  </script>
+</body>
+</html>
