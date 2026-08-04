@@ -261,18 +261,222 @@
   }
   .legend small { color: var(--ink-mute); }
 
-  .stage-overlay-tl {
+  /* ── On-screen canvas controls (bottom-right) ──────────────────────── */
+  .canvas-controls {
     position: absolute;
-    top: 18px;
-    left: 22px;
-    font-family: 'Fraunces', serif;
-    font-variation-settings: "opsz" 144, "SOFT" 30;
-    font-style: italic;
-    font-weight: 300;
-    font-size: 13px;
-    color: var(--ink-mute);
-    letter-spacing: 0.01em;
+    bottom: 20px;
+    right: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 5;
   }
+  .cc-btn {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20,25,35,0.82);
+    border: 1px solid var(--rule);
+    border-radius: 9px;
+    color: var(--ink-soft);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 19px;
+    line-height: 1;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: all 130ms ease;
+    -webkit-user-select: none; user-select: none;
+  }
+  .cc-btn:hover { border-color: var(--accent); color: var(--ink); background: rgba(28,34,46,0.92); }
+  .cc-btn:active { transform: scale(0.93); }
+  .cc-help { margin-top: 4px; font-size: 16px; }
+  .cc-help.active { border-color: var(--accent); color: var(--accent); }
+
+  .help-popover {
+    position: absolute;
+    bottom: 20px;
+    right: 70px;
+    width: 320px;
+    max-height: calc(100% - 40px);
+    overflow-y: auto;
+    background: rgba(18,23,32,0.96);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    z-index: 6;
+    animation: helpIn 160ms ease;
+  }
+  .help-popover[hidden] { display: none; }
+  @keyframes helpIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .help-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--rule);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .help-close {
+    background: none; border: none; color: var(--ink-mute);
+    font-size: 20px; line-height: 1; cursor: pointer; padding: 0 2px;
+  }
+  .help-close:hover { color: var(--ink); }
+  .help-body { padding: 6px 16px 14px; }
+  .help-group { padding: 10px 0; border-bottom: 1px dashed var(--rule); }
+  .help-group:last-child { border-bottom: none; }
+  .help-group-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); opacity: 0.8; margin-bottom: 8px;
+  }
+  .help-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 4px 0; gap: 12px;
+    font-size: 12.5px; color: var(--ink-soft);
+  }
+  .help-row > span:first-child { flex: 1; }
+  .help-keys { display: inline-flex; gap: 3px; align-items: center; color: var(--ink-mute); font-size: 10px; }
+  .help-note {
+    margin-top: 8px;
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: var(--ink-mute);
+  }
+  .help-note .keycap { font-style: normal; }
+
+  /* ── Welcome overlay ──────────────────────────────────────────────── */
+  .welcome-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(8,11,16,0.72);
+    backdrop-filter: blur(6px);
+    animation: welcomeFade 240ms ease;
+  }
+  .welcome-scrim[hidden] { display: none; }
+  @keyframes welcomeFade { from { opacity: 0; } to { opacity: 1; } }
+  .welcome-card {
+    position: relative;
+    width: 540px;
+    max-width: calc(100vw - 40px);
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    background: linear-gradient(180deg, #1a212d, #141a24);
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    padding: 34px 38px 28px;
+    box-shadow: 0 24px 70px rgba(0,0,0,0.6);
+    animation: welcomeRise 300ms cubic-bezier(0.2,0.7,0.3,1);
+  }
+  @keyframes welcomeRise { from { opacity: 0; transform: translateY(16px) scale(0.98); } to { opacity: 1; transform: none; } }
+  .welcome-x {
+    position: absolute;
+    top: 16px; right: 18px;
+    background: none; border: none;
+    color: var(--ink-mute);
+    font-size: 24px; line-height: 1; cursor: pointer;
+  }
+  .welcome-x:hover { color: var(--ink); }
+  .welcome-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); opacity: 0.85;
+  }
+  .welcome-title {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 144, "SOFT" 40;
+    font-weight: 400;
+    font-size: 40px;
+    color: var(--ink);
+    line-height: 1.05;
+    margin: 4px 0 2px;
+  }
+  .welcome-title em {
+    font-style: normal;
+    color: var(--accent);
+    margin: 0 1px;
+  }
+  .welcome-lede {
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    line-height: 1.55;
+    margin: 12px 0 22px;
+  }
+  .welcome-steps { display: flex; flex-direction: column; gap: 15px; }
+  .welcome-step { display: flex; gap: 14px; align-items: flex-start; }
+  .ws-ic {
+    flex: 0 0 34px;
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 9px;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    color: var(--accent);
+    font-size: 16px;
+  }
+  .ws-txt { font-size: 13.5px; line-height: 1.5; color: var(--ink-soft); padding-top: 6px; }
+  .ws-txt b { color: var(--ink); font-weight: 600; }
+  .ws-k {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1px 6px;
+    color: var(--ink);
+  }
+  .ws-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: rgba(201,168,124,0.14);
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    padding: 1px 9px;
+    color: var(--accent);
+    margin: 0 1px;
+  }
+  .welcome-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 26px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+  }
+  .welcome-dontshow {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--ink-mute); cursor: pointer;
+    -webkit-user-select: none; user-select: none;
+  }
+  .welcome-dontshow input { accent-color: var(--accent); cursor: pointer; }
+  .welcome-go {
+    background: var(--accent);
+    color: #1a1205;
+    border: none;
+    border-radius: 9px;
+    padding: 11px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: all 140ms ease;
+    box-shadow: 0 3px 12px rgba(201,168,124,0.3);
+  }
+  .welcome-go:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .welcome-go:active { transform: translateY(0); }
 
   /* ── PANEL ──────────────────────────────────────────────────────────── */
   aside {
@@ -281,6 +485,79 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+  }
+
+  /* Segmented mode switcher */
+  .mode-section { padding-bottom: 18px; }
+  .mode-switch {
+    display: flex;
+    gap: 3px;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 3px;
+  }
+  .mode-seg {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 6px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--ink-mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 150ms ease;
+  }
+  .mode-seg:hover { color: var(--ink-soft); }
+  .mode-seg .mode-seg-ic { font-size: 13px; }
+  .mode-seg.is-active {
+    background: var(--accent);
+    color: #1a1205;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(201,168,124,0.3);
+  }
+  .mode-hint {
+    margin-top: 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ink-mute);
+    font-style: italic;
+    min-height: 18px;
+  }
+
+  /* Edit sub-mode (Restructure / Arrange) — smaller segmented control */
+  .submode-switch {
+    display: flex;
+    gap: 3px;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 3px;
+    margin-bottom: 14px;
+  }
+  .submode-seg {
+    flex: 1;
+    padding: 7px 4px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ink-mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 140ms ease;
+  }
+  .submode-seg:hover { color: var(--ink-soft); }
+  .submode-seg.is-active {
+    background: var(--accent-2);
+    color: #0c1319;
+    font-weight: 600;
   }
   .panel-section {
     padding: 22px 24px;
@@ -523,6 +800,121 @@
     opacity: 0.75;
     margin: 14px 0 2px;
   }
+  /* ── Clade heatmap ─────────────────────────────────────────────────── */
+  .heat-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0 10px;
+  }
+  .heat-metric {
+    display: flex;
+    gap: 2px;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    padding: 2px;
+  }
+  .heat-seg {
+    background: transparent;
+    border: 0;
+    color: var(--ink-mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 140ms ease;
+  }
+  .heat-seg:hover { color: var(--ink-soft); }
+  .heat-seg.is-active { background: var(--rule); color: var(--ink); }
+  .heat-n {
+    margin-left: auto;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    padding: 4px 6px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .heat-wrap { margin-top: 2px; min-height: 40px; }
+  .heat-pending {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink-mute);
+    padding: 10px 0;
+  }
+  .heat-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .heat-cell { cursor: pointer; transition: opacity 120ms ease; }
+  .heat-cell:hover { opacity: 0.75; }
+  .heat-cell.na { fill: none; stroke: var(--rule); stroke-width: 1; stroke-dasharray: 2 2; }
+  .heat-best { fill: none; stroke: #E8C77E; stroke-width: 1.6; pointer-events: none; }
+  .heat-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    fill: var(--ink-mute);
+  }
+  .heat-lbl.a-axis { fill: #E8C77E; }
+  .heat-lbl.b-axis { fill: #7CFFB2; }
+  .heat-axis-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5px;
+    letter-spacing: 0.12em;
+    fill: var(--ink-mute);
+    text-transform: uppercase;
+  }
+  .heat-readout {
+    min-height: 30px;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .heat-readout .hr-dim { color: var(--ink-mute); }
+  .heat-readout .hr-a { color: #E8C77E; }
+  .heat-readout .hr-b { color: #7CFFB2; }
+  .heat-readout .hr-val { color: var(--ink); }
+  .heat-note {
+    font-family: 'Newsreader', serif;
+    font-size: 11.5px;
+    font-style: italic;
+    color: var(--ink-mute);
+    line-height: 1.5;
+    margin-top: 6px;
+  }
+  .heat-scale { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+  .heat-scale .hs-ramp {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #16202B, #2E5566, #7DA0AE, #E8C77E);
+    border: 1px solid var(--rule);
+  }
+  .heat-scale small {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: var(--ink-mute);
+    letter-spacing: 0.08em;
+  }
+  /* clade pair highlighted from the heatmap */
+  .node-circle.heat-hi-a {
+    stroke: #E8C77E !important;
+    stroke-width: 3.5 !important;
+    stroke-dasharray: none !important;
+    filter: drop-shadow(0 0 12px rgba(232,199,126,0.75));
+  }
+  .node-circle.heat-hi-b {
+    stroke: #7CFFB2 !important;
+    stroke-width: 3.5 !important;
+    stroke-dasharray: none !important;
+    filter: drop-shadow(0 0 12px rgba(124,255,178,0.75));
+  }
   /* selection rings drawn on graph roots while comparing */
   .node-circle.compare-a {
     stroke: #E8C77E !important;
@@ -574,6 +966,53 @@
     color: var(--ink-mute);
     font-style: italic;
   }
+  /* "+" badge pinned to the selected circle in Edit mode */
+  .add-badge { cursor: pointer; }
+  .add-badge-bg {
+    fill: #F2C75C;
+    stroke: #0E1117;
+    stroke-width: 1.5;
+    transition: fill 140ms ease;
+  }
+  .add-badge:hover .add-badge-bg { fill: #FFE1A0; }
+  .add-badge-bar {
+    stroke: #0E1117;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    pointer-events: none;
+  }
+  /* keyboard legend under the edit actions */
+  .edit-keys {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--rule);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+  }
+  .edit-keys-note {
+    margin-top: 6px;
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-size: 11px;
+    line-height: 1.45;
+    color: var(--ink-mute);
+  }
+  .edit-keys kbd {
+    display: inline-block;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin-right: 4px;
+    font-family: inherit;
+    font-size: 9px;
+    color: var(--ink-soft);
+  }
   .edit-row { margin-bottom: 10px; }
   .edit-row label {
     display: block;
@@ -602,20 +1041,24 @@
     letter-spacing: 0.06em;
     margin-bottom: 12px;
   }
-  .edit-actions { display: flex; gap: 8px; }
+  .edit-actions { display: flex; gap: 6px; }
   .edit-actions button, .edit-export-btn {
     flex: 1;
+    min-width: 0;
     background: var(--panel-2);
     border: 1px solid var(--rule);
     color: var(--ink-soft);
-    padding: 8px 10px;
+    padding: 8px 6px;
     border-radius: 5px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.05em;
+    font-size: 10.5px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
     cursor: pointer;
     transition: all 140ms ease;
   }
+  /* delete reads as the destructive one on hover */
+  #edit-del:hover:not(:disabled) { border-color: var(--danger); color: var(--danger); }
   .edit-actions button:hover:not(:disabled), .edit-export-btn:hover {
     border-color: var(--accent);
     color: var(--ink);
@@ -662,6 +1105,13 @@
   .node-circle.drag-source {
     opacity: 0.45;
   }
+  .node-circle.moving-source {
+    stroke: var(--accent-2) !important;
+    stroke-width: 2.5 !important;
+    filter: drop-shadow(0 0 12px rgba(123,167,199,0.6));
+  }
+  /* in Arrange sub-mode, circles show a move cursor */
+  .app.edit-mode.arrange-mode .node-circle { cursor: move; }
 
   /* floating chip that follows the cursor while dragging to reparent */
   .drag-ghost {
@@ -694,6 +1144,39 @@
     font-size: 10px;
     color: var(--accent);
     letter-spacing: 0.04em;
+  }
+  .drag-ghost .dg-action {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.03em;
+    padding-left: 8px;
+    margin-left: 6px;
+    border-left: 1px solid var(--rule);
+  }
+  .drag-ghost .dg-action.into { color: #7CFFB2; }
+  .drag-ghost .dg-action.into b { color: #a5ffce; font-weight: 600; }
+  .drag-ghost .dg-action.newgraph { color: var(--accent); }
+  .drag-ghost.to-target { border-color: #7CFFB2; }
+  .drag-ghost.to-empty { border-color: var(--accent); }
+
+  /* when dragging over empty space, hint that releasing makes a new graph */
+  .canvas-wrap.drop-newgraph-armed::after {
+    content: 'release to create a new graph';
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 7px 16px;
+    background: rgba(201,168,124,0.14);
+    border: 1px dashed var(--accent);
+    border-radius: 999px;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    pointer-events: none;
+    z-index: 7;
+    animation: helpIn 140ms ease;
   }
 
   /* inspector */
@@ -779,20 +1262,6 @@
     color: var(--ink-mute);
     margin-left: 6px;
   }
-  .poly-card {
-    background: var(--panel-2);
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 14px;
-  }
-  .poly-meta {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px dashed var(--rule);
-  }
   .poly-stat {
     display: flex;
     align-items: baseline;
@@ -813,6 +1282,7 @@
     color: var(--ink);
   }
   .poly-copy {
+    flex: 0 0 auto;
     margin-left: auto;
     background: transparent;
     border: 1px solid var(--rule);
@@ -835,16 +1305,18 @@
     color: var(--accent);
   }
   .poly-body {
+    flex: 1 1 auto;
+    min-width: 0;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12.5px;
-    line-height: 1.65;
+    font-size: 12px;
+    line-height: 1.6;
     color: var(--ink);
-    max-height: 260px;
+    max-height: 76px;
     overflow-y: auto;
     overflow-x: hidden;
     word-break: break-word;
     white-space: normal;
-    padding-right: 4px;
+    padding-right: 6px;
   }
   .poly-body sup {
     font-size: 0.72em;
@@ -896,20 +1368,48 @@
     color: var(--ink);
   }
 
-  /* ── FOOTER ─────────────────────────────────────────────────────────── */
+  /* ── FOOTER · shape-polynomial bar ──────────────────────────────────── */
+  /* Locked to the focused node: hovering circles no longer swaps it out. */
   footer {
     grid-column: 1 / -1;
     border-top: 1px solid var(--rule);
-    padding: 10px 32px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    color: var(--ink-mute);
+    background: var(--panel-2);
+    padding: 11px 32px 12px;
     display: flex;
-    justify-content: space-between;
-    letter-spacing: 0.06em;
+    align-items: flex-start;
+    gap: 22px;
+    min-height: 56px;
   }
-  footer .right { color: var(--ink-soft); }
-  footer .right strong { color: var(--accent); font-weight: 500; }
+  .poly-head {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding-top: 1px;
+  }
+  .poly-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    white-space: nowrap;
+  }
+  .poly-scope {
+    display: inline-block;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 96;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 14.5px;
+    color: var(--accent);
+  }
+  footer .poly-head .poly-stat .val { font-size: 14.5px; }
 
   /* tooltip */
   .tip {
@@ -935,6 +1435,40 @@
 </head>
 <body>
   <div class="app">
+    <!-- one-time welcome overlay (dismissed state remembered) -->
+    <div class="welcome-scrim" id="welcome-scrim" hidden>
+      <div class="welcome-card" role="dialog" aria-label="Welcome to Venn·Tree">
+        <button class="welcome-x" id="welcome-x" aria-label="Close">×</button>
+        <div class="welcome-kicker">Welcome to</div>
+        <div class="welcome-title">Venn<em>·</em>Tree</div>
+        <p class="welcome-lede">A tree drawn as nested circles — every node is a circle, and its children sit inside it. Bigger, deeper structure lives further in.</p>
+
+        <div class="welcome-steps">
+          <div class="welcome-step">
+            <div class="ws-ic">◎</div>
+            <div class="ws-txt"><b>Explore</b> — click a circle to zoom into it, click outside to come back up. Scroll or use the <span class="ws-k">+ −</span> buttons to zoom.</div>
+          </div>
+          <div class="welcome-step">
+            <div class="ws-ic">⋔</div>
+            <div class="ws-txt"><b>Three modes</b> — switch between <span class="ws-pill">View</span> <span class="ws-pill">Edit</span> <span class="ws-pill">Compare</span> at the top of the panel. Compare measures how alike two subtrees are, down to a clade-by-clade heatmap.</div>
+          </div>
+          <div class="welcome-step">
+            <div class="ws-ic">✎</div>
+            <div class="ws-txt"><b>Build in Edit</b> — select a circle, then <span class="ws-k">Tab</span> adds a child and <span class="ws-k">Enter</span> adds a sibling. The selection and the view hold still, so press again to keep going. Drag a circle onto another to reparent it.</div>
+          </div>
+          <div class="welcome-step">
+            <div class="ws-ic">?</div>
+            <div class="ws-txt"><b>Stuck?</b> — the <span class="ws-k">?</span> button (bottom-right) lists every shortcut and gesture at any time.</div>
+          </div>
+        </div>
+
+        <div class="welcome-actions">
+          <label class="welcome-dontshow"><input type="checkbox" id="welcome-dontshow" checked /> Don't show this again</label>
+          <button class="welcome-go" id="welcome-go">Start exploring</button>
+        </div>
+      </div>
+    </div>
+
     <header>
       <div class="brand">
         <div class="mark">Venn<em>·</em>Tree</div>
@@ -949,16 +1483,80 @@
     </header>
 
     <div class="canvas-wrap">
-      <div class="stage-overlay-tl" id="stage-title">— click a node to zoom · click outside to reset —</div>
       <svg id="stage" xmlns="http://www.w3.org/2000/svg"></svg>
       <div class="legend">
         <span>depth</span>
         <div class="ramp"></div>
         <small>shallow → deep</small>
       </div>
+
+      <!-- on-screen navigation controls (bottom-right) -->
+      <div class="canvas-controls">
+        <button class="cc-btn" id="zoom-in" title="Zoom in (+)" aria-label="Zoom in">+</button>
+        <button class="cc-btn" id="zoom-out" title="Zoom out (−)" aria-label="Zoom out">−</button>
+        <button class="cc-btn" id="zoom-fit" title="Fit / reset view (F)" aria-label="Fit to view">⤢</button>
+        <button class="cc-btn cc-help" id="help-btn" title="Keyboard shortcuts &amp; tips (?)" aria-label="Help">?</button>
+      </div>
+
+      <!-- shortcuts / help popover -->
+      <div class="help-popover" id="help-popover" hidden>
+        <div class="help-head">
+          <span>Getting around</span>
+          <button class="help-close" id="help-close" aria-label="Close">×</button>
+        </div>
+        <div class="help-body">
+          <div class="help-group">
+            <div class="help-group-title">Navigate</div>
+            <div class="help-row"><span>Zoom into a circle</span><kbd class="keycap">click</kbd></div>
+            <div class="help-row"><span>Go up a level</span><span class="help-keys"><kbd class="keycap">click outside</kbd> / <kbd class="keycap">Esc</kbd></span></div>
+            <div class="help-row"><span>Pan</span><kbd class="keycap">drag</kbd></div>
+            <div class="help-row"><span>Zoom</span><span class="help-keys"><kbd class="keycap">scroll</kbd> / <kbd class="keycap">+</kbd> <kbd class="keycap">−</kbd></span></div>
+            <div class="help-row"><span>Fit everything</span><kbd class="keycap">F</kbd></div>
+            <div class="help-note">The polynomial bar along the bottom follows the circle you last clicked into — it stays put when you hover, so you can read it while moving the mouse.</div>
+          </div>
+          <div class="help-group">
+            <div class="help-group-title">Edit — build</div>
+            <div class="help-row"><span>Select a circle</span><kbd class="keycap">click</kbd></div>
+            <div class="help-row"><span>Add a child</span><span class="help-keys"><kbd class="keycap">Tab</kbd> / <kbd class="keycap">double-click</kbd></span></div>
+            <div class="help-row"><span>Add a child (on canvas)</span><kbd class="keycap">+ badge</kbd></div>
+            <div class="help-row"><span>Add a sibling</span><kbd class="keycap">Enter</kbd></div>
+            <div class="help-row"><span>Rename selected</span><kbd class="keycap">F2</kbd></div>
+            <div class="help-row"><span>Delete node + subtree</span><span class="help-keys"><kbd class="keycap">Del</kbd> / <kbd class="keycap">⌫</kbd></span></div>
+            <div class="help-note">The selection and the camera stay put as you add, so pressing <kbd class="keycap">Tab</kbd> or <kbd class="keycap">Enter</kbd> repeatedly builds out a whole level without re-selecting or losing your place.</div>
+          </div>
+          <div class="help-group">
+            <div class="help-group-title">Edit — restructure</div>
+            <div class="help-row"><span>Reparent (moves subtree)</span><kbd class="keycap">drag onto circle</kbd></div>
+            <div class="help-row"><span>Split into new graph</span><kbd class="keycap">drag to empty space</kbd></div>
+            <div class="help-row"><span>Place circles freely</span><kbd class="keycap">Arrange sub-mode</kbd></div>
+            <div class="help-row"><span>Undo / redo</span><span class="help-keys" id="help-undo-keys"></span></div>
+          </div>
+          <div class="help-group">
+            <div class="help-group-title">Compare mode</div>
+            <div class="help-row"><span>Pick any two circles</span><kbd class="keycap">click each</kbd></div>
+            <div class="help-row"><span>Inspect a clade pair</span><kbd class="keycap">hover a heatmap cell</kbd></div>
+            <div class="help-note">In the clade heatmap, a gold outline marks each A-clade's closest match in B. Where that band leaves the diagonal is where the two trees stop corresponding.</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <aside>
+      <div class="panel-section mode-section">
+        <div class="mode-switch" role="tablist" aria-label="Mode">
+          <button class="mode-seg is-active" data-mode="view" role="tab" aria-selected="true">
+            <span class="mode-seg-ic">◎</span> View
+          </button>
+          <button class="mode-seg" data-mode="edit" role="tab" aria-selected="false">
+            <span class="mode-seg-ic">✎</span> Edit
+          </button>
+          <button class="mode-seg" data-mode="compare" role="tab" aria-selected="false">
+            <span class="mode-seg-ic">⇄</span> Compare
+          </button>
+        </div>
+        <div class="mode-hint" id="mode-hint">Click a circle to zoom in · click outside to go back up.</div>
+      </div>
+
       <div class="panel-section">
         <h2>Dataset</h2>
         <select class="ds-select" id="ds-select">
@@ -983,13 +1581,12 @@
         </select>
       </div>
 
-      <div class="panel-section">
-        <h2>Edit mode</h2>
-        <label class="edit-switch">
-          <input type="checkbox" id="edit-toggle" />
-          <span class="switch-track"><span class="switch-thumb"></span></span>
-          <span class="switch-label">enable editing</span>
-        </label>
+      <div class="panel-section mode-panel" id="edit-section" style="display:none;">
+        <h2>Edit</h2>
+        <div class="submode-switch" role="tablist" aria-label="Edit action">
+          <button class="submode-seg is-active" data-submode="restructure" role="tab" aria-selected="true" title="Drag rebuilds the tree (reparent / split)">⋔ Restructure</button>
+          <button class="submode-seg" data-submode="arrange" role="tab" aria-selected="false" title="Drag freely repositions circles">✥ Arrange</button>
+        </div>
         <div class="history-row">
           <button id="undo-btn" class="history-btn" disabled title="Undo">
             <span class="hb-label">↶ undo</span>
@@ -1000,25 +1597,21 @@
             <span class="hb-keys" id="redo-keys"></span>
           </button>
         </div>
-        <div id="edit-panel" style="display:none; margin-top: 14px;">
+        <div id="edit-panel" style="margin-top: 14px;">
           <div id="edit-selection">
             <div class="edit-hint">Click a circle to select it, then rename / add / delete. Drag a circle onto another to reparent it — its children come along. Drag a circle out onto empty space to split it into its own graph.</div>
           </div>
           <div class="edit-export-row">
             <button id="edit-export" class="edit-export-btn">copy Newick</button>
+            <button id="reset-layout" class="edit-export-btn" style="display:none;">reset layout</button>
           </div>
           <textarea id="edit-newick-out" class="edit-newick" style="display:none" readonly></textarea>
         </div>
       </div>
 
-      <div class="panel-section">
+      <div class="panel-section mode-panel" id="compare-section" style="display:none;">
         <h2>Compare shape</h2>
-        <label class="edit-switch">
-          <input type="checkbox" id="compare-toggle" />
-          <span class="switch-track"><span class="switch-thumb"></span></span>
-          <span class="switch-label">compare mode</span>
-        </label>
-        <div id="compare-panel" style="display:none; margin-top: 14px;">
+        <div id="compare-panel" style="margin-top: 4px;">
           <div id="compare-status" class="compare-status">Click one graph, then another, to compare their shapes.</div>
           <div id="compare-result" class="compare-result" style="display:none;">
             <div class="compare-verdict" id="compare-verdict">—</div>
@@ -1031,11 +1624,7 @@
 
             <div class="compare-section-lbl">shape detail</div>
             <div class="compare-metric">
-              <span class="cm-lbl" title="L1 (Manhattan) distance between coefficient vectors. Grows with tree size — large values are expected for big trees.">L1 distance</span>
-              <span class="cm-val" id="compare-dist">—</span>
-            </div>
-            <div class="compare-metric">
-              <span class="cm-lbl" title="L1 distance after log-scaling each coefficient (log1p). Tames the huge high-degree coefficients so all terms contribute more evenly.">L1 (log-scaled)</span>
+              <span class="cm-lbl" title="Mean per-monomial log-L1 distance: the L1 distance between log-scaled coefficient vectors, divided by the number of distinct monomials across the two. Size-independent, so it is comparable between pairs of different sizes. 0 = identical shape; larger = more different.">L1 distance (norm.)</span>
               <span class="cm-val" id="compare-logl1">—</span>
             </div>
 
@@ -1062,6 +1651,26 @@
               <span class="cm-lbl" title="The shallowest layer where the two graphs' subtree shapes first differ. Its circles are outlined on both graphs.">diverges at layer</span>
               <span class="cm-val" id="compare-divlayer">—</span>
             </div>
+
+            <div class="compare-section-lbl">clade heatmap</div>
+            <div class="heat-controls">
+              <div class="heat-metric" role="group" aria-label="Heatmap metric">
+                <button class="heat-seg is-active" data-metric="cos" title="Cosine similarity between the two clades' shape polynomials. Size-robust.">similarity</button>
+                <button class="heat-seg" data-metric="logl1" title="Mean per-monomial log-L1 distance — size-independent, so cell values are comparable across matrices. Shading is still stretched to the largest distance in this matrix, so colour is relative but the number is not. Brighter means closer.">distance</button>
+              </div>
+              <select class="heat-n" id="heat-n" title="How many clades per side">
+                <option value="6">6 × 6</option>
+                <option value="8" selected>8 × 8</option>
+                <option value="12">12 × 12</option>
+              </select>
+            </div>
+            <div class="heat-wrap" id="heat-wrap"></div>
+            <div class="heat-scale">
+              <small>unlike</small>
+              <div class="hs-ramp"></div>
+              <small>alike</small>
+            </div>
+            <div class="heat-readout" id="heat-readout"></div>
 
             <div class="compare-pair" id="compare-pair"></div>
           </div>
@@ -1098,24 +1707,19 @@
         </div>
       </div>
 
-      <div class="panel-section">
-        <h2>Polynomial</h2>
-        <div class="poly-card">
-          <div class="poly-meta">
-            <span class="poly-stat"><span class="lbl">terms</span><span class="val" id="poly-terms">—</span></span>
-            <span class="poly-stat"><span class="lbl">deg</span><span class="val" id="poly-deg">—</span></span>
-            <button class="poly-copy" id="poly-copy" title="copy as plain text">copy</button>
-          </div>
-          <div class="poly-body" id="poly-body">
-            <span class="poly-placeholder">P(T) = y + ∏ P(Tᵢ),&nbsp; P(•) = x</span>
-          </div>
-        </div>
-      </div>
     </aside>
 
     <footer>
-      <div>NEWICK · NESTED CIRCLE PACKING · d3.pack(R²)</div>
-      <div class="right">prototype</div>
+      <div class="poly-head">
+        <span class="poly-title">shape polynomial</span>
+        <span class="poly-scope" id="poly-scope">—</span>
+        <span class="poly-stat"><span class="lbl">terms</span><span class="val" id="poly-terms">—</span></span>
+        <span class="poly-stat"><span class="lbl">deg</span><span class="val" id="poly-deg">—</span></span>
+      </div>
+      <div class="poly-body" id="poly-body">
+        <span class="poly-placeholder">P(T) = y + ∏ P(Tᵢ),&nbsp; P(•) = x</span>
+      </div>
+      <button class="poly-copy" id="poly-copy" title="copy as plain text">copy</button>
     </footer>
   </div>
 
@@ -1298,6 +1902,8 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   // vectors via Manhattan (L1) distance. compareSel holds the chosen trees.
   let compareMode = false;
   let compareSel = [];        // array of up to 2 tree entries
+  let comparePolyResult = null;   // memoised polynomial metrics for the current pair
+  let comparePolyToken = 0;       // cancels a deferred metric run that got superseded
   let compareDivergence = null;  // { lastMatch, divergence, ... } for the current pair
 
   function setAttrs(el, attrs) {
@@ -1338,8 +1944,10 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   //  P(•) = x   (leaf)
   //  P(T) = y + ∏ P(Tᵢ)   (internal node with children Tᵢ)
   //
-  //  Each polynomial is a Map "i,j" → integer coefficient,
-  //  representing Σ c_ij · x^i · y^j.
+  //  Each polynomial is a Map<int, integer coeff>, where the integer key packs
+  //  the two exponents (i = x-degree, j = y-degree) as  key = i*POLY_STRIDE + j.
+  //  This avoids parsing "i,j" strings in the multiplication hot loop — the
+  //  single biggest cost for large trees. Coefficients represent Σ c·x^i·y^j.
   //  Computed lazily and cached on the d3 hierarchy node.
   //  POLY_SIZE_CAP guards against explosion in very large subtrees;
   //  if the polynomial would exceed this many monomials, we return null
@@ -1347,48 +1955,184 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   // ─────────────────────────────────────────────────────────────────────
   const POLY_SIZE_CAP = 5000;
 
+  // Exponent packing. STRIDE must exceed any exponent we will ever see; the
+  // x- and y-degrees are each bounded by the node count, so 2^20 (~1.05M) is
+  // enormously safe and keeps packed keys well inside JS's 2^53 integer range.
+  const POLY_STRIDE = 1 << 20;
+  const packKey = (i, j) => i * POLY_STRIDE + j;
+  const keyI = (k) => Math.floor(k / POLY_STRIDE);
+  const keyJ = (k) => k % POLY_STRIDE;
+  // canonical single-term keys, precomputed
+  const KEY_00 = packKey(0, 0);   // constant 1
+  const KEY_10 = packKey(1, 0);   // x   (a leaf)
+  const KEY_01 = packKey(0, 1);   // y   (the +y at each internal node)
+
+  // Multiply two coefficient maps.
+  //
+  // Two things make this the hot loop's fast path:
+  //
+  //  1. The product key is just `ka + kb`. Keys are packed as i*STRIDE + j, so
+  //     (ia+ib)*STRIDE + (ja+jb) is identically ka + kb, provided ja+jb never
+  //     carries into the i field — guaranteed, since j is bounded by the node
+  //     count and STRIDE is 2^20. The previous version decoded both operands
+  //     with a divide and a modulo on every inner iteration to reconstruct a
+  //     value it could have obtained by adding.
+  //
+  //  2. `b` is flattened into plain arrays once. Iterating a Map allocates a
+  //     fresh iterator, and the old inner `for...of b` did that once per term
+  //     of `a` — |a| iterator allocations per multiply.
   function polyMul(a, b) {
+    const bn = b.size;
+    const bk = new Array(bn), bc = new Array(bn);
+    let t = 0;
+    for (const [k, c] of b) { bk[t] = k; bc[t] = c; t++; }
     const out = new Map();
     for (const [ka, ca] of a) {
-      const [ia, ja] = ka.split(',');
-      const ix = +ia, jy = +ja;
-      for (const [kb, cb] of b) {
-        const [ib, jb] = kb.split(',');
-        const key = (ix + +ib) + ',' + (jy + +jb);
-        out.set(key, (out.get(key) || 0) + ca * cb);
+      for (let i = 0; i < bn; i++) {
+        const key = ka + bk[i];
+        const prev = out.get(key);
+        out.set(key, prev === undefined ? ca * bc[i] : prev + ca * bc[i]);
       }
     }
     return out;
+  }
+
+  // ── Dense accumulation ────────────────────────────────────────────────
+  // These polynomials saturate: multiplying adds exponents, so a product's
+  // monomials fill most of a (dx1+dx2) × (dy1+dy2) rectangle. Once that is
+  // true, a Map is the wrong container — every term costs a hash lookup to
+  // land in a slot we could have indexed arithmetically. So for any multiply
+  // big enough to matter, accumulate into a flat Float64Array indexed by
+  // (i * jStride + j) and convert back at the end.
+  //
+  // The same additive-key trick applies in dense space: the destination index
+  // is aoff + boff, so b's offsets are precomputed once and the inner loop is
+  // a single array add with no hashing and no divides.
+  const DENSE_MAX_BOX = 4194304;   // ~4M slots (32MB) ceiling on the scratch buffer
+  const DENSE_MIN_WORK = 4096;     // below this, Map overhead is cheaper than setup
+  let denseScratch = new Float64Array(1 << 16);
+
+  function polyMulDense(a, b) {
+    const an = a.size, bn = b.size;
+    if (an * bn < DENSE_MIN_WORK) return null;
+    const ai = new Array(an), aj = new Array(an), ac = new Array(an);
+    let t = 0, axm = 0, aym = 0;
+    for (const [k, c] of a) {
+      const i = (k / POLY_STRIDE) | 0, j = k - i * POLY_STRIDE;
+      ai[t] = i; aj[t] = j; ac[t] = c;
+      if (i > axm) axm = i;
+      if (j > aym) aym = j;
+      t++;
+    }
+    const bi = new Array(bn), bj = new Array(bn), bc = new Array(bn);
+    t = 0;
+    let bxm = 0, bym = 0;
+    for (const [k, c] of b) {
+      const i = (k / POLY_STRIDE) | 0, j = k - i * POLY_STRIDE;
+      bi[t] = i; bj[t] = j; bc[t] = c;
+      if (i > bxm) bxm = i;
+      if (j > bym) bym = j;
+      t++;
+    }
+    const jStride = aym + bym + 1;
+    const box = (axm + bxm + 1) * jStride;
+    if (box > DENSE_MAX_BOX) return null;
+    if (denseScratch.length < box) denseScratch = new Float64Array(box);
+    else denseScratch.fill(0, 0, box);
+    const buf = denseScratch;
+    const boff = new Array(bn);
+    for (let x = 0; x < bn; x++) boff[x] = bi[x] * jStride + bj[x];
+    for (let y = 0; y < an; y++) {
+      const aoff = ai[y] * jStride + aj[y], ca = ac[y];
+      for (let x = 0; x < bn; x++) buf[aoff + boff[x]] += ca * bc[x];
+    }
+    const out = new Map();
+    for (let idx = 0; idx < box; idx++) {
+      const v = buf[idx];
+      if (v === 0) continue;
+      const i = (idx / jStride) | 0;
+      out.set(i * POLY_STRIDE + (idx - i * jStride), v);
+    }
+    return out;
+  }
+
+  // Dense where it pays, sparse otherwise. Always returns a fresh Map.
+  function polyMulAuto(a, b) {
+    return polyMulDense(a, b) || polyMul(a, b);
+  }
+
+  // Multiply a list of polynomials, LARGEST FIRST.
+  //
+  // The schedule matters more than it looks, and the intuitive answer is
+  // wrong. Because product size saturates — degrees add, so |acc| approaches
+  // its final value and then stops growing — the cost of the whole fold is
+  // dominated by whichever multiply pairs the accumulator with a *large*
+  // factor. Sorting ascending (or Huffman-merging the two smallest, the usual
+  // reflex) guarantees that the biggest factor is multiplied against a
+  // near-final accumulator at the very end. Sorting descending gets the
+  // accumulator to full size against the second-largest factor instead, and
+  // every remaining multiply is |final| × |small|.
+  //
+  // Measured on the 619-leaf fungal taxonomy: descending 5.1s, tree-order
+  // 7.4s, ascending 11.2s, Huffman 11.9s — all producing an identical
+  // 80,439-term polynomial.
+  function polyMulMany(polys, cap) {
+    if (!polys.length) return new Map([[KEY_00, 1]]);
+    // Copy on the single-factor path: callers add the +y term by mutating what
+    // they get back, and polys[0] is a shape-memo entry shared with other nodes.
+    if (polys.length === 1) return new Map(polys[0]);
+    const list = polys.slice().sort((x, y) => y.size - x.size);
+    let acc = list[0];
+    for (let i = 1; i < list.length; i++) {
+      acc = polyMulAuto(acc, list[i]);
+      if (cap && acc.size > cap) return null;
+    }
+    return acc;
+  }
+
+  // Memoize polynomials by canonical SHAPE, so identical subtrees (e.g. twin
+  // clades) are computed once and reused. The shape key is a compact recursive
+  // encoding independent of node names/positions — only branching structure.
+  const shapePolyCache = new Map();
+  function shapeKey(node) {
+    if (!node.children || node.children.length === 0) return 'L';
+    const parts = node.children.map(shapeKey);
+    parts.sort();
+    return '(' + parts.join('') + ')';
   }
 
   function computePolynomial(node) {
     if (node._poly !== undefined) return node._poly;
     // leaf → x
     if (!node.children || node.children.length === 0) {
-      const p = new Map();
-      p.set('1,0', 1);
+      const p = new Map([[KEY_10, 1]]);
       node._poly = p;
       return p;
     }
+    // identical-shape memo: reuse a previously computed polynomial for this shape
+    const sk = shapeKey(node);
+    const cached = shapePolyCache.get(sk);
+    if (cached !== undefined) { node._poly = cached; return cached; }
+
     // internal → y + ∏ children
-    let prod = new Map();
-    prod.set('0,0', 1); // multiplicative identity
+    const kids = [];
     for (const ch of node.children) {
       const cp = computePolynomial(ch);
-      if (cp === null) { node._poly = null; return null; }
-      prod = polyMul(prod, cp);
-      if (prod.size > POLY_SIZE_CAP) { node._poly = null; return null; }
+      if (cp === null) { node._poly = null; shapePolyCache.set(sk, null); return null; }
+      kids.push(cp);
     }
-    prod.set('0,1', (prod.get('0,1') || 0) + 1);
+    const prod = polyMulMany(kids, POLY_SIZE_CAP);
+    if (prod === null) { node._poly = null; shapePolyCache.set(sk, null); return null; }
+    prod.set(KEY_01, (prod.get(KEY_01) || 0) + 1);
     node._poly = prod;
+    shapePolyCache.set(sk, prod);
     return prod;
   }
 
   function polyTotalDegree(p) {
     let d = 0;
     for (const k of p.keys()) {
-      const c = k.indexOf(',');
-      const total = (+k.slice(0, c)) + (+k.slice(c + 1));
+      const total = Math.floor(k / POLY_STRIDE) + (k % POLY_STRIDE);
       if (total > d) d = total;
     }
     return d;
@@ -1399,8 +2143,7 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     const terms = [];
     for (const [k, c] of p) {
       if (c === 0) continue;
-      const idx = k.indexOf(',');
-      terms.push([+k.slice(0, idx), +k.slice(idx + 1), c]);
+      terms.push([keyI(k), keyJ(k), c]);
     }
     terms.sort((a, b) => {
       const da = a[0] + a[1], db = b[0] + b[1];
@@ -1457,17 +2200,25 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
 
   let currentPolyPlainText = '';
 
+  // The footer bar is LOCKED to the focused node — it is driven only by
+  // zoomTo() / dataset loads, never by hover.
   function updatePolynomial(d) {
     const body = document.getElementById('poly-body');
     const tEl  = document.getElementById('poly-terms');
     const dEl  = document.getElementById('poly-deg');
+    const sEl  = document.getElementById('poly-scope');
     if (!d) {
       body.innerHTML = '<span class="poly-placeholder">P(T) = y + ∏ P(Tᵢ),&nbsp; P(•) = x</span>';
       tEl.textContent = '—';
       dEl.textContent = '—';
+      sEl.textContent = '—';
+      sEl.title = '';
       currentPolyPlainText = '';
       return;
     }
+    const scopeName = d.data.name || (d.depth === 0 ? 'root' : '(unnamed)');
+    sEl.textContent = scopeName;
+    sEl.title = scopeName;
     const p = computePolynomial(d);
     if (p === null) {
       body.innerHTML = '<span class="poly-toobig">subtree too large — exceeds ' + POLY_SIZE_CAP.toLocaleString() + '-monomial display budget. zoom into a smaller clade to compute.</span>';
@@ -1640,6 +2391,10 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   }
 
   function render() {
+    // Bumped on every forest rebuild. Caches keyed on node identity (the clade
+    // heatmap's axis cache) fold this in so an edit can never serve stale
+    // polynomials for a node whose _id was reused.
+    forestRevision++;
     const wrap = document.querySelector('.canvas-wrap');
     const W = wrap.clientWidth, H = wrap.clientHeight;
 
@@ -1696,6 +2451,30 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     // center each tree's pack around its own (0,0), then we translate the <g>
     hierarchy.each(d => { d.x -= size / 2; d.y -= size / 2; });
 
+    // ── Apply manual free-placement overrides ──────────────────────────
+    // A node whose data carries _fx/_fy has been hand-placed by the user in
+    // "Arrange" sub-mode. We move that node to its stored local position and
+    // shift its whole subtree by the same delta, so the subtree travels as a
+    // rigid unit. Each moved node is CLAMPED to stay inside its parent circle
+    // so groups always stay visually nested/attached. Processed breadth-first
+    // (ancestors before descendants) so a moved parent carries its children,
+    // and a child's own placement is then re-clamped against the moved parent.
+    hierarchy.each(d => {
+      const fx = d.data._fx, fy = d.data._fy;
+      if (fx == null || fy == null) return;
+      // clamp the intended position so the node stays within its parent
+      const cl = clampInsideParent(d, fx, fy);
+      const dx = cl.x - d.x, dy = cl.y - d.y;
+      if (dx === 0 && dy === 0) return;
+      // shift this node and every descendant rigidly
+      const stack = [d];
+      while (stack.length) {
+        const n = stack.pop();
+        n.x += dx; n.y += dy;
+        if (n.children) for (const c of n.children) stack.push(c);
+      }
+    });
+
     let maxDepth = 0;
     hierarchy.each(d => { if (d.depth > maxDepth) maxDepth = d.depth; });
     t.maxDepth = maxDepth;
@@ -1732,12 +2511,20 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
         }
         showTip(evt, d);
         updateInspector(d);
-        updatePolynomial(d);
         updateBreadcrumbs(d);
       });
       c.addEventListener('mousemove', (evt) => {
         if (reparentDrag.active && reparentDrag.moved) return;
         moveTip(evt);
+      });
+      // Double-click in Edit mode adds a child to that circle — the fastest
+      // path for someone working mouse-first, and it needs no prior selection.
+      c.addEventListener('dblclick', (evt) => {
+        if (!editMode) return;
+        evt.stopPropagation();
+        evt.preventDefault();
+        hideTip();
+        createChild(d.data);
       });
       c.addEventListener('mouseleave', () => {
         c.classList.remove('drop-target');
@@ -1745,22 +2532,35 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
         hideTip();
         if (currentFocus) {
           updateInspector(currentFocus);
-          updatePolynomial(currentFocus);
           updateBreadcrumbs(currentFocus);
         } else {
           updateInspector(null);
-          updatePolynomial(null);
           updateBreadcrumbs(currentRoot);
         }
       });
-      // ── Edit mode: drag to reparent (or detach) ──────────────────────
+      // ── Edit mode: drag to reparent/detach OR free-move (by sub-mode) ──
       c.addEventListener('mousedown', (evt) => {
         if (!editMode) return;
         if (evt.button !== 0) return;
+        evt.stopPropagation();
+        if (editSubMode === 'arrange') {
+          // free placement: remember where this node currently sits (local)
+          moveDrag.active = true;
+          moveDrag.moved = false;
+          moveDrag.nodeData = d.data;
+          moveDrag.tree = t;
+          moveDrag.startX = evt.clientX;
+          moveDrag.startY = evt.clientY;
+          // current local position (may already be a free position)
+          moveDrag.origFx = (d.data._fx != null) ? d.data._fx : d.x;
+          moveDrag.origFy = (d.data._fy != null) ? d.data._fy : d.y;
+          c.classList.add('moving-source');
+          return;
+        }
+        // restructure sub-mode: reparent / detach
         // A tree's root can only be dragged when there's more than one tree
         // (to merge it into another graph). A lone tree's root isn't draggable.
         if (d === t.hierarchy && forest.length <= 1) return;
-        evt.stopPropagation();
         reparentDrag.active = true;
         reparentDrag.nodeData = d.data;
         reparentDrag.sourceTree = t;
@@ -1773,14 +2573,25 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
         evt.stopPropagation();
         if (compareMode) {
           if (dragJustMoved) return;
-          pickForCompare(t);
+          // node-level compare: pick this specific circle (its subtree)
+          pickNodeForCompare(t, d);
           return;
         }
         if (editMode) {
-          if (reparentDrag.consumedClick) { reparentDrag.consumedClick = false; return; }
+          if (reparentDrag.consumedClick || moveDrag.consumedClick) {
+            reparentDrag.consumedClick = false;
+            moveDrag.consumedClick = false;
+            return;
+          }
           // select for editing; also make this tree the active one
           setActiveTree(treeIndex);
           editSelection = d.data;
+          // Hand keyboard focus back to the canvas. If a toolbar button still
+          // holds DOM focus (clicking "Edit" in the mode switcher leaves it
+          // there), Enter and Tab activate THAT button instead of reaching the
+          // edit shortcuts — pressing Enter would fire the zoom control rather
+          // than adding a sibling.
+          focusCanvas();
           applyEditModeVisuals();
           refreshEditPanel();
           return;
@@ -1862,13 +2673,19 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     currentScale = scale;
     currentTx = tx;
     currentTy = ty;
+    syncAddBadgeScale();
     updateLabelVisibility(scale);
   }
 
   // ── Zoom-to-subtree (smooth) ──────────────────────────────────────────
-  function zoomTo(d, instant=false) {
+  // Rebind every piece of focus-dependent UI to `d` WITHOUT touching the
+  // viewport. Edits need this half on its own: the hierarchy is rebuilt from
+  // scratch on each render, so currentFocus and everything derived from it has
+  // to be re-pointed at the new node objects — but the camera must stay
+  // exactly where the user left it.
+  function setFocusState(d) {
     currentFocus = d;
-    // make sure the active tree matches the node being zoomed to
+    // make sure the active tree matches the node being focused
     const owner = treeOfNode(d);
     if (owner) setActiveTree(forest.indexOf(owner));
     updateBreadcrumbs(d);
@@ -1877,6 +2694,20 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     updateCircleVisibility(d);
     updateInspector(d);
     updatePolynomial(d);
+    return owner;
+  }
+
+  // Re-apply the current pan/zoom after a render() has rebuilt worldG (which
+  // drops the transform attribute along with the old group).
+  function restoreCamera() {
+    if (!worldG) return;
+    worldG.style.transition = 'none';
+    void worldG.getBoundingClientRect();
+    applyTransform(currentTx, currentTy, currentScale, /*smooth*/ false);
+  }
+
+  function zoomTo(d, instant=false) {
+    const owner = setFocusState(d);
 
     const wrap = document.querySelector('.canvas-wrap');
     const W = wrap.clientWidth, H = wrap.clientHeight;
@@ -1937,6 +2768,20 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
 
   // module-level transform state (read by updateLabelVisibility)
   let currentScale = 1, currentTx = 0, currentTy = 0;
+
+  // Park DOM focus on the canvas so window-level shortcuts (Enter / Tab /
+  // Delete in edit mode) are not swallowed by whichever control was last
+  // clicked. tabindex="-1" makes the wrapper focusable without adding it to
+  // the tab order.
+  function focusCanvas() {
+    const wrap = document.querySelector('.canvas-wrap');
+    if (!wrap) return;
+    if (!wrap.hasAttribute('tabindex')) wrap.setAttribute('tabindex', '-1');
+    wrap.style.outline = 'none';
+    const active = document.activeElement;
+    if (active && active !== document.body && active !== wrap) active.blur();
+    wrap.focus({ preventScroll: true });
+  }
 
   // ── Label visibility & sizing for current zoom level ─────────────────
   // Strategy:
@@ -2088,27 +2933,20 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   //  Dataset switching
   // ─────────────────────────────────────────────────────────────────────
   function loadDataset(name) {
-    let nwk, subtitle;
-    const nav = '· click to focus · drag to pan · scroll to zoom · esc to go up';
+    let nwk;
     if (name === 'ha') {
       nwk = HA_NEWICK;
-      subtitle = '— H3N2 hemagglutinin ' + nav + ' —';
     } else if (name === 'fungi') {
       nwk = FUNGI_NEWICK;
-      subtitle = '— Ascomycota taxonomy ' + nav + ' —';
     } else if (name === 'deep') {
       nwk = DEEP_NEWICK;
-      subtitle = '— deep synthetic demo · ~122 leaves, ~40 layers ' + nav + ' —';
     } else if (name === 'compare') {
       nwk = COMPARE_NEWICK;
-      subtitle = '— compare demo · ~309 leaves · detach clades, then compare ' + nav + ' —';
     } else if (name === 'empty') {
       // a lone root the user can build from: rename it, add children, drag, etc.
       nwk = 'root;';
-      subtitle = '— blank canvas · turn on Edit mode, then add children to “root” —';
     } else {
       nwk = SLIDE6_NEWICK_FIXED;
-      subtitle = '— synthetic demo ' + nav + ' —';
     }
     const parsed = parseNewick(nwk);
     const hier = toHierarchy(parsed);
@@ -2120,7 +2958,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     currentFocus = null;
     editSelection = null;
     compareSel = [];                 // reset comparison
-    document.getElementById('stage-title').textContent = subtitle;
     render();
     // focus the root of the (only) tree
     if (forest[0].hierarchy) zoomTo(forest[0].hierarchy, /*instant*/ true);
@@ -2149,6 +2986,21 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     consumedClick: false,
     nodeData: null,
     startX: 0, startY: 0,
+  };
+
+  // Edit sub-mode: 'restructure' = drag reparents/detaches (default);
+  // 'arrange' = drag freely repositions a circle (manual layout, can overlap).
+  let editSubMode = 'restructure';
+
+  // Free-move drag state (used when editSubMode === 'arrange')
+  const moveDrag = {
+    active: false,
+    moved: false,
+    consumedClick: false,
+    nodeData: null,
+    tree: null,
+    startX: 0, startY: 0,      // pointer start (screen)
+    origFx: 0, origFy: 0,      // node's local position at drag start
   };
 
   const canvasWrap = document.querySelector('.canvas-wrap');
@@ -2199,9 +3051,29 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     }
     const childCount = nodeData.children ? nodeData.children.length : 0;
     const label = nodeData.name || '(unnamed)';
-    dragGhostEl.innerHTML = `<span class="dg-name">${label}</span>` +
-      (childCount ? `<span class="dg-meta">+ ${childCount} child${childCount===1?'':'ren'}</span>` : '');
+    dragGhostEl.dataset.label = label;
+    dragGhostEl.dataset.kids = childCount;
     dragGhostEl.style.display = 'flex';
+    updateDragGhostAction(null);   // start with no target
+  }
+  // Update the ghost's action line based on what's under the cursor.
+  function updateDragGhostAction(targetData) {
+    if (!dragGhostEl) return;
+    const label = dragGhostEl.dataset.label || '';
+    const kids = +dragGhostEl.dataset.kids || 0;
+    const kidStr = kids ? `<span class="dg-meta">+ ${kids} child${kids===1?'':'ren'}</span>` : '';
+    let action;
+    if (targetData) {
+      const tname = targetData.name || '(unnamed)';
+      action = `<span class="dg-action into">→ into <b>${escapeHtml(tname)}</b></span>`;
+      dragGhostEl.classList.remove('to-empty');
+      dragGhostEl.classList.add('to-target');
+    } else {
+      action = `<span class="dg-action newgraph">→ release for new graph</span>`;
+      dragGhostEl.classList.remove('to-target');
+      dragGhostEl.classList.add('to-empty');
+    }
+    dragGhostEl.innerHTML = `<span class="dg-name">${escapeHtml(label)}</span>${kidStr}${action}`;
   }
   function moveDragGhost(x, y) {
     if (!dragGhostEl) return;
@@ -2212,7 +3084,72 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     if (dragGhostEl) dragGhostEl.style.display = 'none';
   }
 
+  // Clamp a proposed LOCAL position (fx,fy) for `node` so the node's circle
+  // stays fully inside its parent's circle — this is what keeps a group
+  // visually together: a child can slide around but never leave its parent.
+  // Root nodes (no parent) are unconstrained. Returns {x, y}.
+  function clampInsideParent(node, fx, fy) {
+    const p = node.parent;
+    if (!p) return { x: fx, y: fy };
+    // small breathing gap so the child edge doesn't sit exactly on the parent edge
+    const maxDist = Math.max(0, p.r - node.r - 2);
+    const ddx = fx - p.x, ddy = fy - p.y;
+    const dist = Math.hypot(ddx, ddy);
+    if (dist <= maxDist || dist === 0) return { x: fx, y: fy };
+    const s = maxDist / dist;
+    return { x: p.x + ddx * s, y: p.y + ddy * s };
+  }
+
+  // Live-move a node (and its whole subtree) to a new LOCAL position during an
+  // Arrange drag. Updates the SVG circle cx/cy and label x/y directly for
+  // smoothness; the authoritative _fx/_fy is committed on mouseup. Also stores
+  // the running position on the d3 node so the delta math stays consistent.
+  function moveNodeLive(tree, nodeData, newFx, newFy) {
+    if (!tree || !tree.hierarchy) return;
+    // find the d3 node for this data
+    let node = null;
+    tree.hierarchy.each(n => { if (n.data === nodeData) node = n; });
+    if (!node) return;
+    // keep the group together: constrain the drag so the node stays inside its parent
+    const clamped = clampInsideParent(node, newFx, newFy);
+    const dx = clamped.x - node.x, dy = clamped.y - node.y;
+    if (dx === 0 && dy === 0) return;
+    // shift this node + descendants in-place (d3 coords)
+    const subtree = [];
+    const stack = [node];
+    while (stack.length) {
+      const n = stack.pop();
+      n.x += dx; n.y += dy;
+      subtree.push(n);
+      if (n.children) for (const c of n.children) stack.push(c);
+    }
+    // reflect into the DOM: circles + labels for the affected nodes
+    const idset = new Set(subtree.map(n => n.data._id));
+    tree.g.querySelectorAll('circle.node-circle').forEach(c => {
+      if (c.__data__ && idset.has(c.__data__.data._id)) {
+        c.setAttribute('cx', c.__data__.x);
+        c.setAttribute('cy', c.__data__.y);
+      }
+    });
+    tree.g.querySelectorAll('text.node-label').forEach(l => {
+      if (l.__data__ && idset.has(l.__data__.data._id)) {
+        // labels are positioned in updateLabelVisibility; nudge them to follow
+        const dnode = l.__data__;
+        l.setAttribute('x', dnode.x);
+        // keep label vertical offset consistent with leaf/internal placement
+        if (l.__isLeaf) l.setAttribute('y', dnode.y);
+        else l.setAttribute('y', dnode.y - dnode.r + (parseFloat(l.getAttribute('font-size'))||6) + 2.5);
+      }
+    });
+  }
+
   stage.addEventListener('mousedown', (e) => {
+    // Any press on the canvas parks keyboard focus there. Selecting a circle
+    // alone is not enough: a press that turns into a drag (or one consumed by
+    // a completed reparent) never reaches the selection branch, and focus
+    // would stay on whichever toolbar button was clicked last — where Enter
+    // would fire that button instead of the edit shortcut.
+    focusCanvas();
     if (e.button !== 0) return;
     isDragging = true;
     dragMoved = false;
@@ -2225,6 +3162,24 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   });
 
   window.addEventListener('mousemove', (e) => {
+    // ── Free-move drag (Arrange sub-mode) takes top priority ──
+    if (moveDrag.active) {
+      const dxs = e.clientX - moveDrag.startX;
+      const dys = e.clientY - moveDrag.startY;
+      if (!moveDrag.moved && Math.hypot(dxs, dys) > DRAG_THRESHOLD) {
+        moveDrag.moved = true;
+        hideTip();
+      }
+      if (moveDrag.moved) {
+        // convert the screen delta into local (tree) coord delta
+        const localDx = dxs / currentScale;
+        const localDy = dys / currentScale;
+        const newFx = moveDrag.origFx + localDx;
+        const newFy = moveDrag.origFy + localDy;
+        moveNodeLive(moveDrag.tree, moveDrag.nodeData, newFx, newFy);
+      }
+      return;
+    }
     // ── Edit-mode reparent drag takes priority over pan ──
     if (reparentDrag.active) {
       const dx = e.clientX - reparentDrag.startX;
@@ -2233,7 +3188,15 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
         reparentDrag.moved = true;
         showDragGhost(reparentDrag.nodeData);
       }
-      if (reparentDrag.moved) moveDragGhost(e.clientX, e.clientY);
+      if (reparentDrag.moved) {
+        moveDragGhost(e.clientX, e.clientY);
+        // update the action hint based on what's under the cursor
+        const target = dataObjectAtPoint(e.clientX, e.clientY, reparentDrag.nodeData);
+        updateDragGhostAction(target);
+        // arm the canvas "new graph" affordance when over empty space
+        const wrap = document.querySelector('.canvas-wrap');
+        if (wrap) wrap.classList.toggle('drop-newgraph-armed', !target);
+      }
       return;
     }
     if (!isDragging) return;
@@ -2248,11 +3211,40 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   });
 
   window.addEventListener('mouseup', (e) => {
+    // ── Complete a free-move (Arrange) ──
+    if (moveDrag.active) {
+      const wasMoved = moveDrag.moved;
+      const nodeData = moveDrag.nodeData;
+      const tree = moveDrag.tree;
+      document.querySelectorAll('.moving-source').forEach(el => el.classList.remove('moving-source'));
+      moveDrag.active = false;
+      moveDrag.moved = false;
+      if (wasMoved && tree && tree.hierarchy) {
+        moveDrag.consumedClick = true;   // suppress the click that follows
+        // commit the final local position as _fx/_fy
+        let node = null;
+        tree.hierarchy.each(n => { if (n.data === nodeData) node = n; });
+        if (node) {
+          pushHistory();
+          nodeData._fx = node.x;
+          nodeData._fy = node.y;
+          // no full rebuild needed — DOM already reflects the move; but refresh
+          // stats/inspector and keep selection consistent
+          editSelection = nodeData;
+          applyEditModeVisuals();
+          refreshEditPanel();
+          if (typeof updateResetLayoutBtn === 'function') updateResetLayoutBtn();
+        }
+      }
+      return;
+    }
     // ── Complete an edit-mode reparent / detach ──
     if (reparentDrag.active) {
       const wasMoved = reparentDrag.moved;
       const nodeData = reparentDrag.nodeData;
       hideDragGhost();
+      const wrapEl = document.querySelector('.canvas-wrap');
+      if (wrapEl) wrapEl.classList.remove('drop-newgraph-armed');
       worldG.querySelectorAll('.drag-source').forEach(el => el.classList.remove('drag-source'));
       worldG.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
       reparentDrag.active = false;
@@ -2270,7 +3262,7 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
             editSelection = nodeData;
             // camera follows the move: frame the new parent so you can see
             // where the node (with its subtree) landed
-            rerenderPreservingFocus({ movedId, newParentId: parentId, focusOnId: parentId });
+            rerenderPreservingFocus({ movedId, newParentId: parentId });
           }
         } else {
           // dropped on empty space → detach into its own new graph,
@@ -2283,7 +3275,7 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
               editSelection = nodeData;
               // Animate the repack and move the camera to frame the newly
               // created graph (the detached node is now its own tree's root).
-              rerenderPreservingFocus({ movedId, focusOnId: movedId });
+              rerenderPreservingFocus({ movedId });
             }
           }
         }
@@ -2319,6 +3311,67 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
 
     applyTransform(newTx, newTy, newScale, /*smooth*/ false);
   }, { passive: false });
+
+  // ── Zoom toward the viewport CENTER by a fixed factor (for +/- buttons) ──
+  function zoomByFactor(factor, smooth=true) {
+    const newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, currentScale * factor));
+    if (newScale === currentScale) return;
+    // keep the point currently at screen-center fixed
+    const coordX = (0 - currentTx) / currentScale;
+    const coordY = (0 - currentTy) / currentScale;
+    const newTx = 0 - coordX * newScale;
+    const newTy = 0 - coordY * newScale;
+    applyTransform(newTx, newTy, newScale, smooth);
+  }
+
+  // Wire the on-screen controls
+  const zoomInBtn  = document.getElementById('zoom-in');
+  const zoomOutBtn = document.getElementById('zoom-out');
+  const zoomFitBtn = document.getElementById('zoom-fit');
+  if (zoomInBtn)  zoomInBtn.addEventListener('click',  () => zoomByFactor(1.4));
+  if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => zoomByFactor(1/1.4));
+  if (zoomFitBtn) zoomFitBtn.addEventListener('click', () => {
+    // fit the whole forest; if a single tree, frame its root
+    if (forest.length > 1) fitWorld(false);
+    else if (forest[0] && forest[0].hierarchy) zoomTo(forest[0].hierarchy, false);
+  });
+
+  // Help / shortcuts popover
+  const helpBtn = document.getElementById('help-btn');
+  const helpPopover = document.getElementById('help-popover');
+  const helpClose = document.getElementById('help-close');
+  function toggleHelp(force) {
+    if (!helpPopover) return;
+    const show = force !== undefined ? force : helpPopover.hidden;
+    helpPopover.hidden = !show;
+    if (helpBtn) helpBtn.classList.toggle('active', show);
+  }
+  if (helpBtn) helpBtn.addEventListener('click', () => toggleHelp());
+  if (helpClose) helpClose.addEventListener('click', () => toggleHelp(false));
+  // populate undo/redo caps inside the help popover (mac-aware)
+  (function fillHelpKeys() {
+    const el = document.getElementById('help-undo-keys');
+    if (!el) return;
+    const isMac = /Mac|iPhone|iPad/.test(navigator.platform) || /Mac/.test(navigator.userAgent);
+    const mod = isMac ? '⌘' : 'Ctrl';
+    el.innerHTML = `<kbd class="keycap">${mod}</kbd><kbd class="keycap">Z</kbd> / <kbd class="keycap">${mod}</kbd><kbd class="keycap">⇧</kbd><kbd class="keycap">Z</kbd>`;
+  })();
+
+  // Keyboard: navigation shortcuts (zoom, fit, help) — ignored while typing
+  window.addEventListener('keydown', (e) => {
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'select' || tag === 'textarea') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;  // let mod-combos (undo/redo) pass
+    if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomByFactor(1.4); }
+    else if (e.key === '-' || e.key === '_') { e.preventDefault(); zoomByFactor(1/1.4); }
+    else if (e.key === 'f' || e.key === 'F') {
+      e.preventDefault();
+      if (forest.length > 1) fitWorld(false);
+      else if (forest[0] && forest[0].hierarchy) zoomTo(forest[0].hierarchy, false);
+    }
+    else if (e.key === '?') { e.preventDefault(); toggleHelp(); }
+    else if (e.key === 'Escape' && helpPopover && !helpPopover.hidden) { toggleHelp(false); }
+  });
 
   // Keyboard: Esc / Backspace → go up one level
   window.addEventListener('keydown', (e) => {
@@ -2473,27 +3526,33 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     // restore active tree index if still valid
     if (activeIdx < forest.length) activeTreeIndex = activeIdx;
 
-    // Decide what the camera should frame after the edit:
-    //   • flip.focusOnId (the affected node / its new parent) takes priority,
-    //     so the view follows the edit instead of staying on the old graph;
-    //   • otherwise keep the previous focus where it was.
-    const cameraId = (flip && flip.focusOnId != null) ? flip.focusOnId : focusId;
-    let cameraNode = null;
-    if (cameraId != null) {
+    // The camera does NOT follow edits. Re-framing on every change — panning
+    // to the affected node, or even snapping to re-fit the old focus — meant
+    // the view jumped on every single node you added, which is disorienting
+    // when you are adding several in a row. The viewport is restored exactly
+    // as the user left it and the layout reflows underneath it.
+    //
+    // Focus STATE still has to be re-pointed at the rebuilt hierarchy (the old
+    // node objects are gone after render()), which is what setFocusState does
+    // without touching the transform. `flip.refit` is the one opt-out, used by
+    // window resize, where the viewport itself changed and holding the old
+    // transform would strand the tree off-screen.
+    let focusNode = null;
+    if (focusId != null) {
       for (const t of forest) {
-        const node = t.hierarchy.descendants().find(n => n.data._id === cameraId);
-        if (node) { cameraNode = node; break; }
+        const node = t.hierarchy.descendants().find(n => n.data._id === focusId);
+        if (node) { focusNode = node; break; }
       }
     }
-
-    // When following an edit we want a SMOOTH camera move (animated); when
-    // merely re-rendering in place we snap (instant) to avoid a needless pan.
-    const smoothCamera = !!(flip && flip.focusOnId != null);
-    if (cameraNode) {
-      zoomTo(cameraNode, /*instant*/ !smoothCamera);
-    } else if (forest[activeTreeIndex]) {
-      zoomTo(forest[activeTreeIndex].hierarchy, /*instant*/ true);
+    const refit = !!(flip && flip.refit);
+    if (refit) {
+      zoomTo(focusNode || (forest[activeTreeIndex] && forest[activeTreeIndex].hierarchy),
+             /*instant*/ true);
+    } else {
+      setFocusState(focusNode || (forest[activeTreeIndex] && forest[activeTreeIndex].hierarchy));
+      restoreCamera();
     }
+    const smoothCamera = false;   // edits never animate the camera
 
     if (selId != null) {
       editSelection = null;
@@ -2542,29 +3601,57 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   // Polynomial of a whole tree = polynomial of its root data node. We compute
   // it on a fresh d3 hierarchy so caching on `_poly` doesn't collide with the
   // live render nodes (whose _poly may have been computed at a sub-focus).
+  //
+  // Persistent cache across compare selections: keyed by the ROOT subtree's
+  // canonical shape. Re-picking the same graph (or an identically-shaped one)
+  // returns instantly. Because the polynomial is a pure function of shape, a
+  // structural edit changes the shape key too, so stale hits are impossible.
+  const comparePolyCache = new Map();   // rootShapeKey → polynomial | null
+  const COMPARE_POLY_CACHE_CAP = 200;
   function treePolynomial(treeEntry) {
+    const rootShape = shapeKey(treeEntry.data);
+    if (comparePolyCache.has(rootShape)) return comparePolyCache.get(rootShape);
     // For COMPARISON we want the polynomial even for large trees, since the
     // metrics (cosine, L1) only need the coefficient maps and are cheap to
     // compute once we have them. The normal POLY_SIZE_CAP exists to keep the
     // sidebar's live polynomial display snappy; here we allow a much larger
     // ceiling so big trees (hundreds of leaves) still produce numbers, with a
     // generous guard to avoid pathological blow-ups locking the tab.
+    //
+    // Uses integer-packed exponent keys (fast hot loop) and memoizes by
+    // canonical subtree SHAPE, so identical clades (e.g. twin subtrees) are
+    // computed once and shared across the whole comparison.
     const COMPARE_CAP = 2_000_000;
+    const memo = new Map();   // shapeKey → polynomial | null
+    // compute returns { key, poly }; the shape key is built bottom-up from the
+    // children's keys (no repeated full-subtree walks → avoids O(n²) keying).
     function compute(node) {
       if (!node.children || node.children.length === 0) {
-        return new Map([['1,0', 1]]);
+        return { key: 'L', poly: new Map([[KEY_10, 1]]) };
       }
-      let prod = new Map([['0,0', 1]]);
-      for (const ch of node.children) {
-        const cp = compute(ch);
-        if (cp === null) return null;
-        prod = polyMul(prod, cp);
-        if (prod.size > COMPARE_CAP) return null;  // genuinely enormous
+      const childResults = node.children.map(compute);
+      const parts = childResults.map(r => r.key).sort();
+      const sk = '(' + parts.join('') + ')';
+      const hit = memo.get(sk);
+      if (hit !== undefined) return { key: sk, poly: hit };
+      const kids = [];
+      for (const r of childResults) {
+        if (r.poly === null) { memo.set(sk, null); return { key: sk, poly: null }; }
+        kids.push(r.poly);
       }
-      prod.set('0,1', (prod.get('0,1') || 0) + 1);
-      return prod;
+      const prod = polyMulMany(kids, COMPARE_CAP);
+      if (prod === null) { memo.set(sk, null); return { key: sk, poly: null }; }
+      prod.set(KEY_01, (prod.get(KEY_01) || 0) + 1);
+      memo.set(sk, prod);
+      return { key: sk, poly: prod };
     }
-    return compute(treeEntry.data);
+    const top = compute(treeEntry.data);
+    const result = top.poly;
+    // the root shape key we already computed — reuse it for the persistent cache
+    // keep the persistent cache from growing without bound
+    if (comparePolyCache.size > COMPARE_POLY_CACHE_CAP) comparePolyCache.clear();
+    comparePolyCache.set(rootShape, result);
+    return result;
   }
 
   function polyL1(a, b) {
@@ -2581,11 +3668,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
       dist += Math.abs(cb);  // a has 0 here
     }
     return dist;
-  }
-  function polyL1Norm(p) {
-    let s = 0;
-    for (const c of p.values()) s += Math.abs(c);
-    return s;
   }
 
   // Cosine similarity of two coefficient maps. Measures the ANGLE between the
@@ -2608,42 +3690,67 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   // high-degree terms can reach into the millions; log-scaling compresses that
   // range so small and large terms both contribute, giving a distance that
   // reflects structure more than raw magnitude.
-  function polyLogL1(a, b) {
-    const keys = new Set([...a.keys(), ...b.keys()]);
-    let dist = 0;
-    for (const k of keys) {
-      const la = Math.log1p(Math.abs(a.get(k) || 0));
-      const lb = Math.log1p(Math.abs(b.get(k) || 0));
-      dist += Math.abs(la - lb);
+  //
+  // The displayed distance is the NORMALIZED form: the mean per-monomial
+  // log-difference, i.e. log-L1 divided by the size of the union of the two
+  // key sets.
+  //
+  // Why the union size is the right denominator. Raw log-L1 grows with the
+  // number of terms, so it conflates "these shapes differ a lot" with "these
+  // are big trees" — 730 for a 54-leaf pair against 574,944 for a 619-leaf
+  // pair says almost nothing about relative similarity. Dividing by the term
+  // count answers the size-independent question instead: per monomial, how far
+  // apart are these two polynomials?
+  //
+  // The obvious alternative, relative L1 (L1 / (‖a‖₁+‖b‖₁)), is bounded to
+  // [0,1] but useless in practice here: the denominator is dominated by the
+  // same enormous top-degree coefficients as the numerator, so it saturates —
+  // it scored 0.77–0.996 across every pair measured, including pairs cosine
+  // put 40 points apart. Per-term log-L1 discriminates in the right direction
+  // on the same pairs (7.1 for an 89.7%-cosine pair, 11.1 for a 47% pair).
+  //
+  // Counts the union in the same walk rather than building a Set — on a pair
+  // of 80k-term polynomials that Set was a 160k-element allocation per call,
+  // and the heatmap calls this once per cell.
+  function polyLogL1Norm(a, b) {
+    let dist = 0, union = 0;
+    for (const [k, ca] of a) {
+      const cb = b.get(k) || 0;
+      dist += Math.abs(Math.log1p(Math.abs(ca)) - Math.log1p(Math.abs(cb)));
+      union++;
     }
-    return dist;
+    for (const [k, cb] of b) {
+      if (a.has(k)) continue;
+      dist += Math.log1p(Math.abs(cb));
+      union++;
+    }
+    return union > 0 ? dist / union : 0;
   }
 
   // Structural statistics for a tree's data root: leaf count, max depth, and
   // a normalized imbalance score (0 = balanced). Imbalance uses the mean,
   // over internal nodes, of the normalized spread of subtree leaf-counts.
+  // Single bottom-up pass. The previous version called a full leafCount()
+  // subtree walk at every internal node, making it O(n·depth) — quietly
+  // quadratic on caterpillar trees like the HA set. Leaf counts now come back
+  // up the recursion that is already visiting every node anyway.
   function treeStats(rootData) {
-    let leaves = 0, maxDepth = 0;
-    const imbalances = [];
-    function leafCount(n) {
-      if (!n.children || !n.children.length) return 1;
-      let s = 0;
-      for (const c of n.children) s += leafCount(c);
-      return s;
-    }
+    let leaves = 0, maxDepth = 0, imbSum = 0, imbCount = 0;
     function walk(n, depth) {
       if (depth > maxDepth) maxDepth = depth;
-      if (!n.children || !n.children.length) { leaves++; return; }
-      // imbalance at this internal node: spread of child leaf-counts
-      const counts = n.children.map(leafCount);
-      const mx = Math.max(...counts), mn = Math.min(...counts), tot = counts.reduce((a,b)=>a+b,0);
-      if (tot > 0 && counts.length > 1) imbalances.push((mx - mn) / tot);
-      for (const c of n.children) walk(c, depth + 1);
+      if (!n.children || !n.children.length) { leaves++; return 1; }
+      let tot = 0, mx = -Infinity, mn = Infinity;
+      for (const c of n.children) {
+        const v = walk(c, depth + 1);
+        tot += v;
+        if (v > mx) mx = v;
+        if (v < mn) mn = v;
+      }
+      if (tot > 0 && n.children.length > 1) { imbSum += (mx - mn) / tot; imbCount++; }
+      return tot;
     }
     walk(rootData, 0);
-    const imbalance = imbalances.length
-      ? imbalances.reduce((a,b)=>a+b,0) / imbalances.length : 0;
-    return { leaves, maxDepth, imbalance };
+    return { leaves, maxDepth, imbalance: imbCount ? imbSum / imbCount : 0 };
   }
 
   // ── Layer divergence ────────────────────────────────────────────────────
@@ -2696,14 +3803,27 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     return { lastMatch, divergence, maxCommonDepth, depthA: la.length - 1, depthB: lb.length - 1 };
   }
 
+  // A compare selection is a descriptor: { tree, data, node }
+  //   • whole-graph pick  → data = tree's root data, node = hierarchy root
+  //   • node-level pick    → data = that node's data, node = that d3 node
+  // Metrics operate on `data` (the subtree); visuals use `node` for the ring.
+  function sameSel(a, b) {
+    return a && b && a.data === b.data;
+  }
   function pickForCompare(treeEntry) {
-    // toggle off if re-clicking an already-selected tree
-    const existing = compareSel.indexOf(treeEntry);
-    if (existing !== -1) {
-      compareSel.splice(existing, 1);
+    if (!treeEntry.hierarchy) return;
+    pickDescriptor({ tree: treeEntry, data: treeEntry.data, node: treeEntry.hierarchy });
+  }
+  function pickNodeForCompare(treeEntry, d) {
+    pickDescriptor({ tree: treeEntry, data: d.data, node: d });
+  }
+  function pickDescriptor(sel) {
+    const idx = compareSel.findIndex(s => sameSel(s, sel));
+    if (idx !== -1) {
+      compareSel.splice(idx, 1);          // toggle off
     } else {
-      compareSel.push(treeEntry);
-      if (compareSel.length > 2) compareSel.shift(); // keep most recent two
+      compareSel.push(sel);
+      if (compareSel.length > 2) compareSel.shift();  // keep most recent two
     }
     applyCompareVisuals();
     refreshComparePanel();
@@ -2715,27 +3835,31 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     refreshComparePanel();
   }
 
-  // Draw the gold/green selection rings on the chosen graphs' root circles,
+  // Draw the gold/green selection rings on the chosen circles (root or node),
   // plus (when a divergence layer is known) outline every circle at that depth
-  // in both graphs so you can see exactly where the two shapes split.
+  // WITHIN each selected subtree so you can see exactly where they split.
   function applyCompareVisuals() {
     if (!worldG) return;
-    worldG.querySelectorAll('.compare-a, .compare-b, .compare-diverge')
-      .forEach(el => el.classList.remove('compare-a', 'compare-b', 'compare-diverge'));
+    worldG.querySelectorAll('.compare-a, .compare-b, .compare-diverge, .heat-hi-a, .heat-hi-b')
+      .forEach(el => el.classList.remove('compare-a', 'compare-b', 'compare-diverge', 'heat-hi-a', 'heat-hi-b'));
     if (!compareMode) return;
 
-    compareSel.forEach((t, i) => {
-      if (!t.g || !t.hierarchy) return;
-      // root circle (its __data__ is the hierarchy root)
-      const rootCircle = [...t.g.querySelectorAll('circle.node-circle')]
-        .find(c => c.__data__ === t.hierarchy);
-      if (rootCircle) rootCircle.classList.add(i === 0 ? 'compare-a' : 'compare-b');
+    compareSel.forEach((sel, i) => {
+      const t = sel.tree;
+      if (!t || !t.g || !sel.node) return;
+      // ring on the selected circle
+      const selCircle = [...t.g.querySelectorAll('circle.node-circle')]
+        .find(c => c.__data__ === sel.node);
+      if (selCircle) selCircle.classList.add(i === 0 ? 'compare-a' : 'compare-b');
 
-      // outline the diverging layer's circles in each selected tree
+      // outline the diverging layer's circles, measured RELATIVE to the
+      // selected subtree's root depth (so it lines up for node-level picks)
       if (compareDivergence && compareDivergence.divergence != null) {
-        const d = compareDivergence.divergence;
+        const baseDepth = sel.node.depth;
+        const targetDepth = baseDepth + compareDivergence.divergence;
+        const inSubtree = new Set(sel.node.descendants());
         t.g.querySelectorAll('circle.node-circle').forEach(c => {
-          if (c.__data__ && c.__data__.depth === d) {
+          if (c.__data__ && c.__data__.depth === targetDepth && inSubtree.has(c.__data__)) {
             c.classList.add('compare-diverge');
           }
         });
@@ -2743,9 +3867,430 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     });
   }
 
-  function treeLabel(t) {
-    return t.data.name || '(unnamed)';
+  function selLabel(sel) {
+    return (sel.data && sel.data.name) || '(unnamed)';
   }
+
+  // ─────────────────────────────────────────────────────────────────────
+  //  CLADE HEATMAP
+  //  A matrix of polynomial distances between the largest clades of A and
+  //  the largest clades of B. Rows read shallow→deep, so the point where the
+  //  bright "correspondence" band breaks down is the point where the two
+  //  trees stop agreeing — a finer-grained view than the single layer number.
+  //
+  //  Cheaper than it looks: clades of one tree are nested, so a single
+  //  bottom-up pass with shape memoization yields every clade's polynomial
+  //  at once. Cell cost is then just a dot product, with the vector norms
+  //  precomputed once per clade instead of once per cell.
+  // ─────────────────────────────────────────────────────────────────────
+  const HEAT_POLY_CAP = 150000;   // per-clade monomial ceiling for the matrix
+  let forestRevision = 0;         // incremented by render() on every rebuild
+  let heatMetric = 'cos';         // 'cos' | 'logl1'
+  let heatN = 8;                  // clades per side
+  let heatState = null;           // { rows, cols, cells, ... } for hover lookup
+  const HEAT_DEFAULT_READOUT =
+    '<span class="hr-dim">axes = disjoint clades tiling each selection, shallow first. ' +
+    'Gold outline = each A-clade\'s closest match in B; where that band leaves the ' +
+    'diagonal, the trees stop corresponding. Hover a cell to light both clades.</span>';
+
+  // Choose the n clades that form the axes, by FRONTIER DECOMPOSITION: start
+  // at the selection root and repeatedly split whichever clade currently has
+  // the most leaves, until n clades remain.
+  //
+  // The obvious alternative — "the n biggest clades" — is wrong here twice
+  // over. Those clades are nested inside one another, so the matrix ends up
+  // comparing a chain of near-duplicates (every row nearly a copy of the one
+  // above), and each one carries almost the whole tree's polynomial, which is
+  // where the cost blows up. A frontier is DISJOINT and tiles the selection:
+  // each clade is roughly leaves/n in size, so the polynomials stay small and
+  // every row says something the others don't.
+  function frontierClades(rootData, n) {
+    const lc = new Map();
+    function leaves(d) {
+      const hit = lc.get(d);
+      if (hit !== undefined) return hit;
+      let v = 0;
+      if (!d.children || !d.children.length) v = 1;
+      else for (const c of d.children) v += leaves(c);
+      lc.set(d, v);
+      return v;
+    }
+    const depth = new Map();
+    (function setDepth(d, dep) {
+      depth.set(d, dep);
+      for (const c of (d.children || [])) setDepth(c, dep + 1);
+    })(rootData, 0);
+    leaves(rootData);
+
+    let frontier = [rootData];
+    // Bounded: a single-child node keeps the frontier the same size but always
+    // descends a level, so progress is guaranteed; the cap is a backstop only.
+    for (let iter = 0; frontier.length < n && iter < 10000; iter++) {
+      let bi = -1, bv = -1;
+      for (let i = 0; i < frontier.length; i++) {
+        const d = frontier[i];
+        if (!d.children || !d.children.length) continue;   // leaf, can't split
+        const v = leaves(d);
+        if (v > bv) { bv = v; bi = i; }
+      }
+      if (bi < 0) break;                                    // all leaves
+      const node = frontier[bi];
+      frontier.splice(bi, 1, ...node.children);
+    }
+    frontier.sort((a, b) => leaves(b) - leaves(a));
+    frontier = frontier.slice(0, n);
+    frontier.sort((a, b) => (depth.get(a) - depth.get(b)) || (leaves(b) - leaves(a)));
+    return frontier.map(d => ({ data: d, depth: depth.get(d), leaves: leaves(d) }));
+  }
+
+  // Polynomial for each frontier clade. Computed per clade rather than by one
+  // pass from the selection root: the clades are disjoint, so walking from the
+  // root would additionally multiply everything back up into the root's own
+  // polynomial — the single most expensive object in the tree, and one the
+  // matrix never uses. The shape memo is shared across clades, so repeated
+  // subtree shapes are still only computed once.
+  // Returns Map(dataNode → polynomial | null); null = exceeded the cap.
+  function cladePolynomials(clades) {
+    const memo = new Map();     // shapeKey → polynomial | null
+    const out = new Map();
+    function compute(d) {
+      if (!d.children || !d.children.length) {
+        return { key: 'L', poly: new Map([[KEY_10, 1]]) };
+      }
+      const kids = d.children.map(compute);
+      const sk = '(' + kids.map(k => k.key).sort().join('') + ')';
+      const hit = memo.get(sk);
+      if (hit !== undefined) return { key: sk, poly: hit };
+      const parts = [];
+      let ok = true;
+      for (const k of kids) {
+        if (k.poly === null) { ok = false; break; }
+        parts.push(k.poly);
+      }
+      let poly = ok ? polyMulMany(parts, HEAT_POLY_CAP) : null;
+      if (poly) poly.set(KEY_01, (poly.get(KEY_01) || 0) + 1);
+      memo.set(sk, poly);
+      return { key: sk, poly };
+    }
+    for (const c of clades) out.set(c.data, compute(c.data).poly);
+    return out;
+  }
+
+  function polyNorm2(p) {
+    let s = 0;
+    for (const c of p.values()) s += c * c;
+    return Math.sqrt(s);
+  }
+  // Dot product, iterating whichever vector is sparser.
+  function polyDot(a, b) {
+    if (a.size > b.size) { const t = a; a = b; b = t; }
+    let dot = 0;
+    for (const [k, ca] of a) {
+      const cb = b.get(k);
+      if (cb !== undefined) dot += ca * cb;
+    }
+    return dot;
+  }
+
+  // Dark→bright ramp: dim petrol for unlike, amber for alike. Matches the
+  // circle depth ramp so the panel reads as part of the same visual system.
+  const HEAT_STOPS = [
+    [0.00, [0x16, 0x20, 0x2B]],
+    [0.35, [0x2E, 0x55, 0x66]],
+    [0.70, [0x7D, 0xA0, 0xAE]],
+    [1.00, [0xE8, 0xC7, 0x7E]],
+  ];
+  function heatColor(t) {
+    t = Math.max(0, Math.min(1, t));
+    for (let i = 1; i < HEAT_STOPS.length; i++) {
+      const [p1, c1] = HEAT_STOPS[i - 1];
+      const [p2, c2] = HEAT_STOPS[i];
+      if (t <= p2) {
+        const f = (t - p1) / (p2 - p1 || 1);
+        const c = c1.map((v, k) => Math.round(v + (c2[k] - v) * f));
+        return `rgb(${c[0]},${c[1]},${c[2]})`;
+      }
+    }
+    return 'rgb(232,199,126)';
+  }
+
+  // Clade names in real phylogenies tend to share long prefixes AND differ in
+  // the tail (bush2_b2_c1 vs bush2_b2_c4), so truncate from the MIDDLE — a
+  // head-only truncation would render whole blocks of rows identical.
+  // Internal nodes in real Newick files are frequently unnamed; falling back
+  // to "(unnamed)" would make every row of the matrix read identically, so
+  // unnamed clades are identified by their depth and leaf count instead.
+  function cladeLabel(c) {
+    return c.label || c.data.name || ('d' + c.depth + '\u00b7' + c.leaves + 'L');
+  }
+  // Engineered demo trees (and plenty of real ones) reuse the same name across
+  // sibling clades. Where a name repeats within one axis, qualify it with the
+  // leaf count so each row/column is still identifiable.
+  function labelAxis(entries) {
+    const base = e => e.data.name || ('d' + e.depth + '\u00b7' + e.leaves + 'L');
+    const tally = list => {
+      const m = new Map();
+      for (const k of list) m.set(k, (m.get(k) || 0) + 1);
+      return m;
+    };
+    // pass 1: qualify repeats with their leaf count
+    const firstCounts = tally(entries.map(base));
+    for (const e of entries) {
+      const b = base(e);
+      e.label = firstCounts.get(b) > 1 ? b + '\u00b7' + e.leaves + 'L' : b;
+    }
+    // pass 2: same name AND same size — fall back to an ordinal so no two
+    // rows can read identically
+    const secondCounts = tally(entries.map(e => e.label));
+    const seen = new Map();
+    for (const e of entries) {
+      if (secondCounts.get(e.label) > 1) {
+        const n = (seen.get(e.label) || 0) + 1;
+        seen.set(e.label, n);
+        e.label = e.label + '#' + n;
+      }
+    }
+  }
+  function shortName(s, n = 11) {
+    s = String(s || '(unnamed)');
+    if (s.length <= n) return s;
+    const head = Math.max(1, Math.ceil((n - 1) / 2));
+    const tail = Math.max(1, n - 1 - head);
+    return s.slice(0, head) + '…' + s.slice(s.length - tail);
+  }
+
+  // Clade polynomials are the expensive half and do NOT depend on the chosen
+  // metric, so they are cached across metric toggles — flipping
+  // similarity/distance then only recomputes the cheap cell values.
+  let heatAxisCache = null;   // { key, rows, cols }
+
+  function heatAxes(A, B) {
+    const key = forestRevision + '|' + (A.data._id) + '|' + (B.data._id) + '|' + heatN;
+    if (heatAxisCache && heatAxisCache.key === key) return heatAxisCache;
+    const rows = frontierClades(A.data, heatN);
+    const cols = frontierClades(B.data, heatN);
+    const polyA = cladePolynomials(rows);
+    const polyB = cladePolynomials(cols);
+    const ra = rows.map(r => {
+      const p = polyA.get(r.data) || null;
+      return { ...r, poly: p, norm: p ? polyNorm2(p) : 0 };
+    });
+    const cb = cols.map(c => {
+      const p = polyB.get(c.data) || null;
+      return { ...c, poly: p, norm: p ? polyNorm2(p) : 0 };
+    });
+    labelAxis(ra); labelAxis(cb);
+    heatAxisCache = { key, rows: ra, cols: cb };
+    return heatAxisCache;
+  }
+
+  // Build the full matrix for the current selection + settings.
+  function computeHeatmap(A, B) {
+    const { rows: ra, cols: cb } = heatAxes(A, B);
+
+    // Only the ACTIVE metric is evaluated — computing both doubled the work
+    // on large trees for a number that was never displayed.
+    const cells = [];
+    let maxLog = 0;
+    for (let i = 0; i < ra.length; i++) {
+      cells[i] = [];
+      for (let j = 0; j < cb.length; j++) {
+        const pa = ra[i].poly, pb = cb[j].poly;
+        if (!pa || !pb) { cells[i][j] = { ok: false }; continue; }
+        if (heatMetric === 'cos') {
+          const cos = (ra[i].norm && cb[j].norm)
+            ? polyDot(pa, pb) / (ra[i].norm * cb[j].norm) : 0;
+          cells[i][j] = { ok: true, cos };
+        } else {
+          const logl1 = polyLogL1Norm(pa, pb);
+          if (logl1 > maxLog) maxLog = logl1;
+          cells[i][j] = { ok: true, logl1 };
+        }
+      }
+    }
+    // normalise to a 0..1 "closeness" for colour — bright always means closer
+    for (let i = 0; i < cells.length; i++) {
+      for (let j = 0; j < cells[i].length; j++) {
+        const c = cells[i][j];
+        if (!c.ok) continue;
+        c.t = heatMetric === 'cos'
+          ? Math.max(0, Math.min(1, c.cos))
+          : (maxLog > 0 ? 1 - (c.logl1 / maxLog) : 1);
+      }
+    }
+    // best match per row — where this band leaves the diagonal, the trees
+    // have stopped corresponding
+    for (let i = 0; i < cells.length; i++) {
+      let best = -1, bestVal = -Infinity;
+      for (let j = 0; j < cells[i].length; j++) {
+        const c = cells[i][j];
+        if (c.ok && c.t > bestVal) { bestVal = c.t; best = j; }
+      }
+      if (best >= 0) cells[i][best].best = true;
+    }
+    return { rows: ra, cols: cb, cells, maxLog };
+  }
+
+  // Public entry point. On a several-hundred-leaf tree the matrix can take a
+  // beat, so paint a placeholder first and compute after the browser has had a
+  // frame — otherwise the whole panel appears to hang on selection.
+  let heatToken = 0;
+  function renderHeatmap(A, B) {
+    const wrap = document.getElementById('heat-wrap');
+    const readout = document.getElementById('heat-readout');
+    if (!wrap) return;
+    const token = ++heatToken;
+    wrap.innerHTML = '<div class="heat-pending">computing clade matrix…</div>';
+    if (readout) readout.innerHTML = '';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      // a newer selection (or a cleared one) superseded this run
+      if (token !== heatToken || compareSel.length !== 2) return;
+      drawHeatmap(A, B);
+    }));
+  }
+
+  function drawHeatmap(A, B) {
+    const wrap = document.getElementById('heat-wrap');
+    const readout = document.getElementById('heat-readout');
+    if (!wrap) return;
+
+    const st = computeHeatmap(A, B);
+    heatState = st;
+
+    const W = 332, labelW = 66, topH = 56;
+    const nC = st.cols.length, nR = st.rows.length;
+    const cell = Math.min(30, Math.max(12, (W - labelW) / Math.max(nC, 1)));
+    const gridW = cell * nC, gridH = cell * nR;
+    const H = topH + gridH + 14;
+
+    let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Clade similarity matrix">`;
+    // axis captions, tucked into the empty corner above the row labels
+    svg += `<text class="heat-axis-name" x="1" y="${topH - 16}">A ↓ rows</text>`;
+    svg += `<text class="heat-axis-name" x="1" y="${topH - 5}">B → cols</text>`;
+
+    // column labels run bottom-to-top: compact, and they cannot overflow
+    // the panel the way rotated-diagonal labels would.
+    st.cols.forEach((c, j) => {
+      const x = labelW + j * cell + cell / 2 + 3;
+      const y = topH - 6;
+      svg += `<text class="heat-lbl b-axis" x="${x.toFixed(1)}" y="${y}" ` +
+             `text-anchor="start" transform="rotate(-90 ${x.toFixed(1)} ${y})">` +
+             escapeHtml(shortName(cladeLabel(c), 10)) + `</text>`;
+    });
+
+    // rows
+    st.rows.forEach((r, i) => {
+      const y = topH + i * cell;
+      svg += `<text class="heat-lbl a-axis" x="${labelW - 6}" y="${(y + cell / 2 + 3).toFixed(1)}" ` +
+             `text-anchor="end">` + escapeHtml(shortName(cladeLabel(r), 10)) + `</text>`;
+      st.cols.forEach((c, j) => {
+        const cl = st.cells[i][j];
+        const x = labelW + j * cell;
+        const w = Math.max(1, cell - 1.5);
+        if (!cl.ok) {
+          svg += `<rect class="heat-cell na" data-i="${i}" data-j="${j}" ` +
+                 `x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${w.toFixed(1)}" rx="2"/>`;
+        } else {
+          svg += `<rect class="heat-cell" data-i="${i}" data-j="${j}" ` +
+                 `x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${w.toFixed(1)}" ` +
+                 `rx="2" fill="${heatColor(cl.t)}"/>`;
+          if (cl.best) {
+            svg += `<rect class="heat-best" x="${(x - 0.6).toFixed(1)}" y="${(y - 0.6).toFixed(1)}" ` +
+                   `width="${(w + 1.2).toFixed(1)}" height="${(w + 1.2).toFixed(1)}" rx="3"/>`;
+          }
+        }
+      });
+    });
+    svg += `</svg>`;
+    wrap.innerHTML = svg;
+
+    readout.innerHTML = HEAT_DEFAULT_READOUT;
+
+    // hover → readout + canvas highlight
+    wrap.querySelectorAll('.heat-cell').forEach(rect => {
+      rect.addEventListener('mouseenter', () => {
+        showHeatPair(+rect.dataset.i, +rect.dataset.j);
+      });
+    });
+    // bound once on the persistent wrapper (its innerHTML is what gets replaced)
+    if (!wrap.__heatBound) {
+      wrap.__heatBound = true;
+      wrap.addEventListener('mouseleave', () => {
+        clearHeatHighlight();
+        const ro = document.getElementById('heat-readout');
+        if (ro) ro.innerHTML = HEAT_DEFAULT_READOUT;
+      });
+    }
+  }
+
+  function clearHeatmap() {
+    heatState = null;
+    heatToken++;              // cancel any in-flight deferred render
+    clearHeatHighlight();
+    const wrap = document.getElementById('heat-wrap');
+    const readout = document.getElementById('heat-readout');
+    if (wrap) wrap.innerHTML = '';
+    if (readout) readout.innerHTML = '';
+  }
+
+  function showHeatPair(i, j) {
+    if (!heatState) return;
+    const r = heatState.rows[i], c = heatState.cols[j], cl = heatState.cells[i][j];
+    const readout = document.getElementById('heat-readout');
+    let val;
+    if (!cl.ok) {
+      val = '<span class="hr-dim">polynomial exceeds the ' +
+            HEAT_POLY_CAP.toLocaleString() + '-monomial cap</span>';
+    } else if (heatMetric === 'cos') {
+      val = '<span class="hr-val">' + (cl.cos * 100).toFixed(1) + '%</span> ' +
+            '<span class="hr-dim">cosine</span>';
+    } else {
+      val = '<span class="hr-val">' + cl.logl1.toFixed(3) + '</span> ' +
+            '<span class="hr-dim">normalized L1 distance</span>';
+    }
+    readout.innerHTML =
+      '<span class="hr-a">A · ' + escapeHtml(cladeLabel(r)) + '</span>' +
+      '<span class="hr-dim"> (' + r.leaves + 'L, d' + r.depth + ')</span>' +
+      '<span class="hr-dim"> \u00d7 </span>' +
+      '<span class="hr-b">B · ' + escapeHtml(cladeLabel(c)) + '</span>' +
+      '<span class="hr-dim"> (' + c.leaves + 'L, d' + c.depth + ')</span><br>' + val;
+    highlightHeatPair(r.data, c.data);
+  }
+
+  function clearHeatHighlight() {
+    if (!worldG) return;
+    worldG.querySelectorAll('.heat-hi-a, .heat-hi-b')
+      .forEach(el => el.classList.remove('heat-hi-a', 'heat-hi-b'));
+  }
+
+  function highlightHeatPair(aData, bData) {
+    clearHeatHighlight();
+    if (!worldG || compareSel.length < 2) return;
+    const [A, B] = compareSel;
+    const mark = (tree, data, cls) => {
+      if (!tree || !tree.g) return;
+      tree.g.querySelectorAll('circle.node-circle').forEach(c => {
+        if (c.__data__ && c.__data__.data === data) c.classList.add(cls);
+      });
+    };
+    mark(A.tree, aData, 'heat-hi-a');
+    mark(B.tree, bData, 'heat-hi-b');
+  }
+
+  // control wiring (bound once)
+  document.addEventListener('click', (e) => {
+    const seg = e.target.closest && e.target.closest('.heat-seg');
+    if (!seg) return;
+    heatMetric = seg.dataset.metric;
+    document.querySelectorAll('.heat-seg').forEach(s =>
+      s.classList.toggle('is-active', s === seg));
+    if (compareSel.length === 2) renderHeatmap(compareSel[0], compareSel[1]);
+  });
+  document.addEventListener('change', (e) => {
+    if (!e.target || e.target.id !== 'heat-n') return;
+    heatN = parseInt(e.target.value, 10) || 8;
+    if (compareSel.length === 2) renderHeatmap(compareSel[0], compareSel[1]);
+  });
 
   function refreshComparePanel() {
     const panel = document.getElementById('compare-panel');
@@ -2761,30 +4306,33 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
 
     if (compareSel.length === 0) {
       status.style.display = '';
-      status.textContent = 'Click one graph, then another, to compare their shapes.';
+      status.textContent = 'Click a graph or any circle, then another, to compare their shapes.';
       result.style.display = 'none';
       compareDivergence = null;
+      comparePolyToken++;
+      clearHeatmap();
       applyCompareVisuals();
       return;
     }
     if (compareSel.length === 1) {
       status.style.display = '';
       status.innerHTML = 'Selected <span style="color:#E8C77E">' +
-        escapeHtml(treeLabel(compareSel[0])) + '</span>. Click a second graph to compare.';
+        escapeHtml(selLabel(compareSel[0])) + '</span>. Click a second circle or graph to compare.';
       result.style.display = 'none';
       compareDivergence = null;
+      comparePolyToken++;
+      clearHeatmap();
       applyCompareVisuals();
       return;
     }
 
-    // two trees selected → compute
+    // two selections → compute
     status.style.display = 'none';
     result.style.display = '';
     const [A, B] = compareSel;
 
     const verdict = document.getElementById('compare-verdict');
     const cosEl = document.getElementById('compare-cos');
-    const distEl = document.getElementById('compare-dist');
     const logl1El = document.getElementById('compare-logl1');
     const leavesEl = document.getElementById('compare-leaves');
     const depthEl = document.getElementById('compare-depth');
@@ -2792,8 +4340,8 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     const barFill = document.getElementById('compare-bar-fill');
     const pairEl = document.getElementById('compare-pair');
 
-    pairEl.innerHTML = '<span class="cp-a">A · ' + escapeHtml(treeLabel(A)) + '</span>  vs  ' +
-                       '<span class="cp-b">B · ' + escapeHtml(treeLabel(B)) + '</span>' +
+    pairEl.innerHTML = '<span class="cp-a">A · ' + escapeHtml(selLabel(A)) + '</span>  vs  ' +
+                       '<span class="cp-b">B · ' + escapeHtml(selLabel(B)) + '</span>' +
                        '<br><span class="cp-diverge">◌ magenta ring = first diverging layer</span>';
 
     // ── Structural stats always compute (cheap, no polynomial needed) ──
@@ -2821,17 +4369,60 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     // draw the divergence-layer outlines on both graphs
     applyCompareVisuals();
 
-    // ── Polynomial-based metrics (may be unavailable for very large trees) ──
-    const pa = treePolynomial(A);
-    const pb = treePolynomial(B);
+    // ── Clade heatmap ──
+    // Rendered BEFORE the whole-tree metrics on purpose: even when the full
+    // tree polynomial blows past the cap, individual clades usually don't, so
+    // the matrix still says something useful about where the trees diverge.
+    renderHeatmap(A, B);
 
-    if (pa === null || pb === null) {
+    // ── Polynomial-based metrics ──
+    // Two changes from computing these inline. First they are memoised on
+    // (forestRevision, A, B): refreshComparePanel runs again on every rebuild
+    // and resize, and there is no reason to redo the polynomial each time when
+    // nothing structural moved. Second they run after a paint, so the
+    // structural stats and divergence layer above — which are microseconds of
+    // work — appear immediately instead of waiting behind the polynomial.
+    const mkey = forestRevision + '|' + A.data._id + '|' + B.data._id;
+    if (comparePolyResult && comparePolyResult.key === mkey) {
+      paintPolyMetrics(comparePolyResult, sa, sb);
+      return;
+    }
+    cosEl.textContent = '·';
+    logl1El.textContent = '·';
+    barFill.style.width = '0%';
+    verdict.textContent = 'measuring shape…';
+    const token = ++comparePolyToken;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (token !== comparePolyToken) return;
+      const pa = treePolynomial(A);
+      const pb = treePolynomial(B);
+      // polyL1 is kept but no longer displayed: raw L1 reaches ~1e56 on these
+      // trees and tracks tree size rather than difference. Its one honest use
+      // is the exact-zero test for identical shape, below.
+      const res = (pa === null || pb === null)
+        ? { key: mkey, ok: false }
+        : { key: mkey, ok: true, cos: polyCosine(pa, pb),
+            dist: polyL1(pa, pb), logl1n: polyLogL1Norm(pa, pb) };
+      comparePolyResult = res;
+      // a newer selection may have superseded this run while it was computing
+      if (compareSel.length === 2 && compareSel[0] === A && compareSel[1] === B) {
+        paintPolyMetrics(res, sa, sb);
+      }
+    }));
+  }
+
+  function paintPolyMetrics(res, sa, sb) {
+    const verdict = document.getElementById('compare-verdict');
+    const cosEl = document.getElementById('compare-cos');
+    const logl1El = document.getElementById('compare-logl1');
+    const barFill = document.getElementById('compare-bar-fill');
+    if (!verdict) return;
+
+    if (!res.ok) {
       // Polynomial too large — fall back to a structural similarity so the
       // user still gets an interpretable number for big trees.
       cosEl.textContent = 'n/a';
-      distEl.textContent = 'too large';
       logl1El.textContent = 'too large';
-      // structural similarity from leaf-count, depth, imbalance closeness
       const leafSim = 1 - Math.abs(sa.leaves - sb.leaves) / Math.max(sa.leaves, sb.leaves, 1);
       const depthSim = 1 - Math.abs(sa.maxDepth - sb.maxDepth) / Math.max(sa.maxDepth, sb.maxDepth, 1);
       const balSim = 1 - Math.abs(sa.imbalance - sb.imbalance);
@@ -2840,21 +4431,10 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
       verdict.textContent = verdictFor(structSim) + ' (by structure)';
       return;
     }
-
-    const cos = polyCosine(pa, pb);          // 0..1, size-robust
-    const dist = polyL1(pa, pb);
-    const logl1 = polyLogL1(pa, pb);
-
-    cosEl.textContent = (cos * 100).toFixed(1) + '%';
-    distEl.textContent = dist.toLocaleString();
-    logl1El.textContent = logl1.toFixed(1);
-    barFill.style.width = (cos * 100).toFixed(1) + '%';
-
-    if (dist === 0) {
-      verdict.textContent = 'Identical shape';
-    } else {
-      verdict.textContent = verdictFor(cos);
-    }
+    cosEl.textContent = (res.cos * 100).toFixed(1) + '%';
+    logl1El.textContent = res.logl1n.toFixed(3);
+    barFill.style.width = (res.cos * 100).toFixed(1) + '%';
+    verdict.textContent = res.dist === 0 ? 'Identical shape' : verdictFor(res.cos);
   }
 
   function verdictFor(sim) {
@@ -2870,16 +4450,22 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   }
 
   // After a forest rebuild, tree-entry objects are replaced. Re-resolve the
-  // compare selection by matching each selected tree's root _id to the new
-  // forest entries; drop any that no longer exist.
+  // After a rebuild, tree entries + d3 nodes are replaced. Re-resolve each
+  // compare descriptor by matching its data _id to a node in the new forest.
   function reresolveCompareSel() {
     if (!compareSel.length) return;
-    const ids = compareSel.map(t => t.data && t.data._id);
+    const ids = compareSel.map(s => s.data && s.data._id);
     compareSel = [];
     for (const id of ids) {
       if (id == null) continue;
-      const match = forest.find(t => t.data._id === id);
-      if (match) compareSel.push(match);
+      let found = null;
+      for (const t of forest) {
+        if (!t.hierarchy) continue;
+        let node = null;
+        t.hierarchy.each(n => { if (n.data._id === id) node = n; });
+        if (node) { found = { tree: t, data: node.data, node }; break; }
+      }
+      if (found) compareSel.push(found);
     }
   }
 
@@ -2897,6 +4483,8 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   function cloneData(node) {
     const o = { name: node.name, _id: node._id };
     if (node.length != null) o.length = node.length;
+    if (node._fx != null) o._fx = node._fx;   // preserve manual placement
+    if (node._fy != null) o._fy = node._fy;
     if (node.children && node.children.length) {
       o.children = node.children.map(cloneData);
     } else {
@@ -2937,17 +4525,19 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
 
     render();
 
-    // restore focus + selection by id
+    // Restore focus STATE by id, but not the camera — undo/redo hold the
+    // viewport still for the same reason edits do.
     currentFocus = null;
     if (snap.focusId != null) {
       for (const t of forest) {
         const node = t.hierarchy.descendants().find(n => n.data._id === snap.focusId);
-        if (node) { zoomTo(node, true); break; }
+        if (node) { setFocusState(node); break; }
       }
     }
     if (!currentFocus && forest[activeTreeIndex]) {
-      zoomTo(forest[activeTreeIndex].hierarchy, true);
+      setFocusState(forest[activeTreeIndex].hierarchy);
     }
+    restoreCamera();
     editSelection = null;
     if (snap.selId != null) {
       for (const t of forest) {
@@ -3006,6 +4596,8 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
         targetData.children = [];
         delete targetData.value;
       }
+      // re-pack under the new parent: drop any manual placement on the moved node
+      delete nodeData._fx; delete nodeData._fy;
       targetData.children.push(nodeData);
       forest = forest.filter(t => t !== srcTree);   // remove the now-merged tree
       if (activeTreeIndex >= forest.length) activeTreeIndex = forest.length - 1;
@@ -3025,6 +4617,8 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
       targetData.children = [];
       delete targetData.value;
     }
+    // re-pack under the new parent: drop any manual placement on the moved node
+    delete nodeData._fx; delete nodeData._fy;
     targetData.children.push(nodeData);
     return true;
   }
@@ -3042,21 +4636,67 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
       delete oldParent.children;
       oldParent.value = 1;
     }
+    // becomes a root of a fresh graph — clear any manual placement
+    delete nodeData._fx; delete nodeData._fy;
     // new tree entry with nodeData as its root
     forest.push({ data: nodeData, hierarchy: null, g: null, ox: 0, oy: 0, size: 0, maxDepth: 0 });
     return true;
   }
 
   // ── Add an empty child under a node ──────────────────────────────────────
+  // Default name for a newly created node. Every new node used to be called
+  // "new_node", so adding three in a row produced three circles with identical
+  // labels and no way to tell them apart before renaming. Pick the smallest
+  // unused node_N across the whole forest instead.
+  let _nameHintCounter = 1;
+  function nextNodeName() {
+    const used = new Set();
+    for (const t of forest) {
+      (function walk(d) {
+        if (d.name) used.add(d.name);
+        for (const c of (d.children || [])) walk(c);
+      })(t.data);
+    }
+    // resume from the last handed-out number so a long build session doesn't
+    // rescan from 1 every time
+    let n = Math.max(1, _nameHintCounter);
+    while (used.has('node_' + n)) n++;
+    _nameHintCounter = n + 1;
+    return 'node_' + n;
+  }
+
   function addChild(parentData) {
     if (!parentData.children) {
       parentData.children = [];
       delete parentData.value;
     }
-    const child = { name: 'new_node', value: 1, length: null };
+    const child = { name: nextNodeName(), value: 1, length: null };
     child._id = _nextNodeId++;
     parentData.children.push(child);
     return child;
+  }
+
+  // Insert a new node as the next sibling of `nodeData`. Returns null for a
+  // tree root, which has no parent to hold a sibling; callers fall back to
+  // adding a child there.
+  function addSibling(nodeData) {
+    const tree = treeOfData(nodeData);
+    if (!tree || nodeData === tree.data) return null;
+    const parent = findParentById(tree.data, nodeData._id);
+    if (!parent || !parent.children) return null;
+    const sib = { name: nextNodeName(), value: 1, length: null };
+    sib._id = _nextNodeId++;
+    const at = parent.children.indexOf(nodeData);
+    parent.children.splice(at < 0 ? parent.children.length : at + 1, 0, sib);
+    return sib;
+  }
+
+  // Number of nodes that would go away if this subtree were deleted — shown on
+  // the delete button so the blast radius is visible before the click.
+  function subtreeSize(d) {
+    let n = 1;
+    for (const c of (d.children || [])) n += subtreeSize(c);
+    return n;
   }
 
   // ── Delete a node and its subtree ────────────────────────────────────────
@@ -3109,109 +4749,341 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
       c.classList.toggle('editable', editMode);
       c.classList.remove('edit-selected', 'drop-target', 'drag-source');
     });
+    worldG.querySelectorAll('.add-badge').forEach(el => el.remove());
     if (editMode && editSelection) {
       const sel = [...circles].find(c => c.__data__ && c.__data__.data === editSelection);
-      if (sel) sel.classList.add('edit-selected');
+      if (sel) {
+        sel.classList.add('edit-selected');
+        drawAddBadge(sel);
+      }
     }
   }
 
+  // A "+" affordance pinned to the selected circle's rim. Without it, adding a
+  // child means knowing to look in the sidebar; with it the action sits where
+  // the user is already looking. Placed at the upper-right diagonal so it
+  // clears the centred label.
+  //
+  // The badge lives inside worldG, which is what pans and zooms, so its own
+  // geometry is built at a fixed pixel size and the group carries a
+  // counter-scale of 1/k. Without that it would balloon when you zoom into a
+  // small clade and vanish when you zoom out. syncAddBadgeScale() refreshes
+  // just that factor on every transform, which is cheaper than redrawing.
+  const BADGE_R = 11;   // screen px — comfortable click target on the rim
+  function drawAddBadge(circleEl) {
+    const d = circleEl.__data__;
+    if (!d) return;
+    const parentG = circleEl.parentNode;
+    if (!parentG) return;
+    const off = Math.SQRT1_2 * (d.r || 0);   // 45° along the rim, world units
+    const cx = (d.x || 0) + off, cy = (d.y || 0) - off;
+
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'add-badge');
+    g.dataset.cx = cx;
+    g.dataset.cy = cy;
+    const hit = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    hit.setAttribute('r', BADGE_R);
+    hit.setAttribute('class', 'add-badge-bg');
+    const arm = BADGE_R * 0.46;
+    const mk = (x1, y1, x2, y2) => {
+      const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      l.setAttribute('x1', x1); l.setAttribute('y1', y1);
+      l.setAttribute('x2', x2); l.setAttribute('y2', y2);
+      l.setAttribute('class', 'add-badge-bar');
+      return l;
+    };
+    g.appendChild(hit);
+    g.appendChild(mk(-arm, 0, arm, 0));
+    g.appendChild(mk(0, -arm, 0, arm));
+    const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+    title.textContent = 'Add a child here (Tab)';
+    g.appendChild(title);
+
+    // stopPropagation so the badge click doesn't also reach the circle
+    // underneath and re-select it, and so the drag handler never starts.
+    g.addEventListener('mousedown', (e) => { e.stopPropagation(); });
+    g.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      createChild(d.data);
+    });
+    parentG.appendChild(g);
+    syncAddBadgeScale();
+  }
+
+  function syncAddBadgeScale() {
+    if (!worldG) return;
+    const k = currentScale || 1;
+    worldG.querySelectorAll('.add-badge').forEach(g => {
+      g.setAttribute('transform',
+        `translate(${g.dataset.cx} ${g.dataset.cy}) scale(${1 / k})`);
+    });
+  }
+
+  // ── Node creation actions ───────────────────────────────────────────────
+  // Every route into creating a node — the sidebar buttons, the canvas "+"
+  // badge, double-click, and the keyboard — funnels through these two, so all
+  // of them behave identically.
+  //
+  // Two deliberate NON-behaviours. Creating a node does not move the camera,
+  // and it does not move the selection onto the new node. Both used to happen
+  // on every single add, which made building a clade lurch: the view panned
+  // and the sidebar re-pointed at a node the user had not asked to work on.
+  // Holding the selection still also makes repetition natural — press Tab (or
+  // click "+ child") four times and you get four children of the same parent,
+  // with no re-selecting in between.
+  //
+  // The new node is still announced: the FLIP pass glides circles to their new
+  // positions and pulses the one that appeared, so the change is visible
+  // without the camera chasing it.
+
+  function createChild(parentData) {
+    if (!parentData) return;
+    pushHistory();
+    const parentId = parentData._id;
+    const child = addChild(parentData);
+    rerenderPreservingFocus({ movedId: child._id, newParentId: parentId });
+  }
+
+  function createSibling(nodeData) {
+    if (!nodeData) return;
+    const tree = treeOfData(nodeData);
+    // a root has no siblings — the useful thing to do there is add a child
+    if (!tree || nodeData === tree.data) { createChild(nodeData); return; }
+    pushHistory();
+    const parent = findParentById(tree.data, nodeData._id);
+    const sib = addSibling(nodeData);
+    if (!sib) { undoStack.pop(); updateHistoryButtons(); return; }
+    rerenderPreservingFocus({
+      movedId: sib._id,
+      newParentId: parent ? parent._id : null,
+    });
+  }
+
+  function deleteSelected() {
+    if (!editSelection) return;
+    const owner = treeOfData(editSelection);
+    if (!owner) return;
+    const parent = findParentById(owner.data, editSelection._id);
+    pushHistory();
+    if (deleteNode(editSelection)) {
+      editSelection = parent || (forest[activeTreeIndex] && forest[activeTreeIndex].data) || null;
+      rerenderPreservingFocus();
+    } else {
+      undoStack.pop();   // refused (e.g. last remaining root) — discard snapshot
+      updateHistoryButtons();
+    }
+  }
+
+  // Update one node's on-canvas label in place, matching the truncation and
+  // sizing rules render() uses. Called on every keystroke while renaming, so
+  // the circle relabels as you type instead of only on commit.
+  function updateNodeLabel(nodeData) {
+    if (!worldG) return;
+    const tx = [...worldG.querySelectorAll('text.node-label')]
+      .find(t => t.__data__ && t.__data__.data === nodeData);
+    if (!tx) return;
+    const d = tx.__data__;
+    const raw = nodeData.name || '';
+    const name = raw || (d.depth === 0 ? 'root' : '');
+    const maxLen = tx.__isLeaf ? Math.max(3, Math.floor(d.r / 2.4)) : 60;
+    tx.textContent = name.length > maxLen ? name.slice(0, maxLen - 1) + '…' : name;
+    tx.__name = name;
+  }
+
   // ── The edit panel in the sidebar ───────────────────────────────────────
+  let caretState = null;
   function refreshEditPanel() {
     const panel = document.getElementById('edit-panel');
     if (!panel) return;
     panel.style.display = editMode ? '' : 'none';
     if (!editMode) return;
 
+    // If the name field is focused right now it is about to be destroyed by
+    // the innerHTML rebuild below; remember where the caret was so it can be
+    // put back on the replacement.
+    const liveName = document.getElementById('edit-name');
+    if (liveName && document.activeElement === liveName) {
+      caretState = { start: liveName.selectionStart, end: liveName.selectionEnd };
+    }
+
     const selWrap = document.getElementById('edit-selection');
     if (!editSelection) {
-      selWrap.innerHTML = '<div class="edit-hint">Click a circle to select it, then rename / add / delete. Drag a circle onto another to reparent it — its children come along.</div>';
+      selWrap.innerHTML =
+        '<div class="edit-hint">Click a circle to select it. Double-click any circle to add a child straight away.</div>' +
+        '<div class="edit-hint" style="margin-top:8px">Drag a circle onto another to reparent it — its children come along.</div>';
       return;
     }
     const ownerTree = treeOfData(editSelection);
     const isRoot = (ownerTree && editSelection === ownerTree.data);
     const isLeaf = !editSelection.children || editSelection.children.length === 0;
     const childCount = editSelection.children ? editSelection.children.length : 0;
+    const subSize = subtreeSize(editSelection);
     selWrap.innerHTML = `
       <div class="edit-row">
         <label>name</label>
-        <input id="edit-name" type="text" value="${(editSelection.name||'').replace(/"/g,'&quot;')}" />
+        <input id="edit-name" type="text" autocomplete="off" spellcheck="false"
+               value="${(editSelection.name||'').replace(/"/g,'&quot;')}" />
       </div>
       <div class="edit-meta">${isRoot ? 'root · ' : ''}${isLeaf ? 'leaf' : childCount + ' child' + (childCount===1?'':'ren')}</div>
       <div class="edit-actions">
-        <button id="edit-add">+ child</button>
-        <button id="edit-del">delete</button>
+        <button id="edit-add" title="Add a child of this node (Tab)">+ child</button>
+        <button id="edit-add-sib" title="Add a sibling after this node (Enter)"${isRoot ? ' disabled' : ''}>+ sibling</button>
+        <button id="edit-del" title="Delete this node and everything inside it">delete${subSize > 1 ? ' (' + subSize + ')' : ''}</button>
       </div>
+      <div class="edit-keys">
+        <span><kbd>Enter</kbd> sibling</span>
+        <span><kbd>Tab</kbd> child</span>
+        <span><kbd>F2</kbd> rename</span>
+        <span><kbd>Del</kbd> remove</span>
+      </div>
+      <div class="edit-keys-note">Selection stays put — press again to add more at the same level.</div>
     `;
     const nameInput = document.getElementById('edit-name');
+    // Restore the caret if the user was mid-rename. The selection no longer
+    // moves when a node is created, so a Tab/Enter in the middle of typing
+    // should leave the user exactly where they were in the same field.
+    if (caretState) {
+      nameInput.focus();
+      try { nameInput.setSelectionRange(caretState.start, caretState.end); } catch (_) {}
+      caretState = null;
+    }
     let renameSnapshotTaken = false;
     nameInput.addEventListener('focus', () => { renameSnapshotTaken = false; });
     nameInput.addEventListener('input', () => {
       if (!renameSnapshotTaken) { pushHistory(); renameSnapshotTaken = true; }
       renameNode(editSelection, nameInput.value);
+      updateNodeLabel(editSelection);
     });
-    nameInput.addEventListener('change', () => rerenderPreservingFocus());
-    nameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') nameInput.blur(); });
-    document.getElementById('edit-add').addEventListener('click', () => {
-      pushHistory();
-      const parentId = editSelection._id;
-      const child = addChild(editSelection);
-      editSelection = child;
-      // camera frames the parent so the new child is visible appearing inside
-      rerenderPreservingFocus({ movedId: child._id, newParentId: parentId, focusOnId: parentId });
+    // No re-render on commit. The canvas label is updated live by
+    // updateNodeLabel() on each keystroke, which is both cheaper than a full
+    // rebuild and avoids a re-entrancy trap: the outgoing input fires `change`
+    // as it is detached during a create, and re-rendering from that handler
+    // would tear down the replacement panel mid-focus-handoff.
+    // Enter / Tab keep the build loop going without leaving the field:
+    // type a name, Enter for the next sibling, Tab to go a level deeper.
+    nameInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        createSibling(editSelection);
+      } else if (e.key === 'Tab' && !e.shiftKey) {
+        e.preventDefault();
+        createChild(editSelection);
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        nameInput.blur();
+        rerenderPreservingFocus();
+      }
     });
+    document.getElementById('edit-add').addEventListener('click', () => createChild(editSelection));
+    const sibBtn = document.getElementById('edit-add-sib');
+    if (sibBtn && !isRoot) sibBtn.addEventListener('click', () => createSibling(editSelection));
     const delBtn = document.getElementById('edit-del');
-    if (delBtn) {
-      delBtn.addEventListener('click', () => {
-        const owner = treeOfData(editSelection);
-        const parent = findParentById(owner.data, editSelection._id);
-        pushHistory();
-        if (deleteNode(editSelection)) {
-          editSelection = parent || (forest[activeTreeIndex] && forest[activeTreeIndex].data) || null;
-          rerenderPreservingFocus();
-        } else {
-          undoStack.pop();  // delete refused (e.g. last remaining root); discard snapshot
-          updateHistoryButtons();
-        }
-      });
-    }
+    if (delBtn) delBtn.addEventListener('click', () => deleteSelected());
   }
 
   // ── Edit mode toggle + export wiring ────────────────────────────────────
-  const editToggle = document.getElementById('edit-toggle');
-  const compareToggle = document.getElementById('compare-toggle');
-  if (editToggle) {
-    editToggle.addEventListener('change', () => {
-      editMode = editToggle.checked;
-      if (editMode && compareMode) {
-        // turn compare off — the two modes claim clicks differently
-        compareMode = false;
-        if (compareToggle) compareToggle.checked = false;
-        document.querySelector('.app').classList.remove('compare-mode');
-        clearCompare();
-        refreshComparePanel();
+  // ── Mode switching via the segmented control ──────────────────────────
+  // Three modes: 'view' (navigate), 'edit', 'compare'. They interpret clicks
+  // differently, so only one is active at a time.
+  const MODE_HINTS = {
+    view: 'Click a circle to zoom in · click outside to go back up.',
+    edit: 'Click a circle to select it, then Enter for a sibling or Tab for a child — the selection stays put, so press again for more. Double-click a circle to add a child directly.',
+    compare: 'Click any two circles — in the same graph or different ones — to compare their shapes.',
+  };
+  const EDIT_SUBMODE_HINTS = {
+    restructure: 'Enter = sibling · Tab = child · Delete = remove. Drag a circle onto another to reparent it, or to empty space to split it into a new graph.',
+    arrange: 'Drag any circle to place it freely — it stays where you drop it (its subtree moves with it).',
+  };
+  function setMode(mode) {
+    editMode = (mode === 'edit');
+    // the mode button keeps DOM focus after being clicked; move it off so the
+    // edit shortcuts are not intercepted by it
+    if (editMode) setTimeout(focusCanvas, 0);
+    compareMode = (mode === 'compare');
+
+    const app = document.querySelector('.app');
+    app.classList.toggle('edit-mode', editMode);
+    app.classList.toggle('compare-mode', compareMode);
+    app.classList.toggle('arrange-mode', editMode && editSubMode === 'arrange');
+
+    // segmented buttons active state
+    document.querySelectorAll('.mode-seg').forEach(b => {
+      const on = b.dataset.mode === mode;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    // show only the active mode's panel
+    const editSec = document.getElementById('edit-section');
+    const cmpSec = document.getElementById('compare-section');
+    if (editSec) editSec.style.display = editMode ? '' : 'none';
+    if (cmpSec) cmpSec.style.display = compareMode ? '' : 'none';
+    // hint line
+    const hint = document.getElementById('mode-hint');
+    if (hint) {
+      if (mode === 'edit') hint.textContent = EDIT_SUBMODE_HINTS[editSubMode];
+      else hint.textContent = MODE_HINTS[mode] || '';
+    }
+    updateResetLayoutBtn();
+
+    // leaving compare clears its selection/outlines
+    if (!compareMode) clearCompare();
+    // refresh state
+    forest.forEach(t => ensureIds(t.data));
+    applyEditModeVisuals();
+    refreshEditPanel();
+    applyCompareVisuals();
+    refreshComparePanel();
+  }
+  document.querySelectorAll('.mode-seg').forEach(btn => {
+    btn.addEventListener('click', () => setMode(btn.dataset.mode));
+  });
+
+  // Edit sub-mode toggle (Restructure / Arrange)
+  function setEditSubMode(sm) {
+    editSubMode = sm;
+    document.querySelectorAll('.submode-seg').forEach(b => {
+      const on = b.dataset.submode === sm;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    const app = document.querySelector('.app');
+    app.classList.toggle('arrange-mode', editMode && sm === 'arrange');
+    const hint = document.getElementById('mode-hint');
+    if (hint && editMode) hint.textContent = EDIT_SUBMODE_HINTS[sm];
+  }
+  document.querySelectorAll('.submode-seg').forEach(btn => {
+    btn.addEventListener('click', () => setEditSubMode(btn.dataset.submode));
+  });
+
+  // Reset layout: clear all manual free-placements and re-pack
+  function anyFreePositions() {
+    for (const t of forest) {
+      let found = false;
+      const walk = (n) => { if (n._fx != null || n._fy != null) found = true; (n.children||[]).forEach(walk); };
+      walk(t.data);
+      if (found) return true;
+    }
+    return false;
+  }
+  function updateResetLayoutBtn() {
+    const btn = document.getElementById('reset-layout');
+    if (btn) btn.style.display = (editMode && anyFreePositions()) ? '' : 'none';
+  }
+  const resetLayoutBtn = document.getElementById('reset-layout');
+  if (resetLayoutBtn) {
+    resetLayoutBtn.addEventListener('click', () => {
+      pushHistory();
+      for (const t of forest) {
+        const walk = (n) => { delete n._fx; delete n._fy; (n.children||[]).forEach(walk); };
+        walk(t.data);
       }
-      document.querySelector('.app').classList.toggle('edit-mode', editMode);
-      forest.forEach(t => ensureIds(t.data));
-      applyEditModeVisuals();
-      refreshEditPanel();
+      rerenderPreservingFocus();
+      updateResetLayoutBtn();
     });
   }
-  if (compareToggle) {
-    compareToggle.addEventListener('change', () => {
-      compareMode = compareToggle.checked;
-      if (compareMode && editMode) {
-        editMode = false;
-        if (editToggle) editToggle.checked = false;
-        document.querySelector('.app').classList.remove('edit-mode');
-        applyEditModeVisuals();
-        refreshEditPanel();
-      }
-      document.querySelector('.app').classList.toggle('compare-mode', compareMode);
-      if (!compareMode) clearCompare();
-      applyCompareVisuals();
-      refreshComparePanel();
-    });
-  }
+
   const compareClear = document.getElementById('compare-clear');
   if (compareClear) compareClear.addEventListener('click', clearCompare);
 
@@ -3268,6 +5140,37 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     }
   });
 
+  // ── Edit-mode keyboard shortcuts ────────────────────────────────────────
+  // These fire when the canvas has focus (the name field handles its own copy
+  // of Enter/Tab, so the same keys work whether you're typing a name or just
+  // have a circle selected). Outliner conventions: Enter makes a sibling,
+  // Tab goes a level deeper.
+  window.addEventListener('keydown', (e) => {
+    if (!editMode || !editSelection) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;   // leave undo/redo alone
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    // If a button/link genuinely has focus, Enter and Space belong to it —
+    // hijacking them here would make toolbar controls unusable by keyboard.
+    if (tag === 'button' || tag === 'a') return;
+
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      createSibling(editSelection);
+    } else if (e.key === 'Tab' && !e.shiftKey) {
+      e.preventDefault();
+      createChild(editSelection);
+    } else if (e.key === 'Delete' || e.key === 'Backspace') {
+      e.preventDefault();
+      deleteSelected();
+    } else if (e.key === 'F2') {
+      // rename without reaching for the mouse
+      e.preventDefault();
+      const inp = document.getElementById('edit-name');
+      if (inp) { inp.focus(); inp.select(); }
+    }
+  });
+
   const dsSelect = document.getElementById('ds-select');
   dsSelect.addEventListener('change', (e) => {
     loadDataset(e.target.value);
@@ -3284,12 +5187,57 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
 
   window.addEventListener('resize', () => {
     if (currentRootData) {
-      rerenderPreservingFocus();
+      // the viewport itself changed, so this is the one case that re-frames —
+      // holding the old transform through a resize would strand the tree
+      rerenderPreservingFocus({ refit: true });
     }
   });
 
   // initial paint
   loadDataset(dsSelect.value || 'slide6');
+
+  // ── Welcome overlay (shown once; dismissal remembered) ──────────────────
+  (function initWelcome() {
+    const scrim = document.getElementById('welcome-scrim');
+    if (!scrim) return;
+    const KEY = 'venntree_welcome_seen_v1';
+
+    // safe read: if storage is unavailable, default to showing the welcome
+    let seen = false;
+    try { seen = localStorage.getItem(KEY) === '1'; } catch (e) { seen = false; }
+
+    function dismiss() {
+      scrim.hidden = true;
+      const dontShow = document.getElementById('welcome-dontshow');
+      if (dontShow && dontShow.checked) {
+        try { localStorage.setItem(KEY, '1'); } catch (e) { /* ignore */ }
+      }
+    }
+    function open() {
+      const dontShow = document.getElementById('welcome-dontshow');
+      if (dontShow) dontShow.checked = true;   // reset each open
+      scrim.hidden = false;
+    }
+
+    // bind controls ONCE
+    document.getElementById('welcome-go')?.addEventListener('click', dismiss);
+    document.getElementById('welcome-x')?.addEventListener('click', dismiss);
+    scrim.addEventListener('click', (e) => { if (e.target === scrim) dismiss(); });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !scrim.hidden) dismiss();
+    });
+
+    // show on first visit
+    if (!seen) scrim.hidden = false;
+
+    // re-openable from the header wordmark
+    const mark = document.querySelector('.brand .mark');
+    if (mark) {
+      mark.style.cursor = 'help';
+      mark.title = 'About Venn·Tree';
+      mark.addEventListener('click', open);
+    }
+  })();
   </script>
 </body>
 </html>
