@@ -300,11 +300,10 @@
     pointer-events: none;
   }
   /* The focused circle stays drawn, with a bright rim, so you can always see
-     the edge of the clade you zoomed into. It used to fade out and hand its
-     colour to the whole canvas, which made the clade look infinite: there was
-     no boundary anywhere on screen. The canvas around it now takes the
-     PARENT's colour, shaded down (see updateCanvasBackground), so the rim
-     reads against it and you can still tell you are inside the parent.
+     the edge of the clade you zoomed into; without it the clade looks
+     infinite. The canvas around it takes the PARENT's colour, shaded down
+     (see updateCanvasBackground), so the rim reads against it and you can
+     still tell you are inside the parent.
      Clicking the focused circle goes up a level, hence the zoom-out cursor. */
   .node-circle.is-focus-bg {
     opacity: 1;
@@ -1359,8 +1358,8 @@
 
   /* A, B and the divergence ring all sit in the 202°–21° hue arc, which none
      of the five depth ramps ever enters (they run 21°–202°, teal → green →
-     amber). Hue alone was not enough — the old gold A-ring was byte-identical
-     to a palette leaf colour — so each ring is also backed by a casing. */
+     amber). Hue alone is not enough (a gold ring can match a palette leaf
+     colour exactly), so each ring is also backed by a casing. */
   .cmp-casing {
     fill: none;
     pointer-events: none;
@@ -2057,7 +2056,6 @@
     white-space: nowrap;
   }
 
-
   /* tooltip */
   .tip {
     position: fixed;
@@ -2517,7 +2515,6 @@
         <div class="bl-note" id="bl-note"></div>
       </div>
 
-
     </aside>
 
     <footer>
@@ -2583,7 +2580,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   //
   // ═════════════════════════════════════════════════════════════════════
 
-
   // ═════════════════════════════════════════════════════════════════════
   //  [01]  NEWICK PARSING
   // ═════════════════════════════════════════════════════════════════════
@@ -2646,9 +2642,7 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   const DEEP_NEWICK = "(((sp1,sp2,sp3)clade1,((sp4,sp5,sp6)clade2,((sp7,sp8,(sp10,sp11)sub3)clade3,((sp12,sp13,sp14)clade4,((sp15,sp16,sp17)clade5,((sp18,(sp20,sp21)sub6)clade6,((sp22,(sp24,sp25)sub7)clade7,((sp26,sp27,sp28)clade8,((sp29,sp30,sp31)clade9,((sp32,sp33,sp34)clade10,((sp35,sp36,sp37)clade11,((sp38,sp39,(sp41,sp42)sub12)clade12,((sp43,sp44,(sp46,sp47)sub13)clade13,((sp48,(sp50,sp51)sub14)clade14,((sp52,sp53)clade15,((sp54,sp55,(sp57,sp58)sub16)clade16,((sp59,sp60,sp61)clade17,((sp62,sp63,(sp65,sp66)sub18)clade18,((sp67,sp68,sp69)clade19,((sp70,sp71,(sp73,sp74)sub20)clade20,((sp75,sp76,(sp78,sp79)sub21)clade21,((sp80,sp81,sp82)clade22,((sp83,sp84)clade23,((sp85,sp86,sp87)clade24,((sp88,sp89,(sp91,sp92)sub25)clade25,((sp93,sp94)clade26,((sp95,(sp97,sp98)sub27)clade27,((sp99,sp100,(sp102,sp103)sub28)clade28,((sp104,sp105)clade29,((sp106,(sp108,sp109)sub30)clade30,((sp110,sp111)clade31,((sp112,sp113,(sp115,sp116)sub32)clade32,((sp117,sp118)clade33,((sp119,sp120)clade34,((sp121,sp122,(sp124,sp125)sub35)clade35,((sp126,sp127,(sp129,sp130)sub36)clade36,((sp131,sp132,sp133)clade37,((sp134,(sp136,sp137)sub38)clade38,(sp138,sp139,sp140)clade39)node38)node37)node36)node35)node34)node33)node32)node31)node30)node29)node28)node27)node26)node25)node24)node23)node22)node21)node20)node19)node18)node17)node16)node15)node14)node13)node12)node11)node10)node9)node8)node7)node6)node5)node4)node3)node2)node1)Root;";
 
   // The engineered set — 309 leaves under one root, built to exercise Compare.
-  // Its test clades are named for what they are (the root used to be called
-  // "CompareDemo" and the clades twinA_n4, divQ_extra and so on, which said
-  // nothing to anyone who had not read this comment):
+  // Its test clades are named for what they test:
   //   Twin_A / Twin_B          → the same shape: compare reads 100% / identical
   //   Deep_diff_P / _Q         → same branching for the top levels, then Q has
   //                              one leaf replaced by a cherry, deep down
@@ -2754,8 +2748,8 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   function depthRgb(d, maxD) {
     const last = DEPTH_RGBS.length - 1;
     // A one-node tree (a new tree, the blank canvas) is a leaf, so it takes
-    // the leaf end of the ramp. It used to take the root end — near-black —
-    // under the dark ink that leaf names are set in, so its name was invisible.
+    // the leaf end of the ramp; at the near-black root end its dark name ink
+    // would be invisible.
     if (maxD <= 0) return DEPTH_RGBS[last].slice();
     const t = Math.min(1, d / maxD);
     const pos = t * last;            // 0..last continuous
@@ -2870,9 +2864,8 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   let clusterToken = 0;          // cancels a superseded deferred cluster compute
 
   // ── Small shared helpers ────────────────────────────────────────────────
-  // Generic enough that several sections use them; they were previously
-  // declared wherever they were first needed (escapeHtml sat 2,500 lines in,
-  // inside the compare panel), which made them easy to miss and re-invent.
+  // Generic helpers used by several sections, kept together so they are easy
+  // to find rather than re-invented.
 
   function escapeHtml(s) {
     return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -2969,8 +2962,8 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   //     value it could have obtained by adding.
   //
   //  2. `b` is flattened into plain arrays once. Iterating a Map allocates a
-  //     fresh iterator, and the old inner `for...of b` did that once per term
-  //     of `a` — |a| iterator allocations per multiply.
+  //     fresh iterator, so an inner `for...of b` would allocate one per term
+  //     of `a`.
   function polyMul(a, b) {
     const bn = b.size;
     const bk = new Array(bn), bc = new Array(bn);
@@ -3197,10 +3190,8 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
 
   // ── Polynomial construction ─────────────────────────────────────────────
   // One bottom-up walk, shared by all three callers (sidebar display, whole-
-  // tree comparison, clade heatmap). These used to be three separate copies of
-  // the same recursion that had already drifted apart in small ways — only one
-  // of them built shape keys bottom-up, so the other paid an O(n·depth) cost
-  // re-walking each subtree to key it.
+  // tree comparison, clade heatmap). It builds shape keys bottom-up as it
+  // goes, so no caller pays O(n·depth) re-walking subtrees to key them.
   //
   // Returns { key, poly }; poly === null means the monomial cap was exceeded
   // somewhere below, and null propagates upward.
@@ -3270,7 +3261,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     for (const c of p.values()) s += c * c;
     return Math.sqrt(s);
   }
-
 
   // Manhattan distance — Liu, Vázquez & Jonoska, "A Comparison of
   // Polynomial-Based Tree Clustering Methods" (UCNC 2025), formula (4):
@@ -3446,9 +3436,8 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
 
   // Hold the POLYNOMIAL for copying, not a pre-rendered string.
   //
-  // Two reasons. The written form was previously only produced when it was
-  // short enough to display, so copy silently did nothing on exactly the trees
-  // where you would most want the text — an 80,439-term polynomial is far too
+  // Two reasons. Copy must work even when the polynomial is too long to
+  // display, which is exactly when you most want the text — an 80,439-term polynomial is far too
   // long to read on screen but perfectly reasonable to paste into a file.
   // And generating it eagerly charged every zoom for a string nobody had asked
   // for; serialising fungi's polynomial costs ~46ms for 2.4MB, which is
@@ -3562,10 +3551,9 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   }
 
   // ── What the footer shows ───────────────────────────────────────────────
-  // The bar used to be driven only by the focused node, so in Compare it
-  // stayed on whatever you had last zoomed to while you picked two other
-  // clades — it looked frozen, and it never showed more than one polynomial.
-  // One dispatcher now decides, in this order:
+  // The bar follows what the user is working on, not only the focused node
+  // (in Compare it would otherwise look frozen while two clades are picked).
+  // One dispatcher decides, in this order:
   //   1. Compare ▸ Pair with a pick   → A and B, one line each
   //   2. Compare ▸ Many with picks    → the most recent pick
   //   3. Edit                         → the SELECTED circle (the focused one
@@ -4181,7 +4169,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     }
     return depthRgb(d.depth, t ? t.maxDepth : currentMaxDepth);
   }
-  function nodeFill(d, t) { return rgbToCss(nodeRgb(d, t)); }
   // A rim or arc drawn ON a circle has to read against that circle's own
   // fill, which runs from near-black to bright gold: light ink on dark fills,
   // dark ink on light ones.
@@ -5011,16 +4998,15 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   // The pitch has to clear the box the collision pass gives a label — its
   // line height plus the casing pad above and below (resolveLabelCollisions)
   // — or neighbouring pinned names count as overlapping and every other one
-  // is dropped. At the old pitch of font + 6 (23px against a 25.5px box) the
-  // middle name of a three-deep stack never showed.
+  // is dropped (a pitch of font + 6 hid the middle name of a three-deep
+  // stack).
   const STICKY_LINE_PX = Math.ceil(PINNED_FONT_PX * (LABEL_LINE + 2 * 0.16)) + 1;
 
   // Leaf names, materialised only while they are actually legible.
   //
-  // The old behaviour truncated to whatever fitted — three characters and an
-  // ellipsis on a small circle — which is unreadable and worth nothing. A leaf
-  // name now appears only when the WHOLE name fits inside its circle, and
-  // clicking the leaf frames it, which is what makes it fit.
+  // A leaf name appears only when the WHOLE name fits inside its circle (a
+  // truncated "Asp…" is worth nothing); clicking the leaf frames it, which is
+  // what makes it fit.
   function leafLabelLayer(t, scale) {
     if (!t.leafG || !t.hierarchy) return;
     // one comparison rules out every leaf in the tree at normal zoom
@@ -5456,8 +5442,7 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   }
 
   // The Tree panel. One tree gets the four big numbers; several get one row
-  // each. It used to show the four numbers for whichever tree was active, so
-  // with two trees loaded half the input was simply missing from the panel.
+  // each, so no loaded tree is missing from the panel.
   function treeCounts(root) {
     const leaves = root.leaves().length;
     const all = root.descendants().length;
@@ -5715,7 +5700,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   //  ancestor-stacking that keeps earlier generations readable when zoomed in.
   // ═════════════════════════════════════════════════════════════════════
 
-
   function updateLabelVisibility(scale) {
     // the tree view places its names beside nodes, on rules of its own
     if (viewKind === 'tree') { updateTreeView(scale); return; }
@@ -5735,7 +5719,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     // while a leaf needed ~13px. The effect was backwards — on the fungal set
     // only 11 of the 43 clades large enough to hold a name actually had one,
     // and zooming in could REMOVE names as circles crossed the threshold.
-
 
     // coord-space viewport bounds (inverse of group transform)
     const viewTopCoord    = (-H / 2 - currentTy) / scale;
@@ -6080,11 +6063,9 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   // — most of the radius is spent before any branching happens. Skipping them
   // reclaims that area.
   //
-  // This used to run automatically on load, and it was a mistake: a dataset
-  // that silently opens somewhere other than its own root reads as broken, and
-  // it put three pinned ancestor labels into the same band as the focus label,
-  // which collided. It is now the fit button's second press — an explicit,
-  // reversible action rather than a decision made on the user's behalf.
+  // This is the fit button's second press, never automatic on load: a dataset
+  // that silently opens somewhere other than its own root reads as broken,
+  // and pinned ancestor labels would collide with the focus label.
   function firstBranching(node) {
     let n = node, guard = 0;
     while (n.children && n.children.length === 1 && guard++ < 500) n = n.children[0];
@@ -6260,7 +6241,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   //  The floating chip that follows the cursor during a reparent, plus the
   //  free-placement dragging used by the Arrange sub-mode.
   // ═════════════════════════════════════════════════════════════════════
-
 
   let dragGhostEl = null;
   function showDragGhost(nodeData) {
@@ -6555,7 +6535,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   //  [14]  ON-CANVAS ZOOM CONTROLS & HELP POPOVER
   // ═════════════════════════════════════════════════════════════════════
 
-
   function zoomByFactor(factor, smooth=true) {
     const newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, currentScale * factor));
     if (newScale === currentScale) return;
@@ -6702,7 +6681,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   //  _id, and the camera is restored exactly (it never follows an edit).
   // ═════════════════════════════════════════════════════════════════════
 
-
   function captureCirclePositions() {
     const map = new Map();
     if (!worldG) return map;
@@ -6791,10 +6769,9 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     // restore active tree index if still valid
     if (activeIdx < forest.length) activeTreeIndex = activeIdx;
 
-    // The camera does NOT follow edits. Re-framing on every change — panning
-    // to the affected node, or even snapping to re-fit the old focus — meant
-    // the view jumped on every single node you added, which is disorienting
-    // when you are adding several in a row. The viewport is restored exactly
+    // The camera does NOT follow edits: re-framing on every change makes the
+    // view jump on every node you add, which is disorienting when adding
+    // several in a row. The viewport is restored exactly
     // as the user left it and the layout reflows underneath it.
     //
     // Focus STATE still has to be re-pointed at the rebuilt hierarchy (the old
@@ -6862,7 +6839,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   //  Ids are the only stable handle across a render.
   // ═════════════════════════════════════════════════════════════════════
 
-
   function nodeById(id) {
     if (id == null) return null;
     for (const t of forest) {
@@ -6917,7 +6893,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   // ═════════════════════════════════════════════════════════════════════
   //  [19]  COMPARE: WHOLE-TREE POLYNOMIAL & STATS
   // ═════════════════════════════════════════════════════════════════════
-
 
   const comparePolyCache = new Map();   // rootShapeKey → polynomial | null
   const COMPARE_POLY_CACHE_CAP = 200;
@@ -6991,7 +6966,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   // ═════════════════════════════════════════════════════════════════════
   //  [20]  COMPARE: LAYER DIVERGENCE & SELECTION
   // ═════════════════════════════════════════════════════════════════════
-
 
   function layerSignatures(rootData) {
     // array indexed by depth → sorted array of child-counts of nodes at depth
@@ -7188,13 +7162,9 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   // where the cost blows up. A frontier is DISJOINT and tiles the selection:
   // each clade is roughly leaves/n in size, so the polynomials stay small and
   // every row says something the others don't.
-  // Depth and leaf count for every node of a subtree, in one pass.
-  //
-  // All three decompositions need exactly this, and each used to compute it
-  // itself: two of them carried their own memoised leaf() recursion and a
-  // separate depth walk, the third only the depth walk. Same traversal three
-  // times over, with three chances to drift.
   // ── Shared traversal ──────────────────────────────────────────────────
+  // Depth and leaf count for every node of a subtree, in one pass. All three
+  // heatmap decompositions use it, so they cannot drift apart.
   function subtreeMetrics(rootData) {
     const depth = new Map(), leaves = new Map();
     (function walk(d, dep) {
@@ -7256,7 +7226,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   // arrays turns both operations into a two-pointer merge — sequential memory,
   // no hashing. Cached per polynomial OBJECT, so the shapes shared through the
   // build memo convert only once.
-  // ── Sorted-vector form for matrix work ────────────────────────────────
   const heatVecCache = new WeakMap();
   function polyVec(p) {
     let v = heatVecCache.get(p);
@@ -7338,9 +7307,9 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   //
   // Raw d_M̄ is a sum with one summand per monomial, so it grows with the size
   // of the parts rather than with how different they are: on a layer matrix
-  // the root level of a big tree scored in the tens of thousands while a pair
-  // of tiny deep levels with nothing in common scored 2, and the colour scale
-  // was stretched to whatever the largest cell happened to be. Divided by the
+  // the root level of a big tree scores in the tens of thousands while a pair
+  // of tiny deep levels with nothing in common scores 2, so the colour scale
+  // would stretch to whatever the largest cell happens to be. Divided by the
   // union of the supports it lies in [0, 1] — 0 for identical parts, 1 for
   // parts that share no monomial — and means the same thing in every cell and
   // in every matrix.
@@ -7369,11 +7338,9 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
 
   // Dark→bright ramp: dim petrol for unlike, amber for alike. Matches the
   // circle depth ramp so the panel reads as part of the same visual system.
-  // The cold end must stay clearly lighter than --panel (#181E29): with the
-  // old #16202B a zero-similarity cell was the same colour as the panel, so
-  // "these two parts have nothing in common" rendered as a hole in the grid
-  // and was indistinguishable from a missing cell.
-  // ── Colour ramp ───────────────────────────────────────────────────────
+  // The cold end must stay clearly lighter than --panel (#181E29), or a
+  // zero-similarity cell reads as a hole in the grid, indistinguishable from
+  // a missing cell.
   const HEAT_STOPS = [
     [0.00, [0x25, 0x34, 0x43]],
     [0.35, [0x2E, 0x55, 0x66]],
@@ -7991,9 +7958,9 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
       : parts;
     // Where on the path the levels correspond least. The root pair is left
     // out: it is the two whole selections, i.e. the panel's headline number.
-    // Both metrics are on an absolute 0–1 scale now, so the worst pair means
-    // the same thing for either (raw distance used to grow with level size,
-    // which made its worst pair simply the biggest level).
+    // Both metrics are on an absolute 0–1 scale, so the worst pair means the
+    // same thing for either (a raw distance would grow with level size and
+    // always pick the biggest level).
     let worst = '';
     if (P.length > 1) {
       let wk = null;
@@ -8141,11 +8108,9 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
     if (compareSel.length === 2) renderHeatmap(compareSel[0], compareSel[1]);
   });
 
-
   // ═════════════════════════════════════════════════════════════════════
   //  [22]  COMPARE: SIDEBAR PANEL
   // ═════════════════════════════════════════════════════════════════════
-
 
   function refreshComparePanel() {
     // the footer follows the picks (or goes back to the focused node once
@@ -8415,11 +8380,10 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   // per sweep), repeating until the off-diagonal mass is negligible RELATIVE to
   // the matrix. Converges quadratically — a handful of sweeps in practice.
   //
-  // An earlier version applied a fixed 60 single rotations (largest pivot
-  // first) and stopped on an ABSOLUTE 1e-10 threshold. That is not enough
-  // rotations past ~6 clades — measured top-2 eigenpair residuals of 1e-4 at
-  // n = 8, 1e-2 at n = 12 and 1e-1 at n = 40 — so the similarity map silently
-  // degraded exactly when many clades were picked.
+  // Sweeping to RELATIVE convergence matters: a fixed budget of 60 rotations
+  // with an absolute 1e-10 stop leaves top-2 eigenpair residuals of 1e-4 at
+  // n = 8 and 1e-1 at n = 40, silently degrading the map when many clades
+  // are picked.
   function jacobiEigen(Ain, maxSweeps = 60) {
     const n = Ain.length;
     const A = Ain.map(r => r.slice());
@@ -8995,7 +8959,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   //  re-render; callers are responsible for that.
   // ═════════════════════════════════════════════════════════════════════
 
-
   function reparentNode(nodeData, targetData) {
     if (nodeData === targetData) return false;
     if (isDescendantData(nodeData, targetData)) return false;  // no cycles
@@ -9058,10 +9021,9 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   }
 
   // ── Add an empty child under a node ──────────────────────────────────────
-  // Default name for a newly created node. Every new node used to be called
-  // "new_node", so adding three in a row produced three circles with identical
-  // labels and no way to tell them apart before renaming. Pick the smallest
-  // unused node_N across the whole forest instead.
+  // Default name for a newly created node: the smallest unused node_N across
+  // the whole forest, so nodes added in a row can be told apart before they
+  // are renamed.
   let _nameHintCounter = 1;
   function nextNodeName() {
     const used = new Set();
@@ -9161,7 +9123,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   //  [25]  EDIT MODE
   // ═════════════════════════════════════════════════════════════════════
 
-
   function applyEditModeVisuals() {
     if (!worldG) return;
     const circles = worldG.querySelectorAll('circle.node-circle');
@@ -9257,9 +9218,9 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   // of them behave identically.
   //
   // Two deliberate NON-behaviours. Creating a node does not move the camera,
-  // and it does not move the selection onto the new node. Both used to happen
-  // on every single add, which made building a clade lurch: the view panned
-  // and the sidebar re-pointed at a node the user had not asked to work on.
+  // and it does not move the selection onto the new node. Doing either on every
+  // add makes building a clade lurch: the view pans and the sidebar re-points
+  // at a node the user has not asked to work on.
   // Holding the selection still also makes repetition natural — press Tab (or
   // click "+ child") four times and you get four children of the same parent,
   // with no re-selecting in between.
@@ -9458,7 +9419,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
   //  Mode switcher, toolbar buttons, keyboard shortcuts, welcome overlay, and
   //  the initial paint. Everything below here runs at load time.
   // ═════════════════════════════════════════════════════════════════════
-
 
   function setMode(mode) {
     // a change record belongs to the edit session it came from
@@ -9852,7 +9812,6 @@ const FUNGI_NEWICK = "((((((((((((Xylobotryaceae,Cirrosporiaceae)Xylobotryales)X
       sel.dispatchEvent(new Event('change'));
     });
   }
-
 
   // ── Drawing: Venn ↔ tree, the tree's layout, and branch lengths ─────────
   // Branch lengths as text: exponent form for the small values a
