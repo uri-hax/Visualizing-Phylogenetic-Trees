@@ -10,13 +10,6 @@ VennTree is one self-contained file, `index.html`. There is nothing to install o
 
 - **Online:** open the link above.
 - **Locally:** download `index.html` and open it in a recent Chrome, Edge, Firefox or Safari.
-- If your browser blocks the **copy** buttons on a `file://` page, serve the folder instead:
-
-  ```
-  python3 -m http.server 8000
-  ```
-
-  Then open http://localhost:8000.
 
 Trees never leave your machine. The only network request is for two web fonts (Montserrat and JetBrains Mono). Without a connection, VennTree falls back to system fonts.
 
